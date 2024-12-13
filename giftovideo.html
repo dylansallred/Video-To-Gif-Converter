@@ -4,23 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Video to GIF Converter</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #1a1a1a;
-            --panel-bg: #2d2d2d;
-            --text-color: #ffffff;
-            --border-color: #404040;
-            --primary-color: #4CAF50;
-            --secondary-color: #2196F3;
-            --hover-color: #3d8b40;
-            --disabled-color: #555555;
+            --bg-color: #0f172a;
+            --panel-bg: #1e293b;
+            --text-color: #e2e8f0;
+            --border-color: #334155;
+            --primary-color: #3b82f6;
+            --secondary-color: #6366f1;
+            --hover-color: #2563eb;
+            --disabled-color: #475569;
+            --success-color: #22c55e;
+            --error-color: #ef4444;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         body {
-            font-family: 'Segoe UI', Arial, sans-serif;
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+            line-height: 1.5;
+            letter-spacing: -0.025em;
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
             background-color: var(--bg-color);
             color: var(--text-color);
             min-height: 100vh;
@@ -32,11 +42,15 @@
             grid-template-columns: 1fr 1fr;
             gap: 20px;
             align-items: start;
+            max-width: 1400px;
+            gap: 32px;
+            padding: 20px;
         }
 
         .left-column {
             display: flex;
             flex-direction: column;
+            gap: 10px;
         }
 
         .right-column {
@@ -50,6 +64,11 @@
             font-weight: 300;
             font-size: 2em;
             grid-column: 1 / -1;
+            font-size: 2.5em;
+            font-weight: 600;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .preview-container {
@@ -59,12 +78,16 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
             position: relative;
             max-width: 100%;
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 
+                        0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
-        .preview-container h3 {
-            margin-top: 0;
-            margin-bottom: 10px;
-        }
+   
 
         #videoPreview, #previewGif {
             width: 100%;
@@ -75,7 +98,16 @@
         .settings-panel {
             padding: 20px;
             margin: 0;
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 
+                        0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
+
+   
 
         .setting-group {
             margin: 10px 0;
@@ -88,15 +120,25 @@
         }
 
         #videoInput {
-            background-color: var(--panel-bg);
+            background-color: var(--bg-color);
             color: var(--text-color);
             padding: 10px;
             border-radius: 8px;
             border: 2px dashed var(--border-color);
             width: 100%;
             max-width: 300px;
-            margin: 10px auto;
+            margin: 0px 0px 10px 0px;
             cursor: pointer;
+            background-color: var(--bg-color);
+            border: 2px dashed var(--border-color);
+            padding: 20px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        #videoInput:hover {
+            border-color: var(--primary-color);
+            background-color: rgba(59, 130, 246, 0.1);
         }
 
         .time-control {
@@ -114,54 +156,74 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             transition: border-color 0.3s ease;
+            background-color: var(--bg-color);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 0.95em;
+            transition: all 0.2s ease;
         }
 
         .time-input:focus {
             border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
             outline: none;
         }
 
         select {
             width: 100%;
-            padding: 10px;
-            margin: 5px 0;
+            padding: 5px;
+            margin: 1px 0;
             border-radius: 6px;
             border: 1px solid var(--border-color);
             background-color: var(--bg-color);
             color: var(--text-color);
             cursor: pointer;
             transition: border-color 0.3s ease;
+            background-color: var(--bg-color);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.95em;
+            transition: all 0.2s ease;
         }
 
         select:hover {
             border-color: var(--primary-color);
         }
 
+        select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+            outline: none;
+        }
+
         #convertButton, #downloadButton {
-            padding: 12px 25px;
-            font-size: 16px;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            margin: 10px 5px;
+            padding: 14px 28px;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-size: 0.95em;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.2);
+            background: var(--success-color);
+            box-shadow: 0 4px 6px -1px rgba(34, 197, 94, 0.2);
         }
 
         #convertButton {
-            background-color: var(--primary-color);
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.2);
         }
 
         #downloadButton {
-            background-color: var(--secondary-color);
+            background: var(--success-color);
+            box-shadow: 0 4px 6px -1px rgba(34, 197, 94, 0.2);
         }
 
-        #convertButton:hover {
-            background-color: var(--hover-color);
-        }
-
-        #downloadButton:hover {
-            background-color: #1976D2;
+        #convertButton:hover, #downloadButton:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px -1px rgba(0, 0, 0, 0.2);
         }
 
         #convertButton:disabled {
@@ -207,6 +269,13 @@
             font-size: 12px;
             display: none;
             z-index: 2;
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.875em;
+            font-weight: 500;
         }
 
         #previewGif {
@@ -230,6 +299,8 @@
             justify-content: center;
             align-items: center;
             z-index: 1000;
+            backdrop-filter: blur(8px);
+            background: rgba(15, 23, 42, 0.8);
         }
 
         .progress-content {
@@ -238,6 +309,10 @@
             border-radius: 12px;
             text-align: center;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 32px 48px;
         }
 
         .progress-content p {
@@ -246,13 +321,13 @@
         }
 
         .spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid var(--border-color);
+            width: 48px;
+            height: 48px;
+            border: 4px solid rgba(59, 130, 246, 0.2);
             border-top: 4px solid var(--primary-color);
             border-radius: 50%;
             margin: 10px auto;
-            animation: spin 1s linear infinite;
+            animation: spin 1s cubic-bezier(0.45, 0, 0.55, 1) infinite;
         }
 
         @keyframes spin {
@@ -263,6 +338,106 @@
         /* Remove the old progress style */
         .progress {
             display: none;
+        }
+        h3{
+            margin: -10px 0px 10px 0px;
+        }
+
+        /* Add responsive design improvements */
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+                padding: 16px;
+            }
+
+            .right-column {
+                position: static;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            #convertButton, #downloadButton {
+                width: 100%;
+                margin: 8px 0;
+            }
+        }
+
+        /* Add this after the size-indicator class in the CSS section */
+        .file-size-indicator {
+            margin-top: 10px;
+            font-size: 0.875em;
+            color: var(--text-color);
+            text-align: right;
+        }
+
+        .video-controls {
+            margin-top: 10px;
+        }
+
+        .timeline-container {
+            position: relative;
+            height: 20px;
+            padding: 4px 0;
+            cursor: pointer;
+        }
+
+        .timeline {
+            position: relative;
+            height: 4px;
+            background: var(--border-color);
+            border-radius: 2px;
+        }
+
+        .timeline-progress {
+            position: absolute;
+            height: 100%;
+            background: var(--primary-color);
+            width: 0;
+            border-radius: 2px;
+        }
+
+        .timeline-marker {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: var(--text-color);
+            border: 2px solid var(--primary-color);
+            border-radius: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            cursor: grab;
+            z-index: 2;
+        }
+
+        .timeline-marker:active {
+            cursor: grabbing;
+        }
+
+        .start-marker {
+            background: var(--primary-color);
+        }
+
+        .end-marker {
+            background: var(--secondary-color);
+        }
+
+        .marker-times {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 4px;
+            font-size: 0.8em;
+            color: var(--text-color);
+        }
+
+        /* Add hover effect for timeline */
+        .timeline:hover {
+            height: 6px;
+        }
+
+        .timeline-marker:hover {
+            transform: translate(-50%, -50%) scale(1.2);
         }
     </style>
 </head>
@@ -275,6 +450,19 @@
                 <h3>Original Video</h3>
                 <input type="file" id="videoInput" accept="video/*">
                 <video id="videoPreview" controls style="display: none;"></video>
+                <div class="video-controls">
+                    <div class="timeline-container">
+                        <div class="timeline">
+                            <div class="timeline-progress"></div>
+                            <div class="timeline-marker start-marker" title="Start Time"></div>
+                            <div class="timeline-marker end-marker" title="End Time"></div>
+                        </div>
+                    </div>
+                    <div class="marker-times">
+                        <span class="start-time">0:00</span>
+                        <span class="end-time">0:00</span>
+                    </div>
+                </div>
             </div>
 
             <div class="settings-panel">
@@ -329,6 +517,7 @@
                 <h3>Converted GIF Preview</h3>
                 <img id="previewGif" alt="">
                 <div class="size-indicator" id="sizeIndicator"></div>
+                <div class="file-size-indicator" id="fileSizeIndicator"></div>
             </div>
         </div>
     </div>
@@ -468,6 +657,17 @@ document.addEventListener('DOMContentLoaded', function() {
                     currentBlob = blob;
                     const gifUrl = URL.createObjectURL(blob);
                     
+                    // Calculate and display file size
+                    const fileSizeIndicator = document.getElementById('fileSizeIndicator');
+                    const fileSizeInMB = blob.size / (1024 * 1024);
+                    const fileSizeInKB = blob.size / 1024;
+                    
+                    if (fileSizeInMB >= 1) {
+                        fileSizeIndicator.textContent = `Estimated file size: ${fileSizeInMB.toFixed(2)} MB`;
+                    } else {
+                        fileSizeIndicator.textContent = `Estimated file size: ${fileSizeInKB.toFixed(2)} KB`;
+                    }
+                    
                     // Hide size indicator until image loads
                     const sizeIndicator = document.getElementById('sizeIndicator');
                     sizeIndicator.style.display = 'none';
@@ -513,5 +713,110 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
     </script>
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const timeline = document.querySelector('.timeline');
+    const progress = document.querySelector('.timeline-progress');
+    const startMarker = document.querySelector('.start-marker');
+    const endMarker = document.querySelector('.end-marker');
+    const startTimeDisplay = document.querySelector('.start-time');
+    const endTimeDisplay = document.querySelector('.end-time');
+    const startTimeInput = document.getElementById('startTime');
+    const endTimeInput = document.getElementById('endTime');
+
+    let isDragging = false;
+    let currentMarker = null;
+
+    function formatTime(seconds) {
+        const minutes = Math.floor(seconds / 60);
+        seconds = Math.floor(seconds % 60);
+        return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    }
+
+    function updateMarkerPosition(marker, time, duration) {
+        const position = (time / duration) * 100;
+        marker.style.left = `${position}%`;
+    }
+
+    function updateInputs(marker, time) {
+        if (marker === startMarker) {
+            startTimeInput.value = time.toFixed(1);
+            startTimeDisplay.textContent = formatTime(time);
+        } else {
+            endTimeInput.value = time.toFixed(1);
+            endTimeDisplay.textContent = formatTime(time);
+        }
+    }
+
+    videoPreview.addEventListener('loadedmetadata', function() {
+        // Initialize end marker at the end of the video
+        const duration = videoPreview.duration;
+        endTimeInput.value = duration.toFixed(1);
+        endTimeDisplay.textContent = formatTime(duration);
+        updateMarkerPosition(endMarker, duration, duration);
+        
+        // Initialize start marker at the beginning
+        startTimeInput.value = '0.0';
+        startTimeDisplay.textContent = '0:00';
+        updateMarkerPosition(startMarker, 0, duration);
+    });
+
+    videoPreview.addEventListener('timeupdate', function() {
+        const position = (videoPreview.currentTime / videoPreview.duration) * 100;
+        progress.style.width = `${position}%`;
+    });
+
+    timeline.addEventListener('mousedown', function(e) {
+        const rect = timeline.getBoundingClientRect();
+        const position = (e.clientX - rect.left) / rect.width;
+        const time = position * videoPreview.duration;
+        videoPreview.currentTime = time;
+    });
+
+    // Marker drag functionality
+    [startMarker, endMarker].forEach(marker => {
+        marker.addEventListener('mousedown', function(e) {
+            isDragging = true;
+            currentMarker = marker;
+            e.stopPropagation();
+        });
+    });
+
+    document.addEventListener('mousemove', function(e) {
+        if (!isDragging || !currentMarker) return;
+
+        const rect = timeline.getBoundingClientRect();
+        let position = (e.clientX - rect.left) / rect.width;
+        position = Math.max(0, Math.min(1, position));
+        
+        const time = position * videoPreview.duration;
+
+        // Ensure start marker can't go past end marker and vice versa
+        if (currentMarker === startMarker && time >= endTimeInput.value) return;
+        if (currentMarker === endMarker && time <= startTimeInput.value) return;
+
+        updateMarkerPosition(currentMarker, time, videoPreview.duration);
+        updateInputs(currentMarker, time);
+        
+        // Update video position while dragging
+        videoPreview.currentTime = time;
+    });
+
+    document.addEventListener('mouseup', function() {
+        isDragging = false;
+        currentMarker = null;
+    });
+
+    // Sync manual input changes with markers
+    [startTimeInput, endTimeInput].forEach(input => {
+        input.addEventListener('change', function() {
+            const marker = input === startTimeInput ? startMarker : endMarker;
+            const time = parseFloat(input.value);
+            updateMarkerPosition(marker, time, videoPreview.duration);
+            updateInputs(marker, time);
+        });
+    });
+});
+</script>
 </body>
 </html>
