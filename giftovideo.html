@@ -341,7 +341,8 @@
         }
 
         .file-size-indicator {
-            margin-top: 10px;
+            margin-top: 5px;
+            margin-bottom: 5px;
             font-size: 0.875em;
             color: var(--text-color);
             text-align: right;
@@ -618,6 +619,65 @@
             margin: 10px 0;
             font-size: 16px;
         }
+
+        .tips-container {
+            margin-top: 20px;
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .tips-container h3 {
+            color: var(--text-color);
+            margin: 0 0 15px 0;
+            font-size: 1.1em;
+            border-bottom: 1px solid;
+            border-image: linear-gradient(to right, var(--primary-color) 30%, transparent) 1;
+            padding-bottom: 8px;
+        }
+
+        .tips-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .tips-list li {
+            margin-bottom: 12px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            color: var(--text-color);
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+
+        .tips-list li:last-child {
+            margin-bottom: 0;
+        }
+
+        .tip-icon {
+            font-size: 1.2em;
+            flex-shrink: 0;
+        }
+
+        .tips-list strong {
+            color: var(--primary-color);
+            margin-right: 4px;
+        }
+
+        @media (max-width: 768px) {
+            .tips-container {
+                margin-top: 15px;
+                padding: 15px;
+            }
+
+            .tips-list li {
+                font-size: 0.85em;
+            }
+        }
     </style>
 </head>
 <body>
@@ -737,6 +797,44 @@
                 <div class="size-indicator" id="sizeIndicator"></div>
                 <div class="file-size-indicator" id="fileSizeIndicator"></div>
                 <button id="downloadButton" style="display: none;">Download GIF</button>
+            </div>
+
+            <!-- Add the new tips container -->
+            <div class="tips-container">
+                <h3>Tips for Faster Conversion</h3>
+                <ul class="tips-list">
+                    <li>
+                        <span class="tip-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-layers">
+                                <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                                <polyline points="2 17 12 22 22 17"></polyline>
+                                <polyline points="2 12 12 17 22 12"></polyline>
+                            </svg>
+                        </span>
+                        <strong>Lower Frame Rate:</strong> Use 10-15 fps for most cases
+                    </li>
+                    <li>
+                        <span class="tip-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-minimize"><path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"></path></svg>
+                        </span>
+                        <strong>Reduce Size:</strong> Smaller dimensions = faster conversion
+                    </li>
+                    <li>
+                        <span class="tip-icon">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="2"/>
+                                <path d="M8 4V8L11 11" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </span>
+                        <strong>Shorter Duration:</strong> Keep clips under 10 seconds
+                    </li>
+                    <li>
+                        <span class="tip-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-cpu"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="14" x2="23" y2="14"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="14" x2="4" y2="14"></line></svg>
+                        </span>
+                        <strong>Skip Dithering:</strong> Only use when color accuracy is crucial
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
