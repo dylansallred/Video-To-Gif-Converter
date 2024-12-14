@@ -81,7 +81,7 @@ Processing time depends on:
 3. No build process or dependencies required
 
 ## Live Demo
-Visit [https://dylansallred.github.io/Video-To-Gif/giftovideo.html](https://dylansallred.github.io/Video-To-Gif/giftovideo.html)
+Visit [GIF TO VIDEO](https://dylansallred.github.io/Video-To-Gif/giftovideo.html)
 
 ## License
 MIT License - feel free to use and modify as needed.
