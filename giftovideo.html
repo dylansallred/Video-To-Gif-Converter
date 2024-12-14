@@ -741,7 +741,6 @@
         </div>
     </div>
 
-    <!-- Add this HTML right after the right-column div and before the closing </div> of container -->
     <div class="preview-overlay" id="previewOverlay">
         <div class="preview-overlay-content">
             <img id="overlayGif" alt="">
@@ -760,16 +759,14 @@
             this.originalFileName = '';
             this.settingsChanged = false;
             
-            // Add resize handler
             this.resizeHandler = this.handleResize.bind(this);
             window.addEventListener('resize', this.resizeHandler);
 
-            // Inside the GifConverter constructor, add this after this.settingsChanged = false;
             this.initializePreviewOverlay();
 
-            // Inside the GifConverter class, add after the constructor properties:
-            this.lastConversionSettings = null;  // Store settings used for current GIF
-            this.conversionStartTime = null;  // Add this line
+           
+            this.lastConversionSettings = null; 
+            this.conversionStartTime = null;
             this.workerCount = Math.max(1, navigator.hardwareConcurrency ? 
                 Math.min(navigator.hardwareConcurrency - 1, 8) : 2);
             console.log(this.workerCount);
@@ -903,7 +900,7 @@
                 speed: parseFloat(this.elements.speedSelect.value)
             };
             
-            this.conversionStartTime = performance.now();  // Start timing
+            this.conversionStartTime = performance.now(); 
             this.lastConversionSettings = {...settings};
             this.settingsChanged = false;
             this.elements.convertButton.classList.remove('attention-needed');
@@ -926,7 +923,7 @@
             const newHeight = Math.floor(video.videoHeight * settings.sizePercent);
 
             const gif = new GIF({
-                workers: this.workerCount, // Use the dynamic worker count
+                workers: this.workerCount, 
                 quality: 50,
                 width: newWidth,
                 height: newHeight,
@@ -1186,7 +1183,6 @@
             }
         }
 
-        // Add this new helper method to provide more detailed status messages:
         getFinalizingStepText(percent) {
             if (percent < 25) {
                 return 'Generating color palette...';
@@ -1208,7 +1204,7 @@
             this.isDragging = false;
             this.currentMarker = null;
             this.isPlaying = false;
-            this.isScrubbingPlayhead = false; // Add this line
+            this.isScrubbingPlayhead = false;
             
             this.loadMuteState();
             this.updateMuteButtonUI(this.videoPreview.muted);
