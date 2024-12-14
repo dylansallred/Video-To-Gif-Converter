@@ -111,15 +111,13 @@
         }
 
         .button-group {
-            display: flex;
-            gap: 10px;
             margin-top: 15px;
         }
 
         .button-group button {
-            flex: 1;
-            width: 50%;
+            width: 100%;
         }
+
         #videoInput {
             background-color: var(--bg-color);
             color: var(--text-color);
@@ -232,6 +230,12 @@
         #downloadButton {
             background: var(--success-color);
             box-shadow: 0 4px 6px -1px rgba(34, 197, 94, 0.2);
+            width: 100%;
+        }
+
+        #downloadButton:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px -1px rgba(0, 0, 0, 0.2);
         }
 
         #convertButton:hover, #downloadButton:hover {
@@ -287,6 +291,7 @@
             padding: 32px 48px;
             text-align: center;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            min-width: 300px;
         }
 
         .progress-content p {
@@ -585,6 +590,34 @@
             }
      
         }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: var(--border-color);
+            border-radius: 3px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            transition: width 0.3s ease;
+        }
+
+        .progress-details {
+            font-size: 0.9em;
+            color: var(--text-color);
+            opacity: 0.8;
+            margin: 10px 0 0 0;
+        }
+
+        .progress-status {
+            margin: 10px 0;
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
@@ -648,10 +681,24 @@
                 <div class="setting-group">
                     <label for="ditherSelect">Dithering</label>
                     <select id="ditherSelect">
-                        <option value="false">No Dithering</option>
-                        <option value="FloydSteinberg" selected>Floyd-Steinberg</option>
+                        <option value="false" selected>No Dithering</option>
+                        <option value="FloydSteinberg">Floyd-Steinberg</option>
                         <option value="FalseFloydSteinberg">Light Dithering</option>
                         <option value="Stucki">Stucki</option>
+                    </select>
+                </div>
+
+               
+
+                <div class="setting-group">
+                    <label for="speedSelect">Speed</label>
+                    <select id="speedSelect">
+                        <option value="1" selected>Normal Speed (1x)</option>
+                        <option value="1.5">1.5x Speed</option>
+                        <option value="2">2x Speed</option>
+                        <option value="3">3x Speed</option>
+                        <option value="4">4x Speed</option>
+                        <option value="5">5x Speed</option>
                     </select>
                 </div>
 
@@ -665,14 +712,19 @@
                     </div>
                 </div>
 
+                
+
                 <div class="button-group">
                     <button id="convertButton" disabled>Convert to GIF</button>
-                    <button id="downloadButton" style="display: none;">Download GIF</button>
                 </div>
                 <div class="progress-overlay" id="progressOverlay">
                     <div class="progress-content">
                         <div class="spinner"></div>
-                        <p>Converting... Please wait.</p>
+                        <p class="progress-status">Converting... Please wait.</p>
+                        <div class="progress-bar">
+                            <div class="progress-fill"></div>
+                        </div>
+                        <p class="progress-details">Processing frame: 0/0</p>
                     </div>
                 </div>
             </div>
@@ -684,6 +736,7 @@
                 <img id="previewGif" alt="">
                 <div class="size-indicator" id="sizeIndicator"></div>
                 <div class="file-size-indicator" id="fileSizeIndicator"></div>
+                <button id="downloadButton" style="display: none;">Download GIF</button>
             </div>
         </div>
     </div>
@@ -713,6 +766,13 @@
 
             // Inside the GifConverter constructor, add this after this.settingsChanged = false;
             this.initializePreviewOverlay();
+
+            // Inside the GifConverter class, add after the constructor properties:
+            this.lastConversionSettings = null;  // Store settings used for current GIF
+            this.conversionStartTime = null;  // Add this line
+            this.workerCount = Math.max(1, navigator.hardwareConcurrency ? 
+                Math.min(navigator.hardwareConcurrency - 1, 8) : 2);
+            console.log(this.workerCount);
         }
 
         initializeElements() {
@@ -731,7 +791,8 @@
                 sizeIndicator: document.getElementById('sizeIndicator'),
                 ditherSelect: document.getElementById('ditherSelect'),
                 previewOverlay: document.getElementById('previewOverlay'),
-                overlayGif: document.getElementById('overlayGif')
+                overlayGif: document.getElementById('overlayGif'),
+                speedSelect: document.getElementById('speedSelect'),
             };
         }
 
@@ -759,11 +820,17 @@
                 this.elements.sizeSelect,
                 this.elements.startTime,
                 this.elements.endTime,
-                this.elements.ditherSelect
+                this.elements.ditherSelect,
+                this.elements.speedSelect,
             ];
 
             settingsInputs.forEach(input => {
                 input.addEventListener('change', () => this.markSettingsChanged());
+            });
+
+            this.elements.speedSelect.addEventListener('change', (e) => {
+                this.saveSetting('gifSpeed', e.target.value);
+                this.markSettingsChanged();
             });
         }
 
@@ -784,6 +851,12 @@
             const savedDither = localStorage.getItem('gifDither');
             if (savedDither) {
                 this.elements.ditherSelect.value = savedDither;
+            }
+
+            // Load Speed
+            const savedSpeed = localStorage.getItem('gifSpeed');
+            if (savedSpeed) {
+                this.elements.speedSelect.value = savedSpeed;
             }
         }
 
@@ -826,9 +899,12 @@
                 sizePercent: parseFloat(this.elements.sizeSelect.value),
                 startTime: parseFloat(this.elements.startTime.value),
                 endTime: parseFloat(this.elements.endTime.value),
-                dither: this.elements.ditherSelect.value
+                dither: this.elements.ditherSelect.value,
+                speed: parseFloat(this.elements.speedSelect.value)
             };
             
+            this.conversionStartTime = performance.now();  // Start timing
+            this.lastConversionSettings = {...settings};
             this.settingsChanged = false;
             this.elements.convertButton.classList.remove('attention-needed');
             this.elements.previewGif.style.opacity = '1';
@@ -850,8 +926,8 @@
             const newHeight = Math.floor(video.videoHeight * settings.sizePercent);
 
             const gif = new GIF({
-                workers: 2,
-                quality: 10,
+                workers: this.workerCount, // Use the dynamic worker count
+                quality: 50,
                 width: newWidth,
                 height: newHeight,
                 dither: settings.dither === 'false' ? false : settings.dither,
@@ -881,6 +957,17 @@
             this.elements.progressOverlay.style.display = isStarting ? 'flex' : 'none';
             this.elements.previewGif.style.display = 'none';
             this.elements.downloadButton.style.display = 'none';
+
+            if (isStarting) {
+                // Reset progress elements
+                const progressFill = document.querySelector('.progress-fill');
+                const progressDetails = document.querySelector('.progress-details');
+                const progressStatus = document.querySelector('.progress-status');
+                
+                progressFill.style.width = '0%';
+                progressDetails.textContent = 'Processing frame: 0/0';
+                progressStatus.textContent = 'Converting... Please wait.';
+            }
         }
 
         async processFrames(gif, settings, newWidth, newHeight) {
@@ -889,9 +976,20 @@
             canvas.width = newWidth;
             canvas.height = newHeight;
 
-            const frameInterval = 1000 / settings.fps;
+            const speedMultiplier = parseFloat(this.elements.speedSelect.value);
+            const frameInterval = 1000 / (settings.fps * speedMultiplier);
             let currentTime = settings.startTime * 1000;
             const endTime = settings.endTime * 1000;
+
+            // Calculate total frames
+            const duration = endTime - currentTime;
+            const totalFrames = Math.ceil(duration / frameInterval);
+            let processedFrames = 0;
+
+            // Get progress elements
+            const progressFill = document.querySelector('.progress-fill');
+            const progressDetails = document.querySelector('.progress-details');
+            const progressStatus = document.querySelector('.progress-status');
 
             return new Promise((resolve, reject) => {
                 const captureFrame = () => {
@@ -899,10 +997,18 @@
                         ctx.drawImage(this.elements.videoPreview, 0, 0, newWidth, newHeight);
                         gif.addFrame(ctx, { copy: true, delay: frameInterval });
                         
-                        currentTime += frameInterval;
+                        // Update progress
+                        processedFrames++;
+                        const progress = (processedFrames / totalFrames) * 100;
+                        progressFill.style.width = `${progress}%`;
+                        progressDetails.textContent = `Processing frame: ${processedFrames}/${totalFrames}`;
+                        progressStatus.textContent = `Converting... ${Math.round(progress)}%`;
+                        
+                        currentTime += frameInterval * speedMultiplier;
                         this.elements.videoPreview.currentTime = currentTime / 1000;
                     } else {
                         this.elements.videoPreview.removeEventListener('seeked', captureFrame);
+                        progressStatus.textContent = 'Finalizing GIF...';
                         this.finalizeGif(gif);
                         resolve();
                     }
@@ -914,28 +1020,59 @@
         }
 
         finalizeGif(gif) {
+            // Add progress handlers for the GIF encoding process
+            gif.on('progress', (p) => {
+                const progressStatus = document.querySelector('.progress-status');
+                const progressDetails = document.querySelector('.progress-details');
+                const progressFill = document.querySelector('.progress-fill');
+                
+                // Convert progress to percentage
+                const percent = Math.round(p * 100);
+                
+                progressStatus.textContent = 'Finalizing GIF... ' + percent + '%';
+                progressDetails.textContent = this.getFinalizingStepText(percent);
+                progressFill.style.width = percent + '%';
+            });
+
             gif.on('finished', (blob) => {
+                const conversionEndTime = performance.now();
+                const conversionTime = ((conversionEndTime - this.conversionStartTime) / 1000).toFixed(2);
+                
                 this.currentBlob = blob;
-                this.updatePreview(blob);
+                this.updatePreview(blob, conversionTime);
                 this.updateUIForConversion(false);
                 this.elements.downloadButton.style.display = 'block';
             });
+
+            // Add an error handler
+            gif.on('error', (error) => {
+                console.error('GIF encoding error:', error);
+                const progressStatus = document.querySelector('.progress-status');
+                progressStatus.textContent = 'Error: GIF conversion failed';
+                progressStatus.style.color = 'var(--error-color)';
+            });
+
             gif.render();
         }
 
-        updatePreview(blob) {
+        updatePreview(blob, conversionTime) {
             const gifUrl = URL.createObjectURL(blob);
-            this.updateFileSize(blob);
+            this.updateFileSize(blob, conversionTime);
             this.setupPreviewImage(gifUrl);
         }
 
-        updateFileSize(blob) {
+        updateFileSize(blob, conversionTime) {
             const fileSizeInMB = blob.size / (1024 * 1024);
             const fileSizeInKB = blob.size / 1024;
             
-            this.elements.fileSizeIndicator.textContent = fileSizeInMB >= 1 
-                ? `Estimated file size: ${fileSizeInMB.toFixed(2)} MB`
-                : `Estimated file size: ${fileSizeInKB.toFixed(2)} KB`;
+            let sizeText = fileSizeInMB >= 1 
+                ? `${fileSizeInMB.toFixed(2)} MB`
+                : `${fileSizeInKB.toFixed(2)} KB`;
+            
+            this.elements.fileSizeIndicator.innerHTML = `
+                Estimated file size: ${sizeText}<br>
+                <span style="color: var(--primary-color)">Conversion time: ${conversionTime}s</span>
+            `;
         }
 
         setupPreviewImage(gifUrl) {
@@ -984,8 +1121,32 @@
         }
 
         markSettingsChanged() {
-            this.settingsChanged = true;
-            this.elements.convertButton.classList.add('attention-needed');
+            if (!this.lastConversionSettings || !this.elements.previewGif.src) {
+                // No GIF has been generated yet, don't show animation
+                return;
+            }
+
+            const currentSettings = {
+                fps: parseInt(this.elements.fpsSelect.value),
+                sizePercent: parseFloat(this.elements.sizeSelect.value),
+                startTime: parseFloat(this.elements.startTime.value),
+                endTime: parseFloat(this.elements.endTime.value),
+                dither: this.elements.ditherSelect.value,
+                speed: parseFloat(this.elements.speedSelect.value)
+            };
+
+            // Compare current settings with last conversion settings
+            const settingsChanged = Object.keys(currentSettings).some(key => 
+                currentSettings[key] !== this.lastConversionSettings[key]
+            );
+
+            if (settingsChanged) {
+                this.settingsChanged = true;
+                this.elements.convertButton.classList.add('attention-needed');
+            } else {
+                this.settingsChanged = false;
+                this.elements.convertButton.classList.remove('attention-needed');
+            }
         }
 
         initializePreviewOverlay() {
@@ -1022,6 +1183,19 @@
             if (this.elements.overlayGif.src) {
                 URL.revokeObjectURL(this.elements.overlayGif.src);
                 this.elements.overlayGif.src = '';
+            }
+        }
+
+        // Add this new helper method to provide more detailed status messages:
+        getFinalizingStepText(percent) {
+            if (percent < 25) {
+                return 'Generating color palette...';
+            } else if (percent < 50) {
+                return 'Optimizing colors...';
+            } else if (percent < 75) {
+                return 'Applying dithering...';
+            } else {
+                return 'Encoding final GIF...';
             }
         }
     }
