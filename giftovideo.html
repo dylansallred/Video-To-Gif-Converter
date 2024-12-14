@@ -786,6 +786,28 @@
                 font-size: 16px;
             }
         }
+
+        .cancel-btn {
+            margin-top: 15px;
+            padding: 8px 16px;
+            background: var(--panel-bg);
+            border: 1px solid var(--error-color);
+            color: var(--error-color);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .cancel-btn:hover {
+            background: var(--error-color);
+            color: white;
+        }
+
+        .progress-content {
+            min-width: 300px;
+            position: relative;
+        }
     </style>
 </head>
 <body>
@@ -893,6 +915,8 @@
                             <div class="progress-fill"></div>
                         </div>
                         <p class="progress-details">Processing frame: 0/0</p>
+                        <!-- Add the cancel button -->
+                        <button id="cancelConversion" class="cancel-btn">Cancel Conversion</button>
                     </div>
                 </div>
             </div>
@@ -976,6 +1000,8 @@
             this.workerCount = Math.max(1, navigator.hardwareConcurrency ? 
                 Math.min(navigator.hardwareConcurrency - 1, 8) : 2);
             console.log(this.workerCount);
+            this.currentConversion = null;
+            this.initializeCancelButton();
         }
 
         initializeElements() {
@@ -1124,6 +1150,11 @@
         }
 
         async convertToGif(settings) {
+            // If there's an existing conversion, cancel it first
+            if (this.currentConversion) {
+                this.cancelConversion();
+            }
+
             const video = this.elements.videoPreview;
             const newWidth = Math.floor(video.videoWidth * settings.sizePercent);
             const newHeight = Math.floor(video.videoHeight * settings.sizePercent);
@@ -1137,6 +1168,9 @@
                 workerScript: this.createWorkerScript()
             });
 
+            // Store the current conversion
+            this.currentConversion = gif;
+
             this.updateUIForConversion(true);
 
             try {
@@ -1144,6 +1178,7 @@
             } catch (error) {
                 console.error('Conversion failed:', error);
                 this.updateUIForConversion(false);
+                this.currentConversion = null;
             }
         }
 
@@ -1170,6 +1205,7 @@
                 progressFill.style.width = '0%';
                 progressDetails.textContent = 'Processing frame: 0/0';
                 progressStatus.textContent = 'Converting... Please wait.';
+                progressStatus.style.color = ''; // Reset color
             }
         }
 
@@ -1184,23 +1220,21 @@
             let currentTime = settings.startTime * 1000;
             const endTime = settings.endTime * 1000;
 
-            // Calculate total frames
             const duration = endTime - currentTime;
             const totalFrames = Math.ceil(duration / frameInterval);
             let processedFrames = 0;
 
-            // Get progress elements
             const progressFill = document.querySelector('.progress-fill');
             const progressDetails = document.querySelector('.progress-details');
             const progressStatus = document.querySelector('.progress-status');
 
             return new Promise((resolve, reject) => {
-                const captureFrame = () => {
+                // Store the captureFrame function as a property so we can remove it later
+                this.currentCaptureFrame = () => {
                     if (currentTime <= endTime) {
                         ctx.drawImage(this.elements.videoPreview, 0, 0, newWidth, newHeight);
                         gif.addFrame(ctx, { copy: true, delay: frameInterval });
                         
-                        // Update progress
                         processedFrames++;
                         const progress = (processedFrames / totalFrames) * 100;
                         progressFill.style.width = `${progress}%`;
@@ -1210,21 +1244,31 @@
                         currentTime += frameInterval * speedMultiplier;
                         this.elements.videoPreview.currentTime = currentTime / 1000;
                     } else {
-                        this.elements.videoPreview.removeEventListener('seeked', captureFrame);
+                        this.cleanupVideoEvents();
                         progressStatus.textContent = 'Finalizing GIF...';
                         this.finalizeGif(gif);
                         resolve();
                     }
                 };
 
-                this.elements.videoPreview.addEventListener('seeked', captureFrame);
+                this.elements.videoPreview.addEventListener('seeked', this.currentCaptureFrame);
                 this.elements.videoPreview.currentTime = settings.startTime;
             });
+        }
+
+        // Add this new method to clean up video events
+        cleanupVideoEvents() {
+            if (this.currentCaptureFrame) {
+                this.elements.videoPreview.removeEventListener('seeked', this.currentCaptureFrame);
+                this.currentCaptureFrame = null;
+            }
         }
 
         finalizeGif(gif) {
             // Add progress handlers for the GIF encoding process
             gif.on('progress', (p) => {
+                if (!this.currentConversion) return; // Skip if cancelled
+                
                 const progressStatus = document.querySelector('.progress-status');
                 const progressDetails = document.querySelector('.progress-details');
                 const progressFill = document.querySelector('.progress-fill');
@@ -1238,6 +1282,8 @@
             });
 
             gif.on('finished', (blob) => {
+                if (!this.currentConversion) return; // Skip if cancelled
+                
                 const conversionEndTime = performance.now();
                 const conversionTime = ((conversionEndTime - this.conversionStartTime) / 1000).toFixed(2);
                 
@@ -1245,14 +1291,15 @@
                 this.updatePreview(blob, conversionTime);
                 this.updateUIForConversion(false);
                 this.elements.downloadButton.style.display = 'block';
+                this.currentConversion = null;
             });
 
-            // Add an error handler
             gif.on('error', (error) => {
                 console.error('GIF encoding error:', error);
                 const progressStatus = document.querySelector('.progress-status');
                 progressStatus.textContent = 'Error: GIF conversion failed';
                 progressStatus.style.color = 'var(--error-color)';
+                this.currentConversion = null;
             });
 
             gif.render();
@@ -1398,6 +1445,65 @@
                 return 'Applying dithering...';
             } else {
                 return 'Encoding final GIF...';
+            }
+        }
+
+        initializeCancelButton() {
+            this.cancelButton = document.getElementById('cancelConversion');
+            this.cancelButton.addEventListener('click', () => this.cancelConversion());
+        }
+
+        cancelConversion() {
+            if (this.currentConversion) {
+                // Clean up video events first
+                this.cleanupVideoEvents();
+                
+                // Reset video playback
+                const startTime = parseFloat(this.elements.startTime.value);
+                this.elements.videoPreview.currentTime = startTime;
+                this.elements.videoPreview.pause();
+                
+                // Abort the current conversion
+                this.currentConversion.abort();
+                
+                // Terminate all workers
+                if (this.currentConversion.freeWorkers) {
+                    this.currentConversion.freeWorkers.forEach(worker => worker.terminate());
+                }
+                if (this.currentConversion.activeWorkers) {
+                    this.currentConversion.activeWorkers.forEach(worker => worker.terminate());
+                }
+                
+                // Clear the current conversion
+                this.currentConversion = null;
+                
+                // Reset UI elements
+                this.elements.convertButton.disabled = false;
+                this.elements.previewGif.style.display = 'none';
+                this.elements.downloadButton.style.display = 'none';
+                
+                // Show feedback
+                const progressStatus = document.querySelector('.progress-status');
+                const progressFill = document.querySelector('.progress-fill');
+                const progressDetails = document.querySelector('.progress-details');
+                
+                progressStatus.textContent = 'Conversion cancelled';
+                progressStatus.style.color = 'var(--error-color)';
+                progressFill.style.width = '0%';
+                progressDetails.textContent = '';
+                
+                // Hide the overlay after a short delay
+                setTimeout(() => {
+                    this.elements.progressOverlay.style.display = 'none';
+                    progressStatus.style.color = '';
+                    progressStatus.textContent = 'Converting... Please wait.';
+                    progressDetails.textContent = 'Processing frame: 0/0';
+                }, 1500);
+                
+                // Reset any other state
+                this.currentBlob = null;
+                this.settingsChanged = false;
+                this.elements.convertButton.classList.remove('attention-needed');
             }
         }
     }
