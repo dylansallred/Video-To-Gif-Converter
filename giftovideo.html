@@ -531,6 +531,55 @@
         #previewGif {
             transition: opacity 0.3s ease;
         }
+
+        .preview-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(8px);
+            z-index: 1001;
+            padding: 40px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .preview-overlay-content {
+            position: relative;
+            max-width: 95vw;
+            max-height: 95vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #overlayGif {
+            max-width: 100%;
+            max-height: 95vh;
+            object-fit: contain;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+
+        #previewGif {
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        #previewGif:hover {
+            transform: scale(1.02);
+        }
+
+        @media (max-width: 768px) {
+            .preview-overlay {
+                padding: 20px;
+            }
+     
+        }
     </style>
 </head>
 <body>
@@ -634,6 +683,14 @@
         </div>
     </div>
 
+    <!-- Add this HTML right after the right-column div and before the closing </div> of container -->
+    <div class="preview-overlay" id="previewOverlay">
+        <div class="preview-overlay-content">
+            <img id="overlayGif" alt="">
+         
+        </div>
+    </div>
+
     <script>
     // Main application class
     class GifConverter {
@@ -648,6 +705,9 @@
             // Add resize handler
             this.resizeHandler = this.handleResize.bind(this);
             window.addEventListener('resize', this.resizeHandler);
+
+            // Inside the GifConverter constructor, add this after this.settingsChanged = false;
+            this.initializePreviewOverlay();
         }
 
         initializeElements() {
@@ -664,7 +724,9 @@
                 endTime: document.getElementById('endTime'),
                 fileSizeIndicator: document.getElementById('fileSizeIndicator'),
                 sizeIndicator: document.getElementById('sizeIndicator'),
-                ditherSelect: document.getElementById('ditherSelect')
+                ditherSelect: document.getElementById('ditherSelect'),
+                previewOverlay: document.getElementById('previewOverlay'),
+                overlayGif: document.getElementById('overlayGif')
             };
         }
 
@@ -919,6 +981,43 @@
         markSettingsChanged() {
             this.settingsChanged = true;
             this.elements.convertButton.classList.add('attention-needed');
+        }
+
+        initializePreviewOverlay() {
+            this.elements.previewOverlay = document.getElementById('previewOverlay');
+            this.elements.overlayGif = document.getElementById('overlayGif');
+    
+            // Double click on preview to open overlay
+            this.elements.previewGif.addEventListener('dblclick', () => this.openPreviewOverlay());
+            
+            // Click anywhere in the overlay to close it
+            this.elements.previewOverlay.addEventListener('click', () => this.closePreviewOverlay());
+            
+            // ESC key to close overlay
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && this.elements.previewOverlay.style.display === 'flex') {
+                    this.closePreviewOverlay();
+                }
+            });
+        }
+
+        openPreviewOverlay() {
+            if (this.currentBlob) {
+                const gifUrl = URL.createObjectURL(this.currentBlob);
+                this.elements.overlayGif.src = gifUrl;
+                this.elements.previewOverlay.style.display = 'flex';
+                document.body.style.overflow = 'hidden'; // Prevent scrolling when overlay is open
+            }
+        }
+
+        closePreviewOverlay() {
+            this.elements.previewOverlay.style.display = 'none';
+            document.body.style.overflow = ''; // Restore scrolling
+            // Clean up the object URL when closing
+            if (this.elements.overlayGif.src) {
+                URL.revokeObjectURL(this.elements.overlayGif.src);
+                this.elements.overlayGif.src = '';
+            }
         }
     }
 
