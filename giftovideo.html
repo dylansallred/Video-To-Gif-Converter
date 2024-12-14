@@ -461,9 +461,14 @@
             background: #e2e8f0;
             top: 50%;
             transform: translateY(-50%);
-            pointer-events: none;
+            pointer-events: auto;
             display: none;
             z-index: 1;
+            cursor: grab;
+        }
+
+        .playhead:active {
+            cursor: grabbing;
         }
 
         .playhead::after {
@@ -1029,6 +1034,7 @@
             this.isDragging = false;
             this.currentMarker = null;
             this.isPlaying = false;
+            this.isScrubbingPlayhead = false; // Add this line
             
             this.loadMuteState();
             this.updateMuteButtonUI(this.videoPreview.muted);
@@ -1089,6 +1095,11 @@
 
             this.videoPreview.addEventListener('timeupdate', this.updatePlayhead.bind(this));
             this.elements.muteBtn.addEventListener('click', this.toggleMute.bind(this));
+            
+            // Add these new event listeners
+            this.elements.playhead.addEventListener('mousedown', this.handlePlayheadDragStart.bind(this));
+            document.addEventListener('mousemove', this.handlePlayheadDrag.bind(this));
+            document.addEventListener('mouseup', this.handlePlayheadDragEnd.bind(this));
         }
 
         handleVideoLoad() {
@@ -1322,12 +1333,14 @@
         updatePlayhead() {
             if (!this.videoPreview.src) return;
             
+            // Don't update position while scrubbing
+            if (this.isScrubbingPlayhead) return;
+            
             const duration = this.videoPreview.duration;
             const currentTime = this.videoPreview.currentTime;
             const startTime = parseFloat(this.elements.startTimeInput.value);
             const endTime = parseFloat(this.elements.endTimeInput.value);
             
-            // Only hide playhead if we're not currently dragging
             if (!this.isDragging && (currentTime > endTime || currentTime < startTime)) {
                 this.elements.playhead.style.display = 'none';
                 return;
@@ -1386,6 +1399,60 @@
             if (this.animationFrameId) {
                 cancelAnimationFrame(this.animationFrameId);
                 this.animationFrameId = null;
+            }
+        }
+
+        handlePlayheadDragStart(e) {
+            if (!this.videoPreview.src) return;
+            
+            this.isScrubbingPlayhead = true;
+            this.wasPlaying = this.isPlaying;
+            if (this.isPlaying) {
+                this.videoPreview.pause();
+            }
+            
+            e.stopPropagation();
+            e.preventDefault();
+        }
+
+        handlePlayheadDrag(e) {
+            if (!this.isScrubbingPlayhead || !this.videoPreview.src) return;
+            
+            e.preventDefault();
+            
+            const rect = this.elements.timeline.getBoundingClientRect();
+            let position = (e.clientX - rect.left) / rect.width;
+            position = Math.max(0, Math.min(1, position));
+            
+            const startTime = parseFloat(this.elements.startTimeInput.value);
+            const endTime = parseFloat(this.elements.endTimeInput.value);
+            const duration = this.videoPreview.duration;
+            
+            // Calculate time based on position
+            let time = position * duration;
+            
+            // Clamp time between start and end markers
+            time = Math.max(startTime, Math.min(endTime, time));
+            
+            // Update video time
+            this.videoPreview.currentTime = time;
+            
+            // Update playhead position
+            const playheadPosition = (time / duration) * 100;
+            this.elements.playhead.style.left = `${playheadPosition}%`;
+        }
+
+        handlePlayheadDragEnd() {
+            if (!this.isScrubbingPlayhead) return;
+            
+            this.isScrubbingPlayhead = false;
+            
+            // Resume playback if it was playing before
+            if (this.wasPlaying) {
+                this.videoPreview.play().catch(() => {
+                    this.isPlaying = false;
+                    this.updatePlayButton(false);
+                });
             }
         }
     }
