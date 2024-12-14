@@ -130,6 +130,7 @@
             transition: all 0.3s ease;
             margin: 0 auto 10px;
             display: block;
+            outline: none;
         }
 
         #videoInput:hover {
@@ -220,6 +221,7 @@
             letter-spacing: 0.05em;
             border: none;
             color: white;
+            outline: none;
         }
 
         #convertButton {
@@ -454,6 +456,7 @@
             cursor: pointer;
             font-weight: 500;
             transition: background-color 0.2s ease;
+            outline: none;
         }
 
         .play-pause-btn:hover {
@@ -509,6 +512,7 @@
             cursor: pointer;
             font-weight: 500;
             transition: background-color 0.2s ease;
+            outline: none;
         }
 
         .mute-btn:hover {
@@ -678,6 +682,110 @@
                 font-size: 0.85em;
             }
         }
+
+        /* Add these new rules */
+        button:focus,
+        input[type="file"]:focus {
+            outline: none;
+        }
+
+        /* Add these styles in the <style> section */
+
+        /* Improve touch targets for mobile */
+        @media (max-width: 768px) {
+            .timeline-marker {
+                touch-action: none;
+            }
+
+            .start-marker::before {
+                font-size: 28px; /* Increased from 20px */
+                left: -4px;
+            }
+
+            .end-marker::before {
+                font-size: 28px; /* Increased from 20px */
+                right: -4px;
+            }
+
+            /* Improve mobile form controls */
+            .setting-group {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+                margin: 16px 0;
+            }
+
+            .setting-group label {
+                min-width: auto;
+            }
+
+            select, .time-input {
+                width: 100%;
+                padding: 12px;  /* Increased padding for better touch targets */
+                font-size: 16px; /* Prevent iOS zoom on focus */
+            }
+
+            /* Improve time controls for mobile */
+            .time-control {
+                flex-direction: column;
+                width: 100%;
+                gap: 8px;
+                align-items: baseline;
+            }
+
+            .time-control label {
+                width: auto;
+            }
+
+            .time-input {
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            .container {
+                grid-template-columns: 1fr;
+                padding: 10px;
+            }
+
+            .preview-container, .settings-panel {
+                padding: 16px;
+            }
+
+            /* Improve spacing for mobile */
+            .setting-group {
+                margin: 10px 0;
+            }
+
+            /* Make the timeline easier to interact with on mobile */
+            .timeline-container {
+                height: 40px;  /* Increased touch area */
+                padding: 8px 0;
+            }
+
+            .timeline {
+                height: 8px;  /* Slightly thicker for mobile */
+            }
+
+            .timeline:hover {
+                height: 10px;
+            }
+
+            /* Improve button sizes for mobile */
+            .play-pause-btn, .mute-btn, #convertButton, #downloadButton {
+                padding: 12px 16px;
+                font-size: 16px;
+            }
+
+            /* Adjust playback controls for mobile */
+            .playback-controls {
+                gap: 12px;
+            }
+
+            /* Make sure inputs don't zoom on iOS */
+            input[type="number"] {
+                font-size: 16px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -688,7 +796,7 @@
             <div class="preview-container">
                 <h3>Original Video</h3>
                 <input type="file" id="videoInput" accept="video/*">
-                <video id="videoPreview" style="display: none;"></video>
+                <video id="videoPreview" style="display: none;" playsinline webkit-playsinline></video>
                 <div class="video-controls">
                     <div class="timeline-container">
                         <div class="timeline">
@@ -763,7 +871,7 @@
                 </div>
 
                 <div class="setting-group">
-                    <label>Time Range</label>
+                   <label style="margin-top: 10px;">Time Range</label>
                     <div class="time-control">
                         <label style="color: var(--success-color)">Start:</label>
                         <input type="number" id="startTime" class="time-input" value="0.00" min="0" step="0.01" pattern="\d*\.?\d{0,2}">
@@ -1306,6 +1414,8 @@
             
             this.loadMuteState();
             this.updateMuteButtonUI(this.videoPreview.muted);
+            this.isKeyHeld = false;
+            this.frameStepInterval = null;
         }
 
         initializeElements() {
@@ -1368,6 +1478,18 @@
             this.elements.playhead.addEventListener('mousedown', this.handlePlayheadDragStart.bind(this));
             document.addEventListener('mousemove', this.handlePlayheadDrag.bind(this));
             document.addEventListener('mouseup', this.handlePlayheadDragEnd.bind(this));
+
+            // Add keyboard event listener for arrow keys
+            document.addEventListener('keydown', this.handleKeyDown.bind(this));
+            document.addEventListener('keyup', this.handleKeyUp.bind(this));
+            
+            // Add touch events for markers
+            [this.elements.startMarker, this.elements.endMarker].forEach(marker => {
+                marker.addEventListener('touchstart', this.handleMarkerTouchStart.bind(this), { passive: false });
+            });
+            
+            document.addEventListener('touchmove', this.handleMarkerTouchMove.bind(this), { passive: false });
+            document.addEventListener('touchend', this.handleMarkerTouchEnd.bind(this));
         }
 
         handleVideoLoad() {
@@ -1722,6 +1844,128 @@
                     this.updatePlayButton(false);
                 });
             }
+        }
+
+        handleKeyDown(e) {
+            if (!this.videoPreview.src || this.isKeyHeld) return;
+            
+            const frameTime = 1 / 30; // Assuming 30fps, adjust frame time accordingly
+            
+            if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+                e.preventDefault(); // Prevent page scrolling
+                
+                // Pause video if playing
+                if (this.isPlaying) {
+                    this.videoPreview.pause();
+                    this.isPlaying = false;
+                    this.updatePlayButton(false);
+                }
+                
+                this.isKeyHeld = true;
+                this.startFrameStep(e.key === 'ArrowLeft' ? -frameTime : frameTime);
+            }
+        }
+
+        handleKeyUp(e) {
+            if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+                this.isKeyHeld = false;
+                if (this.frameStepInterval) {
+                    clearInterval(this.frameStepInterval);
+                    this.frameStepInterval = null;
+                }
+            }
+        }
+
+        startFrameStep(timeStep) {
+            const stepFrame = () => {
+                const startTime = parseFloat(this.elements.startTimeInput.value);
+                const endTime = parseFloat(this.elements.endTimeInput.value);
+                let newTime = this.videoPreview.currentTime + timeStep;
+                
+                // Handle looping in both directions
+                if (newTime > endTime) {
+                    newTime = startTime;
+                } else if (newTime < startTime) {
+                    newTime = endTime;
+                }
+                
+                // Update video time
+                this.videoPreview.currentTime = newTime;
+                
+                // Show playhead during frame stepping
+                this.elements.playhead.style.display = 'block';
+                this.updatePlayhead();
+            };
+            
+            // Execute immediately for single press
+            stepFrame();
+            
+            // Use requestAnimationFrame for smoother continuous stepping
+            let lastTimestamp = performance.now();
+            const animate = (timestamp) => {
+                if (!this.isKeyHeld) return;
+                
+                const deltaTime = timestamp - lastTimestamp;
+                if (deltaTime >= 16) { // Limit to ~60fps (1000ms/60 ≈ 16.67ms)
+                    stepFrame();
+                    lastTimestamp = timestamp;
+                }
+                
+                requestAnimationFrame(animate);
+            };
+            
+            // Start animation after a short delay
+            setTimeout(() => {
+                if (this.isKeyHeld) {
+                    requestAnimationFrame(animate);
+                }
+            }, 200); // Delay before continuous stepping begins
+        }
+
+        handleMarkerTouchStart(e) {
+            if (!this.videoPreview.src) return;
+            
+            e.preventDefault();
+            this.isDragging = true;
+            this.currentMarker = e.target;
+        }
+
+        handleMarkerTouchMove(e) {
+            if (!this.isDragging || !this.currentMarker || !this.videoPreview.src) return;
+            
+            e.preventDefault();
+            
+            const touch = e.touches[0];
+            const rect = this.elements.timeline.getBoundingClientRect();
+            let position = (touch.clientX - rect.left) / rect.width;
+            position = Math.max(0, Math.min(1, position));
+            
+            const time = position * this.videoPreview.duration;
+            this.updateTimeFromDrag(time);
+        }
+
+        handleMarkerTouchEnd() {
+            this.isDragging = false;
+            this.currentMarker = null;
+        }
+
+        validateTimeInputs() {
+            const start = parseFloat(this.elements.startTimeInput.value);
+            const end = parseFloat(this.elements.endTimeInput.value);
+            const duration = this.videoPreview.duration;
+            
+            // Ensure values are within valid range
+            const validStart = Math.max(0, Math.min(start, duration - 0.1));
+            const validEnd = Math.max(validStart + 0.1, Math.min(end, duration));
+            
+            this.elements.startTimeInput.value = validStart.toFixed(2);
+            this.elements.endTimeInput.value = validEnd.toFixed(2);
+            
+            // Update markers and displays
+            this.updateMarkerPositions();
+            this.updateTimeDisplay(true, validStart);
+            this.updateTimeDisplay(false, validEnd);
+            this.updateDurationDisplay();
         }
     }
 
