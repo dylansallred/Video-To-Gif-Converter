@@ -40,11 +40,10 @@
         .container {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px;
             align-items: start;
             max-width: 1400px;
-            gap: 32px;
-            padding: 20px;
+            gap: 10px;
+            padding: 5px 10px 10px 10px;
         }
 
         .left-column {
@@ -60,25 +59,20 @@
 
         h1 {
             color: var(--text-color);
-            margin: 0 0 0px 0;
-            font-weight: 300;
-            font-size: 2em;
+            margin: 0;
             grid-column: 1 / -1;
-            font-size: 2.5em;
+            font-size: 2em;
             font-weight: 600;
             background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            text-align: center;
         }
 
         .preview-container {
             background: var(--panel-bg);
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
             position: relative;
             max-width: 100%;
-            background: var(--panel-bg);
             border: 1px solid var(--border-color);
             border-radius: 16px;
             padding: 24px;
@@ -86,8 +80,6 @@
                         0 2px 4px -1px rgba(0, 0, 0, 0.06);
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
-
-   
 
         #videoPreview, #previewGif {
             width: 100%;
@@ -96,7 +88,6 @@
         }
 
         .settings-panel {
-            padding: 20px;
             margin: 0;
             background: var(--panel-bg);
             border: 1px solid var(--border-color);
@@ -107,10 +98,16 @@
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
-   
-
         .setting-group {
             margin: 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .setting-group label {
+            min-width: 100px;
+            flex-shrink: 0;
         }
 
         .button-group {
@@ -119,21 +116,22 @@
             margin-top: 15px;
         }
 
+        .button-group button {
+            flex: 1;
+            width: 50%;
+        }
         #videoInput {
             background-color: var(--bg-color);
             color: var(--text-color);
+            border: 2px dashed var(--border-color);
             padding: 10px;
-            border-radius: 8px;
-            border: 2px dashed var(--border-color);
-            width: 100%;
-            max-width: 300px;
-            margin: 0px 0px 10px 0px;
-            cursor: pointer;
-            background-color: var(--bg-color);
-            border: 2px dashed var(--border-color);
-            padding: 20px;
             border-radius: 12px;
+            width: -webkit-fill-available;
+            width: -moz-available;
+            cursor: pointer;
             transition: all 0.3s ease;
+            margin: 0 auto 10px;
+            display: block;
         }
 
         #videoInput:hover {
@@ -145,21 +143,20 @@
             display: flex;
             align-items: center;
             gap: 15px;
-            margin: 10px 0;
+            margin: 5px 0;
+            flex-grow: 1;
+        }
+        .time-control label {
+            min-width: 0px;
         }
 
         .time-input {
             width: 80px;
-            padding: 8px;
-            border-radius: 6px;
-            border: 1px solid var(--border-color);
             background-color: var(--bg-color);
             color: var(--text-color);
-            transition: border-color 0.3s ease;
-            background-color: var(--bg-color);
             border: 2px solid var(--border-color);
             border-radius: 8px;
-            padding: 12px;
+            padding: 5px;
             font-size: 0.95em;
             transition: all 0.2s ease;
         }
@@ -171,20 +168,28 @@
         }
 
         select {
+            flex-grow: 1;
             width: 100%;
-            padding: 5px;
-            margin: 1px 0;
-            border-radius: 6px;
-            border: 1px solid var(--border-color);
             background-color: var(--bg-color);
             color: var(--text-color);
-            cursor: pointer;
-            transition: border-color 0.3s ease;
-            background-color: var(--bg-color);
             border: 2px solid var(--border-color);
             border-radius: 8px;
+            padding: 5px 10px;
+            margin: -2px 0;
             font-size: 0.95em;
+            cursor: pointer;
             transition: all 0.2s ease;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23e2e8f0'><path d='M2 4 L6 8 L10 4'/></svg>");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 32px;
+        }
+
+        select::-ms-expand {
+            display: none;
         }
 
         select:hover {
@@ -197,18 +202,26 @@
             outline: none;
         }
 
+        @media not all and (min-resolution:.001dpcm) { 
+            @supports (-webkit-appearance:none) {
+                select {
+                    text-indent: 1px;
+                    text-overflow: '';
+                    line-height: 1.2;
+                    background-color: var(--bg-color);
+                }
+            }
+        }
+
         #convertButton, #downloadButton {
-            padding: 14px 28px;
+            padding: 10px 10px;
             font-weight: 600;
             border-radius: 8px;
             transition: all 0.2s ease;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            font-size: 0.95em;
-            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
-            box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.2);
-            background: var(--success-color);
-            box-shadow: 0 4px 6px -1px rgba(34, 197, 94, 0.2);
+            border: none;
+            color: white;
         }
 
         #convertButton {
@@ -231,88 +244,49 @@
             cursor: not-allowed;
         }
 
-        .progress {
-            margin: 10px 0;
-            padding: 10px;
-            background-color: var(--panel-bg);
-            border-radius: 6px;
-            display: none;
-            color: var(--text-color);
-        }
-
-        /* Custom styling for number input arrows */
-        input[type="number"]::-webkit-inner-spin-button,
-        input[type="number"]::-webkit-outer-spin-button {
-            opacity: 1;
-            background: var(--panel-bg);
-        }
-
-        /* Add animation for the preview */
-        #previewGif {
-            transition: opacity 0.3s ease;
-        }
-
-        /* Add a subtle hover effect to interactive elements */
-        select:hover, .time-input:hover {
-            border-color: var(--primary-color);
-        }
-
-        /* Add new styles for the size indicator */
         .size-indicator {
             position: absolute;
-            top: 10px;
-            right: 20px;
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            display: none;
-            z-index: 2;
-            background: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            color: var(--text-color);
+            top: 59px;
+            left: 30px;
+            background: #3341556b;
+            color: var(--success-color);
             padding: 6px 12px;
             border-radius: 6px;
-            font-size: 0.875em;
+            font-size: 0.75em;
             font-weight: 500;
+            display: none;
+            z-index: 2;
         }
 
         #previewGif {
             width: auto;
             max-width: 100%;
             max-height: 600px;
-            margin: 0;
-            border-radius: 8px;
             display: block;
+            transition: opacity 0.3s ease;
         }
 
-        /* Add new styles for the progress overlay */
         .progress-overlay {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(8px);
             display: none;
             justify-content: center;
             align-items: center;
             z-index: 1000;
-            backdrop-filter: blur(8px);
-            background: rgba(15, 23, 42, 0.8);
         }
 
         .progress-content {
             background: var(--panel-bg);
-            padding: 20px 40px;
-            border-radius: 12px;
-            text-align: center;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            background: var(--panel-bg);
             border: 1px solid var(--border-color);
             border-radius: 16px;
             padding: 32px 48px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
 
         .progress-content p {
@@ -335,15 +309,12 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Remove the old progress style */
-        .progress {
-            display: none;
-        }
-        h3{
-            margin: -10px 0px 10px 0px;
+        h3 {
+            margin: -10px 0 10px 0;
+            border-bottom: 1px solid;
+            border-image: linear-gradient(to right, var(--primary-color) 30%, transparent) 1;
         }
 
-        /* Add responsive design improvements */
         @media (max-width: 768px) {
             .container {
                 grid-template-columns: 1fr;
@@ -364,7 +335,6 @@
             }
         }
 
-        /* Add this after the size-indicator class in the CSS section */
         .file-size-indicator {
             margin-top: 10px;
             font-size: 0.875em;
@@ -373,7 +343,9 @@
         }
 
         .video-controls {
-            margin-top: 10px;
+            margin-top: 15px;
+            display: flex;
+            flex-direction: column;
         }
 
         .timeline-container {
@@ -381,46 +353,76 @@
             height: 20px;
             padding: 4px 0;
             cursor: pointer;
+            overflow: visible;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
         }
 
         .timeline {
             position: relative;
-            height: 4px;
+            height: 6px;
             background: var(--border-color);
             border-radius: 2px;
+            cursor: pointer;
+            transition: height 0.4s;
         }
 
-        .timeline-progress {
-            position: absolute;
-            height: 100%;
-            background: var(--primary-color);
-            width: 0;
-            border-radius: 2px;
+        .timeline:hover {
+            height: 8px;
         }
+        
 
         .timeline-marker {
             position: absolute;
-            width: 12px;
-            height: 12px;
-            background: var(--text-color);
-            border: 2px solid var(--primary-color);
-            border-radius: 50%;
+            width: 8px;
+            height: 16px;
             top: 50%;
             transform: translate(-50%, -50%);
             cursor: grab;
             z-index: 2;
+            font-family: monospace;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--bg-color);
+            font-weight: bold;
+            border: none;
+            border-radius: 0;
+            transition: transform 0.2s;
         }
 
         .timeline-marker:active {
             cursor: grabbing;
         }
 
+        .timeline-marker:hover {
+            transform: translate(-50%, -50%) scale(1.2);
+        }
+
         .start-marker {
-            background: var(--primary-color);
+            background: none;
+        }
+
+        .start-marker::before {
+            content: '[';
+            position: absolute;
+            left: -2px;
+            color: var(--success-color);
+            font-size: 20px;
         }
 
         .end-marker {
-            background: var(--secondary-color);
+            background: none;
+        }
+
+        .end-marker::before {
+            content: ']';
+            position: absolute;
+            right: -2px;
+            color: var(--error-color);
+            font-size: 20px;
         }
 
         .marker-times {
@@ -431,13 +433,103 @@
             color: var(--text-color);
         }
 
-        /* Add hover effect for timeline */
-        .timeline:hover {
-            height: 6px;
+        .duration-time {
+            color: var(--primary-color);
+            font-weight: 500;
         }
 
-        .timeline-marker:hover {
-            transform: translate(-50%, -50%) scale(1.2);
+        .play-pause-btn {
+            margin-top: 10px;
+            padding: 8px 16px;
+            background: var(--primary-color);
+            border: none;
+            border-radius: 6px;
+            color: white;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.2s ease;
+        }
+
+        .play-pause-btn:hover {
+            background: var(--hover-color);
+        }
+
+        .playhead {
+            position: absolute;
+            width: 2px;
+            height: 16px;
+            background: #e2e8f0;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            display: none;
+            z-index: 1;
+        }
+
+        .playhead::after {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            width: 10px;
+            height: 10px;
+            background: #e2e8f0;
+            border-radius: 50%;
+            transform: translateY(-50%);
+        }
+
+        .playback-controls {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .play-pause-btn {
+            flex: 0.9; 
+            margin-top: 0; 
+        }
+
+        .mute-btn {
+            flex: 0.1;  
+            background: var(--panel-bg);
+            border: .5px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-color);
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.2s ease;
+        }
+
+        .mute-btn:hover {
+            background: var(--border-color);
+        }
+        
+        button svg {
+            vertical-align: middle;
+        }
+
+        #convertButton.attention-needed {
+            animation: pulse 2s infinite;
+            background: linear-gradient(to right, var(--primary-color), var(--error-color));
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.2);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 6px 8px -1px rgba(239, 68, 68, 0.3);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.2);
+            }
+        }
+
+        #previewGif {
+            transition: opacity 0.3s ease;
         }
     </style>
 </head>
@@ -449,18 +541,28 @@
             <div class="preview-container">
                 <h3>Original Video</h3>
                 <input type="file" id="videoInput" accept="video/*">
-                <video id="videoPreview" controls style="display: none;"></video>
+                <video id="videoPreview" style="display: none;"></video>
                 <div class="video-controls">
                     <div class="timeline-container">
                         <div class="timeline">
-                            <div class="timeline-progress"></div>
                             <div class="timeline-marker start-marker" title="Start Time"></div>
                             <div class="timeline-marker end-marker" title="End Time"></div>
+                            <div class="playhead"></div>
+                        </div>
+                        <div class="marker-times">
+                            <span class="start-time">0:00</span>
+                            <span class="duration-time"></span>
+                            <span class="end-time">0:00</span>
                         </div>
                     </div>
-                    <div class="marker-times">
-                        <span class="start-time">0:00</span>
-                        <span class="end-time">0:00</span>
+                    <div class="playback-controls">
+                        <button class="play-pause-btn">Play</button>
+                        <button class="mute-btn">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                                <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                            </svg>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -490,12 +592,22 @@
                 </div>
 
                 <div class="setting-group">
+                    <label for="ditherSelect">Dithering</label>
+                    <select id="ditherSelect">
+                        <option value="false">No Dithering</option>
+                        <option value="FloydSteinberg" selected>Floyd-Steinberg</option>
+                        <option value="FalseFloydSteinberg">Light Dithering</option>
+                        <option value="Stucki">Stucki</option>
+                    </select>
+                </div>
+
+                <div class="setting-group">
                     <label>Time Range</label>
                     <div class="time-control">
-                        <label>Start:</label>
-                        <input type="number" id="startTime" class="time-input" value="0" min="0" step="0.1">
-                        <label>End:</label>
-                        <input type="number" id="endTime" class="time-input" value="0" min="0" step="0.1">
+                        <label style="color: var(--success-color)">Start:</label>
+                        <input type="number" id="startTime" class="time-input" value="0.00" min="0" step="0.01" pattern="\d*\.?\d{0,2}">
+                        <label style="color: var(--error-color)">End:</label>
+                        <input type="number" id="endTime" class="time-input" value="0.00" min="0" step="0.01" pattern="\d*\.?\d{0,2}">
                     </div>
                 </div>
 
@@ -522,301 +634,675 @@
         </div>
     </div>
 
-    <!-- Keep your existing scripts -->
     <script>
-        // gif.js 0.2.0 - https://github.com/jnordberg/gif.js
-(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.GIF=f()}})(function(){var define,module,exports;return function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s}({1:[function(require,module,exports){function EventEmitter(){this._events=this._events||{};this._maxListeners=this._maxListeners||undefined}module.exports=EventEmitter;EventEmitter.EventEmitter=EventEmitter;EventEmitter.prototype._events=undefined;EventEmitter.prototype._maxListeners=undefined;EventEmitter.defaultMaxListeners=10;EventEmitter.prototype.setMaxListeners=function(n){if(!isNumber(n)||n<0||isNaN(n))throw TypeError("n must be a positive number");this._maxListeners=n;return this};EventEmitter.prototype.emit=function(type){var er,handler,len,args,i,listeners;if(!this._events)this._events={};if(type==="error"){if(!this._events.error||isObject(this._events.error)&&!this._events.error.length){er=arguments[1];if(er instanceof Error){throw er}else{var err=new Error('Uncaught, unspecified "error" event. ('+er+")");err.context=er;throw err}}}handler=this._events[type];if(isUndefined(handler))return false;if(isFunction(handler)){switch(arguments.length){case 1:handler.call(this);break;case 2:handler.call(this,arguments[1]);break;case 3:handler.call(this,arguments[1],arguments[2]);break;default:args=Array.prototype.slice.call(arguments,1);handler.apply(this,args)}}else if(isObject(handler)){args=Array.prototype.slice.call(arguments,1);listeners=handler.slice();len=listeners.length;for(i=0;i<len;i++)listeners[i].apply(this,args)}return true};EventEmitter.prototype.addListener=function(type,listener){var m;if(!isFunction(listener))throw TypeError("listener must be a function");if(!this._events)this._events={};if(this._events.newListener)this.emit("newListener",type,isFunction(listener.listener)?listener.listener:listener);if(!this._events[type])this._events[type]=listener;else if(isObject(this._events[type]))this._events[type].push(listener);else this._events[type]=[this._events[type],listener];if(isObject(this._events[type])&&!this._events[type].warned){if(!isUndefined(this._maxListeners)){m=this._maxListeners}else{m=EventEmitter.defaultMaxListeners}if(m&&m>0&&this._events[type].length>m){this._events[type].warned=true;console.error("(node) warning: possible EventEmitter memory "+"leak detected. %d listeners added. "+"Use emitter.setMaxListeners() to increase limit.",this._events[type].length);if(typeof console.trace==="function"){console.trace()}}}return this};EventEmitter.prototype.on=EventEmitter.prototype.addListener;EventEmitter.prototype.once=function(type,listener){if(!isFunction(listener))throw TypeError("listener must be a function");var fired=false;function g(){this.removeListener(type,g);if(!fired){fired=true;listener.apply(this,arguments)}}g.listener=listener;this.on(type,g);return this};EventEmitter.prototype.removeListener=function(type,listener){var list,position,length,i;if(!isFunction(listener))throw TypeError("listener must be a function");if(!this._events||!this._events[type])return this;list=this._events[type];length=list.length;position=-1;if(list===listener||isFunction(list.listener)&&list.listener===listener){delete this._events[type];if(this._events.removeListener)this.emit("removeListener",type,listener)}else if(isObject(list)){for(i=length;i-- >0;){if(list[i]===listener||list[i].listener&&list[i].listener===listener){position=i;break}}if(position<0)return this;if(list.length===1){list.length=0;delete this._events[type]}else{list.splice(position,1)}if(this._events.removeListener)this.emit("removeListener",type,listener)}return this};EventEmitter.prototype.removeAllListeners=function(type){var key,listeners;if(!this._events)return this;if(!this._events.removeListener){if(arguments.length===0)this._events={};else if(this._events[type])delete this._events[type];return this}if(arguments.length===0){for(key in this._events){if(key==="removeListener")continue;this.removeAllListeners(key)}this.removeAllListeners("removeListener");this._events={};return this}listeners=this._events[type];if(isFunction(listeners)){this.removeListener(type,listeners)}else if(listeners){while(listeners.length)this.removeListener(type,listeners[listeners.length-1])}delete this._events[type];return this};EventEmitter.prototype.listeners=function(type){var ret;if(this._events){var evlistener=this._events[type];if(isFunction(evlistener))ret=[this._events[type]];else if(evlistener)ret=this._events[type].slice();return ret}return 0};EventEmitter.listenerCount=function(emitter,type){return emitter.listenerCount(type)};function isFunction(arg){return typeof arg==="function"}function isNumber(arg){return typeof arg==="number"}function isObject(arg){return typeof arg==="object"&&arg!==null}function isUndefined(arg){return arg===void 0}},{}],2:[function(require,module,exports){var UA,browser,mode,platform,ua;ua=navigator.userAgent.toLowerCase();platform=navigator.platform.toLowerCase();UA=ua.match(/(opera|ie|firefox|chrome|version)[\s\/:]([\w\d\.]+)?.*?(safari|version[\s\/:]([\w\d\.]+)|$)/)||[null,"unknown",0];mode=UA[1]==="ie"&&document.documentMode;browser={name:UA[1]==="version"?UA[3]:UA[1],version:mode||parseFloat(UA[1]==="opera"&&UA[4]?UA[4]:UA[2]),platform:{name:ua.match(/ip(?:ad|od|hone)/)?"ios":(ua.match(/(?:webos|android)/)||platform.match(/mac|win|linux/)||["other"])[0]}};browser[browser.name]=true;browser[browser.name+parseInt(browser.version,10)]=true;browser.platform[browser.platform.name]=true;module.exports=browser},{}],3:[function(require,module,exports){var EventEmitter,GIF,browser,extend=function(child,parent){for(var key in parent){if(hasProp.call(parent,key))child[key]=parent[key]}function ctor(){this.constructor=child}ctor.prototype=parent.prototype;child.prototype=new ctor;child.__super__=parent.prototype;return child},hasProp={}.hasOwnProperty,indexOf=[].indexOf||function(item){for(var i=0,l=this.length;i<l;i++){if(i in this&&this[i]===item)return i}return-1},slice=[].slice;EventEmitter=require("events").EventEmitter;browser=require("./browser.coffee");GIF=function(superClass){var defaults,frameDefaults;extend(GIF,superClass);defaults={workerScript:"gif.worker.js",workers:2,repeat:0,background:"#fff",quality:10,width:null,height:null,transparent:null,debug:false,dither:false};frameDefaults={delay:500,copy:false};function GIF(options){var base,key,value;this.running=false;this.options={};this.frames=[];this.freeWorkers=[];this.activeWorkers=[];this.setOptions(options);for(key in defaults){value=defaults[key];if((base=this.options)[key]==null){base[key]=value}}}GIF.prototype.setOption=function(key,value){this.options[key]=value;if(this._canvas!=null&&(key==="width"||key==="height")){return this._canvas[key]=value}};GIF.prototype.setOptions=function(options){var key,results,value;results=[];for(key in options){if(!hasProp.call(options,key))continue;value=options[key];results.push(this.setOption(key,value))}return results};GIF.prototype.addFrame=function(image,options){var frame,key;if(options==null){options={}}frame={};frame.transparent=this.options.transparent;for(key in frameDefaults){frame[key]=options[key]||frameDefaults[key]}if(this.options.width==null){this.setOption("width",image.width)}if(this.options.height==null){this.setOption("height",image.height)}if(typeof ImageData!=="undefined"&&ImageData!==null&&image instanceof ImageData){frame.data=image.data}else if(typeof CanvasRenderingContext2D!=="undefined"&&CanvasRenderingContext2D!==null&&image instanceof CanvasRenderingContext2D||typeof WebGLRenderingContext!=="undefined"&&WebGLRenderingContext!==null&&image instanceof WebGLRenderingContext){if(options.copy){frame.data=this.getContextData(image)}else{frame.context=image}}else if(image.childNodes!=null){if(options.copy){frame.data=this.getImageData(image)}else{frame.image=image}}else{throw new Error("Invalid image")}return this.frames.push(frame)};GIF.prototype.render=function(){var i,j,numWorkers,ref;if(this.running){throw new Error("Already running")}if(this.options.width==null||this.options.height==null){throw new Error("Width and height must be set prior to rendering")}this.running=true;this.nextFrame=0;this.finishedFrames=0;this.imageParts=function(){var j,ref,results;results=[];for(i=j=0,ref=this.frames.length;0<=ref?j<ref:j>ref;i=0<=ref?++j:--j){results.push(null)}return results}.call(this);numWorkers=this.spawnWorkers();if(this.options.globalPalette===true){this.renderNextFrame()}else{for(i=j=0,ref=numWorkers;0<=ref?j<ref:j>ref;i=0<=ref?++j:--j){this.renderNextFrame()}}this.emit("start");return this.emit("progress",0)};GIF.prototype.abort=function(){var worker;while(true){worker=this.activeWorkers.shift();if(worker==null){break}this.log("killing active worker");worker.terminate()}this.running=false;return this.emit("abort")};GIF.prototype.spawnWorkers=function(){var j,numWorkers,ref,results;numWorkers=Math.min(this.options.workers,this.frames.length);(function(){results=[];for(var j=ref=this.freeWorkers.length;ref<=numWorkers?j<numWorkers:j>numWorkers;ref<=numWorkers?j++:j--){results.push(j)}return results}).apply(this).forEach(function(_this){return function(i){var worker;_this.log("spawning worker "+i);worker=new Worker(_this.options.workerScript);worker.onmessage=function(event){_this.activeWorkers.splice(_this.activeWorkers.indexOf(worker),1);_this.freeWorkers.push(worker);return _this.frameFinished(event.data)};return _this.freeWorkers.push(worker)}}(this));return numWorkers};GIF.prototype.frameFinished=function(frame){var i,j,ref;this.log("frame "+frame.index+" finished - "+this.activeWorkers.length+" active");this.finishedFrames++;this.emit("progress",this.finishedFrames/this.frames.length);this.imageParts[frame.index]=frame;if(this.options.globalPalette===true){this.options.globalPalette=frame.globalPalette;this.log("global palette analyzed");if(this.frames.length>2){for(i=j=1,ref=this.freeWorkers.length;1<=ref?j<ref:j>ref;i=1<=ref?++j:--j){this.renderNextFrame()}}}if(indexOf.call(this.imageParts,null)>=0){return this.renderNextFrame()}else{return this.finishRendering()}};GIF.prototype.finishRendering=function(){var data,frame,i,image,j,k,l,len,len1,len2,len3,offset,page,ref,ref1,ref2;len=0;ref=this.imageParts;for(j=0,len1=ref.length;j<len1;j++){frame=ref[j];len+=(frame.data.length-1)*frame.pageSize+frame.cursor}len+=frame.pageSize-frame.cursor;this.log("rendering finished - filesize "+Math.round(len/1e3)+"kb");data=new Uint8Array(len);offset=0;ref1=this.imageParts;for(k=0,len2=ref1.length;k<len2;k++){frame=ref1[k];ref2=frame.data;for(i=l=0,len3=ref2.length;l<len3;i=++l){page=ref2[i];data.set(page,offset);if(i===frame.data.length-1){offset+=frame.cursor}else{offset+=frame.pageSize}}}image=new Blob([data],{type:"image/gif"});return this.emit("finished",image,data)};GIF.prototype.renderNextFrame=function(){var frame,task,worker;if(this.freeWorkers.length===0){throw new Error("No free workers")}if(this.nextFrame>=this.frames.length){return}frame=this.frames[this.nextFrame++];worker=this.freeWorkers.shift();task=this.getTask(frame);this.log("starting frame "+(task.index+1)+" of "+this.frames.length);this.activeWorkers.push(worker);return worker.postMessage(task)};GIF.prototype.getContextData=function(ctx){return ctx.getImageData(0,0,this.options.width,this.options.height).data};GIF.prototype.getImageData=function(image){var ctx;if(this._canvas==null){this._canvas=document.createElement("canvas");this._canvas.width=this.options.width;this._canvas.height=this.options.height}ctx=this._canvas.getContext("2d");ctx.setFill=this.options.background;ctx.fillRect(0,0,this.options.width,this.options.height);ctx.drawImage(image,0,0);return this.getContextData(ctx)};GIF.prototype.getTask=function(frame){var index,task;index=this.frames.indexOf(frame);task={index:index,last:index===this.frames.length-1,delay:frame.delay,transparent:frame.transparent,width:this.options.width,height:this.options.height,quality:this.options.quality,dither:this.options.dither,globalPalette:this.options.globalPalette,repeat:this.options.repeat,canTransfer:browser.name==="chrome"};if(frame.data!=null){task.data=frame.data}else if(frame.context!=null){task.data=this.getContextData(frame.context)}else if(frame.image!=null){task.data=this.getImageData(frame.image)}else{throw new Error("Invalid frame")}return task};GIF.prototype.log=function(){var args;args=1<=arguments.length?slice.call(arguments,0):[];if(!this.options.debug){return}return console.log.apply(console,args)};return GIF}(EventEmitter);module.exports=GIF},{"./browser.coffee":2,events:1}]},{},[3])(3)});
-//# sourceMappingURL=gif.js.map
-
-    </script>
-    <script>
-
-document.addEventListener('DOMContentLoaded', function() {
-    const videoInput = document.getElementById('videoInput');
-    const videoPreview = document.getElementById('videoPreview');
-    const convertButton = document.getElementById('convertButton');
-    const progressOverlay = document.getElementById('progressOverlay');
-    const previewGif = document.getElementById('previewGif');
-    const downloadButton = document.getElementById('downloadButton');
-    
-    // Settings elements
-    const fpsSelect = document.getElementById('fpsSelect');
-    const sizeSelect = document.getElementById('sizeSelect');
-    const startTime = document.getElementById('startTime');
-    const endTime = document.getElementById('endTime');
-
-    let currentBlob = null;
-
-    videoInput.addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (file) {
-            const videoUrl = URL.createObjectURL(file);
-            videoPreview.src = videoUrl;
-            videoPreview.style.display = 'block';
-            convertButton.disabled = false;
+    // Main application class
+    class GifConverter {
+        constructor() {
+            this.initializeElements();
+            this.initializeEventListeners();
+            this.loadSavedSettings();
+            this.currentBlob = null;
+            this.originalFileName = '';
+            this.settingsChanged = false;
             
-            // Reset preview and download button
-            previewGif.style.display = 'none';
-            downloadButton.style.display = 'none';
-            
-            videoPreview.onloadedmetadata = () => {
-                endTime.value = videoPreview.duration.toFixed(1);
-                endTime.max = videoPreview.duration;
-                startTime.max = videoPreview.duration;
+            // Add resize handler
+            this.resizeHandler = this.handleResize.bind(this);
+            window.addEventListener('resize', this.resizeHandler);
+        }
+
+        initializeElements() {
+            this.elements = {
+                videoInput: document.getElementById('videoInput'),
+                videoPreview: document.getElementById('videoPreview'),
+                convertButton: document.getElementById('convertButton'),
+                progressOverlay: document.getElementById('progressOverlay'),
+                previewGif: document.getElementById('previewGif'),
+                downloadButton: document.getElementById('downloadButton'),
+                fpsSelect: document.getElementById('fpsSelect'),
+                sizeSelect: document.getElementById('sizeSelect'),
+                startTime: document.getElementById('startTime'),
+                endTime: document.getElementById('endTime'),
+                fileSizeIndicator: document.getElementById('fileSizeIndicator'),
+                sizeIndicator: document.getElementById('sizeIndicator'),
+                ditherSelect: document.getElementById('ditherSelect')
             };
         }
-    });
 
-    // Validate time inputs
-    startTime.addEventListener('change', () => {
-        if (parseFloat(startTime.value) >= parseFloat(endTime.value)) {
-            startTime.value = (parseFloat(endTime.value) - 0.1).toFixed(1);
+        initializeEventListeners() {
+            this.elements.videoInput.addEventListener('change', this.handleVideoInput.bind(this));
+            this.elements.convertButton.addEventListener('click', this.handleConvert.bind(this));
+            this.elements.downloadButton.addEventListener('click', this.handleDownload.bind(this));
+            this.elements.startTime.addEventListener('change', this.validateTimeInputs.bind(this));
+            this.elements.endTime.addEventListener('change', this.validateTimeInputs.bind(this));
+
+            this.elements.sizeSelect.addEventListener('change', (e) => {
+                this.saveSetting('gifOutputSize', e.target.value);
+            });
+
+            this.elements.fpsSelect.addEventListener('change', (e) => {
+                this.saveSetting('gifFrameRate', e.target.value);
+            });
+
+            this.elements.ditherSelect.addEventListener('change', (e) => {
+                this.saveSetting('gifDither', e.target.value);
+            });
+
+            const settingsInputs = [
+                this.elements.fpsSelect,
+                this.elements.sizeSelect,
+                this.elements.startTime,
+                this.elements.endTime,
+                this.elements.ditherSelect
+            ];
+
+            settingsInputs.forEach(input => {
+                input.addEventListener('change', () => this.markSettingsChanged());
+            });
         }
-    });
 
-    endTime.addEventListener('change', () => {
-        if (parseFloat(endTime.value) <= parseFloat(startTime.value)) {
-            endTime.value = (parseFloat(startTime.value) + 0.1).toFixed(1);
-        }
-    });
-
-    downloadButton.addEventListener('click', () => {
-        if (currentBlob) {
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(currentBlob);
-            a.download = 'converted.gif';
-            a.click();
-        }
-    });
-
-    convertButton.addEventListener('click', function() {
-        const fps = parseInt(fpsSelect.value);
-        const sizePercent = parseFloat(sizeSelect.value);
-        
-        convertToGif({
-            fps: fps,
-            sizePercent: sizePercent,
-            startTime: parseFloat(startTime.value),
-            endTime: parseFloat(endTime.value)
-        });
-    });
-
-    function convertToGif(settings) {
-        // Worker script content inlined
-        const workerScript = `
-            // gif.worker.js 0.2.0 - https://github.com/jnordberg/gif.js
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){var NeuQuant=require("./TypedNeuQuant.js");var LZWEncoder=require("./LZWEncoder.js");function ByteArray(){this.page=-1;this.pages=[];this.newPage()}ByteArray.pageSize=4096;ByteArray.charMap={};for(var i=0;i<256;i++)ByteArray.charMap[i]=String.fromCharCode(i);ByteArray.prototype.newPage=function(){this.pages[++this.page]=new Uint8Array(ByteArray.pageSize);this.cursor=0};ByteArray.prototype.getData=function(){var rv="";for(var p=0;p<this.pages.length;p++){for(var i=0;i<ByteArray.pageSize;i++){rv+=ByteArray.charMap[this.pages[p][i]]}}return rv};ByteArray.prototype.writeByte=function(val){if(this.cursor>=ByteArray.pageSize)this.newPage();this.pages[this.page][this.cursor++]=val};ByteArray.prototype.writeUTFBytes=function(string){for(var l=string.length,i=0;i<l;i++)this.writeByte(string.charCodeAt(i))};ByteArray.prototype.writeBytes=function(array,offset,length){for(var l=length||array.length,i=offset||0;i<l;i++)this.writeByte(array[i])};function GIFEncoder(width,height){this.width=~~width;this.height=~~height;this.transparent=null;this.transIndex=0;this.repeat=-1;this.delay=0;this.image=null;this.pixels=null;this.indexedPixels=null;this.colorDepth=null;this.colorTab=null;this.neuQuant=null;this.usedEntry=new Array;this.palSize=7;this.dispose=-1;this.firstFrame=true;this.sample=10;this.dither=false;this.globalPalette=false;this.out=new ByteArray}GIFEncoder.prototype.setDelay=function(milliseconds){this.delay=Math.round(milliseconds/10)};GIFEncoder.prototype.setFrameRate=function(fps){this.delay=Math.round(100/fps)};GIFEncoder.prototype.setDispose=function(disposalCode){if(disposalCode>=0)this.dispose=disposalCode};GIFEncoder.prototype.setRepeat=function(repeat){this.repeat=repeat};GIFEncoder.prototype.setTransparent=function(color){this.transparent=color};GIFEncoder.prototype.addFrame=function(imageData){this.image=imageData;this.colorTab=this.globalPalette&&this.globalPalette.slice?this.globalPalette:null;this.getImagePixels();this.analyzePixels();if(this.globalPalette===true)this.globalPalette=this.colorTab;if(this.firstFrame){this.writeLSD();this.writePalette();if(this.repeat>=0){this.writeNetscapeExt()}}this.writeGraphicCtrlExt();this.writeImageDesc();if(!this.firstFrame&&!this.globalPalette)this.writePalette();this.writePixels();this.firstFrame=false};GIFEncoder.prototype.finish=function(){this.out.writeByte(59)};GIFEncoder.prototype.setQuality=function(quality){if(quality<1)quality=1;this.sample=quality};GIFEncoder.prototype.setDither=function(dither){if(dither===true)dither="FloydSteinberg";this.dither=dither};GIFEncoder.prototype.setGlobalPalette=function(palette){this.globalPalette=palette};GIFEncoder.prototype.getGlobalPalette=function(){return this.globalPalette&&this.globalPalette.slice&&this.globalPalette.slice(0)||this.globalPalette};GIFEncoder.prototype.writeHeader=function(){this.out.writeUTFBytes("GIF89a")};GIFEncoder.prototype.analyzePixels=function(){if(!this.colorTab){this.neuQuant=new NeuQuant(this.pixels,this.sample);this.neuQuant.buildColormap();this.colorTab=this.neuQuant.getColormap()}if(this.dither){this.ditherPixels(this.dither.replace("-serpentine",""),this.dither.match(/-serpentine/)!==null)}else{this.indexPixels()}this.pixels=null;this.colorDepth=8;this.palSize=7;if(this.transparent!==null){this.transIndex=this.findClosest(this.transparent,true)}};GIFEncoder.prototype.indexPixels=function(imgq){var nPix=this.pixels.length/3;this.indexedPixels=new Uint8Array(nPix);var k=0;for(var j=0;j<nPix;j++){var index=this.findClosestRGB(this.pixels[k++]&255,this.pixels[k++]&255,this.pixels[k++]&255);this.usedEntry[index]=true;this.indexedPixels[j]=index}};GIFEncoder.prototype.ditherPixels=function(kernel,serpentine){var kernels={FalseFloydSteinberg:[[3/8,1,0],[3/8,0,1],[2/8,1,1]],FloydSteinberg:[[7/16,1,0],[3/16,-1,1],[5/16,0,1],[1/16,1,1]],Stucki:[[8/42,1,0],[4/42,2,0],[2/42,-2,1],[4/42,-1,1],[8/42,0,1],[4/42,1,1],[2/42,2,1],[1/42,-2,2],[2/42,-1,2],[4/42,0,2],[2/42,1,2],[1/42,2,2]],Atkinson:[[1/8,1,0],[1/8,2,0],[1/8,-1,1],[1/8,0,1],[1/8,1,1],[1/8,0,2]]};if(!kernel||!kernels[kernel]){throw"Unknown dithering kernel: "+kernel}var ds=kernels[kernel];var index=0,height=this.height,width=this.width,data=this.pixels;var direction=serpentine?-1:1;this.indexedPixels=new Uint8Array(this.pixels.length/3);for(var y=0;y<height;y++){if(serpentine)direction=direction*-1;for(var x=direction==1?0:width-1,xend=direction==1?width:0;x!==xend;x+=direction){index=y*width+x;var idx=index*3;var r1=data[idx];var g1=data[idx+1];var b1=data[idx+2];idx=this.findClosestRGB(r1,g1,b1);this.usedEntry[idx]=true;this.indexedPixels[index]=idx;idx*=3;var r2=this.colorTab[idx];var g2=this.colorTab[idx+1];var b2=this.colorTab[idx+2];var er=r1-r2;var eg=g1-g2;var eb=b1-b2;for(var i=direction==1?0:ds.length-1,end=direction==1?ds.length:0;i!==end;i+=direction){var x1=ds[i][1];var y1=ds[i][2];if(x1+x>=0&&x1+x<width&&y1+y>=0&&y1+y<height){var d=ds[i][0];idx=index+x1+y1*width;idx*=3;data[idx]=Math.max(0,Math.min(255,data[idx]+er*d));data[idx+1]=Math.max(0,Math.min(255,data[idx+1]+eg*d));data[idx+2]=Math.max(0,Math.min(255,data[idx+2]+eb*d))}}}}};GIFEncoder.prototype.findClosest=function(c,used){return this.findClosestRGB((c&16711680)>>16,(c&65280)>>8,c&255,used)};GIFEncoder.prototype.findClosestRGB=function(r,g,b,used){if(this.colorTab===null)return-1;if(this.neuQuant&&!used){return this.neuQuant.lookupRGB(r,g,b)}var c=b|g<<8|r<<16;var minpos=0;var dmin=256*256*256;var len=this.colorTab.length;for(var i=0,index=0;i<len;index++){var dr=r-(this.colorTab[i++]&255);var dg=g-(this.colorTab[i++]&255);var db=b-(this.colorTab[i++]&255);var d=dr*dr+dg*dg+db*db;if((!used||this.usedEntry[index])&&d<dmin){dmin=d;minpos=index}}return minpos};GIFEncoder.prototype.getImagePixels=function(){var w=this.width;var h=this.height;this.pixels=new Uint8Array(w*h*3);var data=this.image;var srcPos=0;var count=0;for(var i=0;i<h;i++){for(var j=0;j<w;j++){this.pixels[count++]=data[srcPos++];this.pixels[count++]=data[srcPos++];this.pixels[count++]=data[srcPos++];srcPos++}}};GIFEncoder.prototype.writeGraphicCtrlExt=function(){this.out.writeByte(33);this.out.writeByte(249);this.out.writeByte(4);var transp,disp;if(this.transparent===null){transp=0;disp=0}else{transp=1;disp=2}if(this.dispose>=0){disp=dispose&7}disp<<=2;this.out.writeByte(0|disp|0|transp);this.writeShort(this.delay);this.out.writeByte(this.transIndex);this.out.writeByte(0)};GIFEncoder.prototype.writeImageDesc=function(){this.out.writeByte(44);this.writeShort(0);this.writeShort(0);this.writeShort(this.width);this.writeShort(this.height);if(this.firstFrame||this.globalPalette){this.out.writeByte(0)}else{this.out.writeByte(128|0|0|0|this.palSize)}};GIFEncoder.prototype.writeLSD=function(){this.writeShort(this.width);this.writeShort(this.height);this.out.writeByte(128|112|0|this.palSize);this.out.writeByte(0);this.out.writeByte(0)};GIFEncoder.prototype.writeNetscapeExt=function(){this.out.writeByte(33);this.out.writeByte(255);this.out.writeByte(11);this.out.writeUTFBytes("NETSCAPE2.0");this.out.writeByte(3);this.out.writeByte(1);this.writeShort(this.repeat);this.out.writeByte(0)};GIFEncoder.prototype.writePalette=function(){this.out.writeBytes(this.colorTab);var n=3*256-this.colorTab.length;for(var i=0;i<n;i++)this.out.writeByte(0)};GIFEncoder.prototype.writeShort=function(pValue){this.out.writeByte(pValue&255);this.out.writeByte(pValue>>8&255)};GIFEncoder.prototype.writePixels=function(){var enc=new LZWEncoder(this.width,this.height,this.indexedPixels,this.colorDepth);enc.encode(this.out)};GIFEncoder.prototype.stream=function(){return this.out};module.exports=GIFEncoder},{"./LZWEncoder.js":2,"./TypedNeuQuant.js":3}],2:[function(require,module,exports){var EOF=-1;var BITS=12;var HSIZE=5003;var masks=[0,1,3,7,15,31,63,127,255,511,1023,2047,4095,8191,16383,32767,65535];function LZWEncoder(width,height,pixels,colorDepth){var initCodeSize=Math.max(2,colorDepth);var accum=new Uint8Array(256);var htab=new Int32Array(HSIZE);var codetab=new Int32Array(HSIZE);var cur_accum,cur_bits=0;var a_count;var free_ent=0;var maxcode;var clear_flg=false;var g_init_bits,ClearCode,EOFCode;function char_out(c,outs){accum[a_count++]=c;if(a_count>=254)flush_char(outs)}function cl_block(outs){cl_hash(HSIZE);free_ent=ClearCode+2;clear_flg=true;output(ClearCode,outs)}function cl_hash(hsize){for(var i=0;i<hsize;++i)htab[i]=-1}function compress(init_bits,outs){var fcode,c,i,ent,disp,hsize_reg,hshift;g_init_bits=init_bits;clear_flg=false;n_bits=g_init_bits;maxcode=MAXCODE(n_bits);ClearCode=1<<init_bits-1;EOFCode=ClearCode+1;free_ent=ClearCode+2;a_count=0;ent=nextPixel();hshift=0;for(fcode=HSIZE;fcode<65536;fcode*=2)++hshift;hshift=8-hshift;hsize_reg=HSIZE;cl_hash(hsize_reg);output(ClearCode,outs);outer_loop:while((c=nextPixel())!=EOF){fcode=(c<<BITS)+ent;i=c<<hshift^ent;if(htab[i]===fcode){ent=codetab[i];continue}else if(htab[i]>=0){disp=hsize_reg-i;if(i===0)disp=1;do{if((i-=disp)<0)i+=hsize_reg;if(htab[i]===fcode){ent=codetab[i];continue outer_loop}}while(htab[i]>=0)}output(ent,outs);ent=c;if(free_ent<1<<BITS){codetab[i]=free_ent++;htab[i]=fcode}else{cl_block(outs)}}output(ent,outs);output(EOFCode,outs)}function encode(outs){outs.writeByte(initCodeSize);remaining=width*height;curPixel=0;compress(initCodeSize+1,outs);outs.writeByte(0)}function flush_char(outs){if(a_count>0){outs.writeByte(a_count);outs.writeBytes(accum,0,a_count);a_count=0}}function MAXCODE(n_bits){return(1<<n_bits)-1}function nextPixel(){if(remaining===0)return EOF;--remaining;var pix=pixels[curPixel++];return pix&255}function output(code,outs){cur_accum&=masks[cur_bits];if(cur_bits>0)cur_accum|=code<<cur_bits;else cur_accum=code;cur_bits+=n_bits;while(cur_bits>=8){char_out(cur_accum&255,outs);cur_accum>>=8;cur_bits-=8}if(free_ent>maxcode||clear_flg){if(clear_flg){maxcode=MAXCODE(n_bits=g_init_bits);clear_flg=false}else{++n_bits;if(n_bits==BITS)maxcode=1<<BITS;else maxcode=MAXCODE(n_bits)}}if(code==EOFCode){while(cur_bits>0){char_out(cur_accum&255,outs);cur_accum>>=8;cur_bits-=8}flush_char(outs)}}this.encode=encode}module.exports=LZWEncoder},{}],3:[function(require,module,exports){var ncycles=100;var netsize=256;var maxnetpos=netsize-1;var netbiasshift=4;var intbiasshift=16;var intbias=1<<intbiasshift;var gammashift=10;var gamma=1<<gammashift;var betashift=10;var beta=intbias>>betashift;var betagamma=intbias<<gammashift-betashift;var initrad=netsize>>3;var radiusbiasshift=6;var radiusbias=1<<radiusbiasshift;var initradius=initrad*radiusbias;var radiusdec=30;var alphabiasshift=10;var initalpha=1<<alphabiasshift;var alphadec;var radbiasshift=8;var radbias=1<<radbiasshift;var alpharadbshift=alphabiasshift+radbiasshift;var alpharadbias=1<<alpharadbshift;var prime1=499;var prime2=491;var prime3=487;var prime4=503;var minpicturebytes=3*prime4;function NeuQuant(pixels,samplefac){var network;var netindex;var bias;var freq;var radpower;function init(){network=[];netindex=new Int32Array(256);bias=new Int32Array(netsize);freq=new Int32Array(netsize);radpower=new Int32Array(netsize>>3);var i,v;for(i=0;i<netsize;i++){v=(i<<netbiasshift+8)/netsize;network[i]=new Float64Array([v,v,v,0]);freq[i]=intbias/netsize;bias[i]=0}}function unbiasnet(){for(var i=0;i<netsize;i++){network[i][0]>>=netbiasshift;network[i][1]>>=netbiasshift;network[i][2]>>=netbiasshift;network[i][3]=i}}function altersingle(alpha,i,b,g,r){network[i][0]-=alpha*(network[i][0]-b)/initalpha;network[i][1]-=alpha*(network[i][1]-g)/initalpha;network[i][2]-=alpha*(network[i][2]-r)/initalpha}function alterneigh(radius,i,b,g,r){var lo=Math.abs(i-radius);var hi=Math.min(i+radius,netsize);var j=i+1;var k=i-1;var m=1;var p,a;while(j<hi||k>lo){a=radpower[m++];if(j<hi){p=network[j++];p[0]-=a*(p[0]-b)/alpharadbias;p[1]-=a*(p[1]-g)/alpharadbias;p[2]-=a*(p[2]-r)/alpharadbias}if(k>lo){p=network[k--];p[0]-=a*(p[0]-b)/alpharadbias;p[1]-=a*(p[1]-g)/alpharadbias;p[2]-=a*(p[2]-r)/alpharadbias}}}function contest(b,g,r){var bestd=~(1<<31);var bestbiasd=bestd;var bestpos=-1;var bestbiaspos=bestpos;var i,n,dist,biasdist,betafreq;for(i=0;i<netsize;i++){n=network[i];dist=Math.abs(n[0]-b)+Math.abs(n[1]-g)+Math.abs(n[2]-r);if(dist<bestd){bestd=dist;bestpos=i}biasdist=dist-(bias[i]>>intbiasshift-netbiasshift);if(biasdist<bestbiasd){bestbiasd=biasdist;bestbiaspos=i}betafreq=freq[i]>>betashift;freq[i]-=betafreq;bias[i]+=betafreq<<gammashift}freq[bestpos]+=beta;bias[bestpos]-=betagamma;return bestbiaspos}function inxbuild(){var i,j,p,q,smallpos,smallval,previouscol=0,startpos=0;for(i=0;i<netsize;i++){p=network[i];smallpos=i;smallval=p[1];for(j=i+1;j<netsize;j++){q=network[j];if(q[1]<smallval){smallpos=j;smallval=q[1]}}q=network[smallpos];if(i!=smallpos){j=q[0];q[0]=p[0];p[0]=j;j=q[1];q[1]=p[1];p[1]=j;j=q[2];q[2]=p[2];p[2]=j;j=q[3];q[3]=p[3];p[3]=j}if(smallval!=previouscol){netindex[previouscol]=startpos+i>>1;for(j=previouscol+1;j<smallval;j++)netindex[j]=i;previouscol=smallval;startpos=i}}netindex[previouscol]=startpos+maxnetpos>>1;for(j=previouscol+1;j<256;j++)netindex[j]=maxnetpos}function inxsearch(b,g,r){var a,p,dist;var bestd=1e3;var best=-1;var i=netindex[g];var j=i-1;while(i<netsize||j>=0){if(i<netsize){p=network[i];dist=p[1]-g;if(dist>=bestd)i=netsize;else{i++;if(dist<0)dist=-dist;a=p[0]-b;if(a<0)a=-a;dist+=a;if(dist<bestd){a=p[2]-r;if(a<0)a=-a;dist+=a;if(dist<bestd){bestd=dist;best=p[3]}}}}if(j>=0){p=network[j];dist=g-p[1];if(dist>=bestd)j=-1;else{j--;if(dist<0)dist=-dist;a=p[0]-b;if(a<0)a=-a;dist+=a;if(dist<bestd){a=p[2]-r;if(a<0)a=-a;dist+=a;if(dist<bestd){bestd=dist;best=p[3]}}}}}return best}function learn(){var i;var lengthcount=pixels.length;var alphadec=30+(samplefac-1)/3;var samplepixels=lengthcount/(3*samplefac);var delta=~~(samplepixels/ncycles);var alpha=initalpha;var radius=initradius;var rad=radius>>radiusbiasshift;if(rad<=1)rad=0;for(i=0;i<rad;i++)radpower[i]=alpha*((rad*rad-i*i)*radbias/(rad*rad));var step;if(lengthcount<minpicturebytes){samplefac=1;step=3}else if(lengthcount%prime1!==0){step=3*prime1}else if(lengthcount%prime2!==0){step=3*prime2}else if(lengthcount%prime3!==0){step=3*prime3}else{step=3*prime4}var b,g,r,j;var pix=0;i=0;while(i<samplepixels){b=(pixels[pix]&255)<<netbiasshift;g=(pixels[pix+1]&255)<<netbiasshift;r=(pixels[pix+2]&255)<<netbiasshift;j=contest(b,g,r);altersingle(alpha,j,b,g,r);if(rad!==0)alterneigh(rad,j,b,g,r);pix+=step;if(pix>=lengthcount)pix-=lengthcount;i++;if(delta===0)delta=1;if(i%delta===0){alpha-=alpha/alphadec;radius-=radius/radiusdec;rad=radius>>radiusbiasshift;if(rad<=1)rad=0;for(j=0;j<rad;j++)radpower[j]=alpha*((rad*rad-j*j)*radbias/(rad*rad))}}}function buildColormap(){init();learn();unbiasnet();inxbuild()}this.buildColormap=buildColormap;function getColormap(){var map=[];var index=[];for(var i=0;i<netsize;i++)index[network[i][3]]=i;var k=0;for(var l=0;l<netsize;l++){var j=index[l];map[k++]=network[j][0];map[k++]=network[j][1];map[k++]=network[j][2]}return map}this.getColormap=getColormap;this.lookupRGB=inxsearch}module.exports=NeuQuant},{}],4:[function(require,module,exports){var GIFEncoder,renderFrame;GIFEncoder=require("./GIFEncoder.js");renderFrame=function(frame){var encoder,page,stream,transfer;encoder=new GIFEncoder(frame.width,frame.height);if(frame.index===0){encoder.writeHeader()}else{encoder.firstFrame=false}encoder.setTransparent(frame.transparent);encoder.setRepeat(frame.repeat);encoder.setDelay(frame.delay);encoder.setQuality(frame.quality);encoder.setDither(frame.dither);encoder.setGlobalPalette(frame.globalPalette);encoder.addFrame(frame.data);if(frame.last){encoder.finish()}if(frame.globalPalette===true){frame.globalPalette=encoder.getGlobalPalette()}stream=encoder.stream();frame.data=stream.pages;frame.cursor=stream.cursor;frame.pageSize=stream.constructor.pageSize;if(frame.canTransfer){transfer=function(){var i,len,ref,results;ref=frame.data;results=[];for(i=0,len=ref.length;i<len;i++){page=ref[i];results.push(page.buffer)}return results}();return self.postMessage(frame,transfer)}else{return self.postMessage(frame)}};self.onmessage=function(event){return renderFrame(event.data)}},{"./GIFEncoder.js":1}]},{},[4]);
-//# sourceMappingURL=gif.worker.js.map
-        `;
-
-        const workerBlob = new Blob([workerScript], { type: 'application/javascript' });
-        const workerUrl = URL.createObjectURL(workerBlob);
-
-        const video = videoPreview;
-        
-        // Calculate new dimensions
-        const newWidth = Math.floor(video.videoWidth * settings.sizePercent);
-        const newHeight = Math.floor(video.videoHeight * settings.sizePercent);
-
-        const gif = new GIF({
-            workers: 2,
-            quality: settings.quality,
-            width: newWidth,
-            height: newHeight,
-            workerScript: workerUrl
-        });
-
-        convertButton.disabled = true;
-        progressOverlay.style.display = 'flex';
-        previewGif.style.display = 'none';
-        downloadButton.style.display = 'none';
-
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d', { willReadFrequently: true });
-        canvas.width = newWidth;
-        canvas.height = newHeight;
-
-        // Calculate frame interval based on FPS
-        const frameInterval = 1000 / settings.fps;
-        let currentTime = settings.startTime * 1000;
-        const endTime = settings.endTime * 1000;
-
-        video.currentTime = settings.startTime;
-
-        video.addEventListener('seeked', function captureFrame() {
-            if (currentTime <= endTime) {
-                ctx.drawImage(video, 0, 0, newWidth, newHeight);
-                gif.addFrame(ctx, {copy: true, delay: frameInterval});
-                
-                currentTime += frameInterval;
-                video.currentTime = currentTime / 1000;
-            } else {
-                video.removeEventListener('seeked', captureFrame);
-                
-                gif.on('finished', function(blob) {
-                    currentBlob = blob;
-                    const gifUrl = URL.createObjectURL(blob);
-                    
-                    // Calculate and display file size
-                    const fileSizeIndicator = document.getElementById('fileSizeIndicator');
-                    const fileSizeInMB = blob.size / (1024 * 1024);
-                    const fileSizeInKB = blob.size / 1024;
-                    
-                    if (fileSizeInMB >= 1) {
-                        fileSizeIndicator.textContent = `Estimated file size: ${fileSizeInMB.toFixed(2)} MB`;
-                    } else {
-                        fileSizeIndicator.textContent = `Estimated file size: ${fileSizeInKB.toFixed(2)} KB`;
-                    }
-                    
-                    // Hide size indicator until image loads
-                    const sizeIndicator = document.getElementById('sizeIndicator');
-                    sizeIndicator.style.display = 'none';
-                    
-                    previewGif.onload = function() {
-                        // Maintain aspect ratio while fitting within bounds
-                        const maxWidth = previewGif.parentElement.clientWidth;
-                        const maxHeight = 600;
-                        
-                        const aspectRatio = newWidth / newHeight;
-                        let displayWidth = newWidth;
-                        let displayHeight = newHeight;
-                        
-                        // Scale down if necessary
-                        if (displayWidth > maxWidth) {
-                            displayWidth = maxWidth;
-                            displayHeight = displayWidth / aspectRatio;
-                        }
-                        if (displayHeight > maxHeight) {
-                            displayHeight = maxHeight;
-                            displayWidth = displayHeight * aspectRatio;
-                        }
-                        
-                        previewGif.style.width = `${displayWidth}px`;
-                        previewGif.style.height = `${displayHeight}px`;
-                        
-                        // Show and update size indicator after image loads
-                        sizeIndicator.textContent = `${newWidth}×${newHeight}px`;
-                        sizeIndicator.style.display = 'block';
-                    };
-                    
-                    previewGif.src = gifUrl;
-                    previewGif.style.display = 'block';
-                    downloadButton.style.display = 'block';
-                    convertButton.disabled = false;
-                    progressOverlay.style.display = 'none';
-                });
-
-                gif.render();
+        loadSavedSettings() {
+            // Load Output Size
+            const savedSize = localStorage.getItem('gifOutputSize');
+            if (savedSize) {
+                this.elements.sizeSelect.value = savedSize;
             }
-        });
-    }
-});
 
-    </script>
-    <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const timeline = document.querySelector('.timeline');
-    const progress = document.querySelector('.timeline-progress');
-    const startMarker = document.querySelector('.start-marker');
-    const endMarker = document.querySelector('.end-marker');
-    const startTimeDisplay = document.querySelector('.start-time');
-    const endTimeDisplay = document.querySelector('.end-time');
-    const startTimeInput = document.getElementById('startTime');
-    const endTimeInput = document.getElementById('endTime');
+            // Load Frame Rate
+            const savedFps = localStorage.getItem('gifFrameRate');
+            if (savedFps) {
+                this.elements.fpsSelect.value = savedFps;
+            }
 
-    let isDragging = false;
-    let currentMarker = null;
+            // Load Dithering
+            const savedDither = localStorage.getItem('gifDither');
+            if (savedDither) {
+                this.elements.ditherSelect.value = savedDither;
+            }
+        }
 
-    function formatTime(seconds) {
-        const minutes = Math.floor(seconds / 60);
-        seconds = Math.floor(seconds % 60);
-        return `${minutes}:${seconds.toString().padStart(2, '0')}`;
-    }
+        saveSetting(setting, value) {
+            localStorage.setItem(setting, value);
+        }
 
-    function updateMarkerPosition(marker, time, duration) {
-        const position = (time / duration) * 100;
-        marker.style.left = `${position}%`;
-    }
+        handleVideoInput(e) {
+            const file = e.target.files[0];
+            if (!file) return;
 
-    function updateInputs(marker, time) {
-        if (marker === startMarker) {
-            startTimeInput.value = time.toFixed(1);
-            startTimeDisplay.textContent = formatTime(time);
-        } else {
-            endTimeInput.value = time.toFixed(1);
-            endTimeDisplay.textContent = formatTime(time);
+            this.originalFileName = file.name.replace(/\.[^/.]+$/, '');
+            const videoUrl = URL.createObjectURL(file);
+            
+            this.elements.videoPreview.src = videoUrl;
+            this.elements.videoPreview.style.display = 'block';
+            this.elements.convertButton.disabled = false;
+            this.elements.previewGif.style.display = 'none';
+            this.elements.downloadButton.style.display = 'none';
+
+            this.elements.videoPreview.onloadedmetadata = () => {
+                this.elements.endTime.value = this.elements.videoPreview.duration.toFixed(2);
+                this.elements.endTime.max = Math.ceil(this.elements.videoPreview.duration * 100) / 100;
+                this.elements.startTime.max = Math.ceil(this.elements.videoPreview.duration * 100) / 100;
+            };
+        }
+
+        validateTimeInputs() {
+            const start = parseFloat(this.elements.startTime.value);
+            const end = parseFloat(this.elements.endTime.value);
+            
+            if (start >= end) {
+                this.elements.startTime.value = (end - 0.1).toFixed(1);
+            }
+        }
+
+        handleConvert() {
+            const settings = {
+                fps: parseInt(this.elements.fpsSelect.value),
+                sizePercent: parseFloat(this.elements.sizeSelect.value),
+                startTime: parseFloat(this.elements.startTime.value),
+                endTime: parseFloat(this.elements.endTime.value),
+                dither: this.elements.ditherSelect.value
+            };
+            
+            this.settingsChanged = false;
+            this.elements.convertButton.classList.remove('attention-needed');
+            this.elements.previewGif.style.opacity = '1';
+            this.convertToGif(settings);
+        }
+
+        handleDownload() {
+            if (this.currentBlob) {
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(this.currentBlob);
+                a.download = `${this.originalFileName}.gif`;
+                a.click();
+            }
+        }
+
+        async convertToGif(settings) {
+            const video = this.elements.videoPreview;
+            const newWidth = Math.floor(video.videoWidth * settings.sizePercent);
+            const newHeight = Math.floor(video.videoHeight * settings.sizePercent);
+
+            const gif = new GIF({
+                workers: 2,
+                quality: 10,
+                width: newWidth,
+                height: newHeight,
+                dither: settings.dither === 'false' ? false : settings.dither,
+                workerScript: this.createWorkerScript()
+            });
+
+            this.updateUIForConversion(true);
+
+            try {
+                await this.processFrames(gif, settings, newWidth, newHeight);
+            } catch (error) {
+                console.error('Conversion failed:', error);
+                this.updateUIForConversion(false);
+            }
+        }
+
+        createWorkerScript() {
+            const workerScript = `// gif.worker.js 0.2.0 - https://github.com/jnordberg/gif.js
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){var NeuQuant=require("./TypedNeuQuant.js");var LZWEncoder=require("./LZWEncoder.js");function ByteArray(){this.page=-1;this.pages=[];this.newPage()}ByteArray.pageSize=4096;ByteArray.charMap={};for(var i=0;i<256;i++)ByteArray.charMap[i]=String.fromCharCode(i);ByteArray.prototype.newPage=function(){this.pages[++this.page]=new Uint8Array(ByteArray.pageSize);this.cursor=0};ByteArray.prototype.getData=function(){var rv="";for(var p=0;p<this.pages.length;p++){for(var i=0;i<ByteArray.pageSize;i++){rv+=ByteArray.charMap[this.pages[p][i]]}}return rv};ByteArray.prototype.writeByte=function(val){if(this.cursor>=ByteArray.pageSize)this.newPage();this.pages[this.page][this.cursor++]=val};ByteArray.prototype.writeUTFBytes=function(string){for(var l=string.length,i=0;i<l;i++)this.writeByte(string.charCodeAt(i))};ByteArray.prototype.writeBytes=function(array,offset,length){for(var l=length||array.length,i=offset||0;i<l;i++)this.writeByte(array[i])};function GIFEncoder(width,height){this.width=~~width;this.height=~~height;this.transparent=null;this.transIndex=0;this.repeat=-1;this.delay=0;this.image=null;this.pixels=null;this.indexedPixels=null;this.colorDepth=null;this.colorTab=null;this.neuQuant=null;this.usedEntry=new Array;this.palSize=7;this.dispose=-1;this.firstFrame=true;this.sample=10;this.dither=false;this.globalPalette=false;this.out=new ByteArray}GIFEncoder.prototype.setDelay=function(milliseconds){this.delay=Math.round(milliseconds/10)};GIFEncoder.prototype.setFrameRate=function(fps){this.delay=Math.round(100/fps)};GIFEncoder.prototype.setDispose=function(disposalCode){if(disposalCode>=0)this.dispose=disposalCode};GIFEncoder.prototype.setRepeat=function(repeat){this.repeat=repeat};GIFEncoder.prototype.setTransparent=function(color){this.transparent=color};GIFEncoder.prototype.addFrame=function(imageData){this.image=imageData;this.colorTab=this.globalPalette&&this.globalPalette.slice?this.globalPalette:null;this.getImagePixels();this.analyzePixels();if(this.globalPalette===true)this.globalPalette=this.colorTab;if(this.firstFrame){this.writeLSD();this.writePalette();if(this.repeat>=0){this.writeNetscapeExt()}}this.writeGraphicCtrlExt();this.writeImageDesc();if(!this.firstFrame&&!this.globalPalette)this.writePalette();this.writePixels();this.firstFrame=false};GIFEncoder.prototype.finish=function(){this.out.writeByte(59)};GIFEncoder.prototype.setQuality=function(quality){if(quality<1)quality=1;this.sample=quality};GIFEncoder.prototype.setDither=function(dither){if(dither===true)dither="FloydSteinberg";this.dither=dither};GIFEncoder.prototype.setGlobalPalette=function(palette){this.globalPalette=palette};GIFEncoder.prototype.getGlobalPalette=function(){return this.globalPalette&&this.globalPalette.slice&&this.globalPalette.slice(0)||this.globalPalette};GIFEncoder.prototype.writeHeader=function(){this.out.writeUTFBytes("GIF89a")};GIFEncoder.prototype.analyzePixels=function(){if(!this.colorTab){this.neuQuant=new NeuQuant(this.pixels,this.sample);this.neuQuant.buildColormap();this.colorTab=this.neuQuant.getColormap()}if(this.dither){this.ditherPixels(this.dither.replace("-serpentine",""),this.dither.match(/-serpentine/)!==null)}else{this.indexPixels()}this.pixels=null;this.colorDepth=8;this.palSize=7;if(this.transparent!==null){this.transIndex=this.findClosest(this.transparent,true)}};GIFEncoder.prototype.indexPixels=function(imgq){var nPix=this.pixels.length/3;this.indexedPixels=new Uint8Array(nPix);var k=0;for(var j=0;j<nPix;j++){var index=this.findClosestRGB(this.pixels[k++]&255,this.pixels[k++]&255,this.pixels[k++]&255);this.usedEntry[index]=true;this.indexedPixels[j]=index}};GIFEncoder.prototype.ditherPixels=function(kernel,serpentine){var kernels={FalseFloydSteinberg:[[3/8,1,0],[3/8,0,1],[2/8,1,1]],FloydSteinberg:[[7/16,1,0],[3/16,-1,1],[5/16,0,1],[1/16,1,1]],Stucki:[[8/42,1,0],[4/42,2,0],[2/42,-2,1],[4/42,-1,1],[8/42,0,1],[4/42,1,1],[2/42,2,1],[1/42,-2,2],[2/42,-1,2],[4/42,0,2],[2/42,1,2],[1/42,2,2]],Atkinson:[[1/8,1,0],[1/8,2,0],[1/8,-1,1],[1/8,0,1],[1/8,1,1],[1/8,0,2]]};if(!kernel||!kernels[kernel]){throw"Unknown dithering kernel: "+kernel}var ds=kernels[kernel];var index=0,height=this.height,width=this.width,data=this.pixels;var direction=serpentine?-1:1;this.indexedPixels=new Uint8Array(this.pixels.length/3);for(var y=0;y<height;y++){if(serpentine)direction=direction*-1;for(var x=direction==1?0:width-1,xend=direction==1?width:0;x!==xend;x+=direction){index=y*width+x;var idx=index*3;var r1=data[idx];var g1=data[idx+1];var b1=data[idx+2];idx=this.findClosestRGB(r1,g1,b1);this.usedEntry[idx]=true;this.indexedPixels[index]=idx;idx*=3;var r2=this.colorTab[idx];var g2=this.colorTab[idx+1];var b2=this.colorTab[idx+2];var er=r1-r2;var eg=g1-g2;var eb=b1-b2;for(var i=direction==1?0:ds.length-1,end=direction==1?ds.length:0;i!==end;i+=direction){var x1=ds[i][1];var y1=ds[i][2];if(x1+x>=0&&x1+x<width&&y1+y>=0&&y1+y<height){var d=ds[i][0];idx=index+x1+y1*width;idx*=3;data[idx]=Math.max(0,Math.min(255,data[idx]+er*d));data[idx+1]=Math.max(0,Math.min(255,data[idx+1]+eg*d));data[idx+2]=Math.max(0,Math.min(255,data[idx+2]+eb*d))}}}}};GIFEncoder.prototype.findClosest=function(c,used){return this.findClosestRGB((c&16711680)>>16,(c&65280)>>8,c&255,used)};GIFEncoder.prototype.findClosestRGB=function(r,g,b,used){if(this.colorTab===null)return-1;if(this.neuQuant&&!used){return this.neuQuant.lookupRGB(r,g,b)}var c=b|g<<8|r<<16;var minpos=0;var dmin=256*256*256;var len=this.colorTab.length;for(var i=0,index=0;i<len;index++){var dr=r-(this.colorTab[i++]&255);var dg=g-(this.colorTab[i++]&255);var db=b-(this.colorTab[i++]&255);var d=dr*dr+dg*dg+db*db;if((!used||this.usedEntry[index])&&d<dmin){dmin=d;minpos=index}}return minpos};GIFEncoder.prototype.getImagePixels=function(){var w=this.width;var h=this.height;this.pixels=new Uint8Array(w*h*3);var data=this.image;var srcPos=0;var count=0;for(var i=0;i<h;i++){for(var j=0;j<w;j++){this.pixels[count++]=data[srcPos++];this.pixels[count++]=data[srcPos++];this.pixels[count++]=data[srcPos++];srcPos++}}};GIFEncoder.prototype.writeGraphicCtrlExt=function(){this.out.writeByte(33);this.out.writeByte(249);this.out.writeByte(4);var transp,disp;if(this.transparent===null){transp=0;disp=0}else{transp=1;disp=2}if(this.dispose>=0){disp=dispose&7}disp<<=2;this.out.writeByte(0|disp|0|transp);this.writeShort(this.delay);this.out.writeByte(this.transIndex);this.out.writeByte(0)};GIFEncoder.prototype.writeImageDesc=function(){this.out.writeByte(44);this.writeShort(0);this.writeShort(0);this.writeShort(this.width);this.writeShort(this.height);if(this.firstFrame||this.globalPalette){this.out.writeByte(0)}else{this.out.writeByte(128|0|0|0|this.palSize)}};GIFEncoder.prototype.writeLSD=function(){this.writeShort(this.width);this.writeShort(this.height);this.out.writeByte(128|112|0|this.palSize);this.out.writeByte(0);this.out.writeByte(0)};GIFEncoder.prototype.writeNetscapeExt=function(){this.out.writeByte(33);this.out.writeByte(255);this.out.writeByte(11);this.out.writeUTFBytes("NETSCAPE2.0");this.out.writeByte(3);this.out.writeByte(1);this.writeShort(this.repeat);this.out.writeByte(0)};GIFEncoder.prototype.writePalette=function(){this.out.writeBytes(this.colorTab);var n=3*256-this.colorTab.length;for(var i=0;i<n;i++)this.out.writeByte(0)};GIFEncoder.prototype.writeShort=function(pValue){this.out.writeByte(pValue&255);this.out.writeByte(pValue>>8&255)};GIFEncoder.prototype.writePixels=function(){var enc=new LZWEncoder(this.width,this.height,this.indexedPixels,this.colorDepth);enc.encode(this.out)};GIFEncoder.prototype.stream=function(){return this.out};module.exports=GIFEncoder},{"./LZWEncoder.js":2,"./TypedNeuQuant.js":3}],2:[function(require,module,exports){var EOF=-1;var BITS=12;var HSIZE=5003;var masks=[0,1,3,7,15,31,63,127,255,511,1023,2047,4095,8191,16383,32767,65535];function LZWEncoder(width,height,pixels,colorDepth){var initCodeSize=Math.max(2,colorDepth);var accum=new Uint8Array(256);var htab=new Int32Array(HSIZE);var codetab=new Int32Array(HSIZE);var cur_accum,cur_bits=0;var a_count;var free_ent=0;var maxcode;var clear_flg=false;var g_init_bits,ClearCode,EOFCode;function char_out(c,outs){accum[a_count++]=c;if(a_count>=254)flush_char(outs)}function cl_block(outs){cl_hash(HSIZE);free_ent=ClearCode+2;clear_flg=true;output(ClearCode,outs)}function cl_hash(hsize){for(var i=0;i<hsize;++i)htab[i]=-1}function compress(init_bits,outs){var fcode,c,i,ent,disp,hsize_reg,hshift;g_init_bits=init_bits;clear_flg=false;n_bits=g_init_bits;maxcode=MAXCODE(n_bits);ClearCode=1<<init_bits-1;EOFCode=ClearCode+1;free_ent=ClearCode+2;a_count=0;ent=nextPixel();hshift=0;for(fcode=HSIZE;fcode<65536;fcode*=2)++hshift;hshift=8-hshift;hsize_reg=HSIZE;cl_hash(hsize_reg);output(ClearCode,outs);outer_loop:while((c=nextPixel())!=EOF){fcode=(c<<BITS)+ent;i=c<<hshift^ent;if(htab[i]===fcode){ent=codetab[i];continue}else if(htab[i]>=0){disp=hsize_reg-i;if(i===0)disp=1;do{if((i-=disp)<0)i+=hsize_reg;if(htab[i]===fcode){ent=codetab[i];continue outer_loop}}while(htab[i]>=0)}output(ent,outs);ent=c;if(free_ent<1<<BITS){codetab[i]=free_ent++;htab[i]=fcode}else{cl_block(outs)}}output(ent,outs);output(EOFCode,outs)}function encode(outs){outs.writeByte(initCodeSize);remaining=width*height;curPixel=0;compress(initCodeSize+1,outs);outs.writeByte(0)}function flush_char(outs){if(a_count>0){outs.writeByte(a_count);outs.writeBytes(accum,0,a_count);a_count=0}}function MAXCODE(n_bits){return(1<<n_bits)-1}function nextPixel(){if(remaining===0)return EOF;--remaining;var pix=pixels[curPixel++];return pix&255}function output(code,outs){cur_accum&=masks[cur_bits];if(cur_bits>0)cur_accum|=code<<cur_bits;else cur_accum=code;cur_bits+=n_bits;while(cur_bits>=8){char_out(cur_accum&255,outs);cur_accum>>=8;cur_bits-=8}if(free_ent>maxcode||clear_flg){if(clear_flg){maxcode=MAXCODE(n_bits=g_init_bits);clear_flg=false}else{++n_bits;if(n_bits==BITS)maxcode=1<<BITS;else maxcode=MAXCODE(n_bits)}}if(code==EOFCode){while(cur_bits>0){char_out(cur_accum&255,outs);cur_accum>>=8;cur_bits-=8}flush_char(outs)}}this.encode=encode}module.exports=LZWEncoder},{}],3:[function(require,module,exports){var ncycles=100;var netsize=256;var maxnetpos=netsize-1;var netbiasshift=4;var intbiasshift=16;var intbias=1<<intbiasshift;var gammashift=10;var gamma=1<<gammashift;var betashift=10;var beta=intbias>>betashift;var betagamma=intbias<<gammashift-betashift;var initrad=netsize>>3;var radiusbiasshift=6;var radiusbias=1<<radiusbiasshift;var initradius=initrad*radiusbias;var radiusdec=30;var alphabiasshift=10;var initalpha=1<<alphabiasshift;var alphadec;var radbiasshift=8;var radbias=1<<radbiasshift;var alpharadbshift=alphabiasshift+radbiasshift;var alpharadbias=1<<alpharadbshift;var prime1=499;var prime2=491;var prime3=487;var prime4=503;var minpicturebytes=3*prime4;function NeuQuant(pixels,samplefac){var network;var netindex;var bias;var freq;var radpower;function init(){network=[];netindex=new Int32Array(256);bias=new Int32Array(netsize);freq=new Int32Array(netsize);radpower=new Int32Array(netsize>>3);var i,v;for(i=0;i<netsize;i++){v=(i<<netbiasshift+8)/netsize;network[i]=new Float64Array([v,v,v,0]);freq[i]=intbias/netsize;bias[i]=0}}function unbiasnet(){for(var i=0;i<netsize;i++){network[i][0]>>=netbiasshift;network[i][1]>>=netbiasshift;network[i][2]>>=netbiasshift;network[i][3]=i}}function altersingle(alpha,i,b,g,r){network[i][0]-=alpha*(network[i][0]-b)/initalpha;network[i][1]-=alpha*(network[i][1]-g)/initalpha;network[i][2]-=alpha*(network[i][2]-r)/initalpha}function alterneigh(radius,i,b,g,r){var lo=Math.abs(i-radius);var hi=Math.min(i+radius,netsize);var j=i+1;var k=i-1;var m=1;var p,a;while(j<hi||k>lo){a=radpower[m++];if(j<hi){p=network[j++];p[0]-=a*(p[0]-b)/alpharadbias;p[1]-=a*(p[1]-g)/alpharadbias;p[2]-=a*(p[2]-r)/alpharadbias}if(k>lo){p=network[k--];p[0]-=a*(p[0]-b)/alpharadbias;p[1]-=a*(p[1]-g)/alpharadbias;p[2]-=a*(p[2]-r)/alpharadbias}}}function contest(b,g,r){var bestd=~(1<<31);var bestbiasd=bestd;var bestpos=-1;var bestbiaspos=bestpos;var i,n,dist,biasdist,betafreq;for(i=0;i<netsize;i++){n=network[i];dist=Math.abs(n[0]-b)+Math.abs(n[1]-g)+Math.abs(n[2]-r);if(dist<bestd){bestd=dist;bestpos=i}biasdist=dist-(bias[i]>>intbiasshift-netbiasshift);if(biasdist<bestbiasd){bestbiasd=biasdist;bestbiaspos=i}betafreq=freq[i]>>betashift;freq[i]-=betafreq;bias[i]+=betafreq<<gammashift}freq[bestpos]+=beta;bias[bestpos]-=betagamma;return bestbiaspos}function inxbuild(){var i,j,p,q,smallpos,smallval,previouscol=0,startpos=0;for(i=0;i<netsize;i++){p=network[i];smallpos=i;smallval=p[1];for(j=i+1;j<netsize;j++){q=network[j];if(q[1]<smallval){smallpos=j;smallval=q[1]}}q=network[smallpos];if(i!=smallpos){j=q[0];q[0]=p[0];p[0]=j;j=q[1];q[1]=p[1];p[1]=j;j=q[2];q[2]=p[2];p[2]=j;j=q[3];q[3]=p[3];p[3]=j}if(smallval!=previouscol){netindex[previouscol]=startpos+i>>1;for(j=previouscol+1;j<smallval;j++)netindex[j]=i;previouscol=smallval;startpos=i}}netindex[previouscol]=startpos+maxnetpos>>1;for(j=previouscol+1;j<256;j++)netindex[j]=maxnetpos}function inxsearch(b,g,r){var a,p,dist;var bestd=1e3;var best=-1;var i=netindex[g];var j=i-1;while(i<netsize||j>=0){if(i<netsize){p=network[i];dist=p[1]-g;if(dist>=bestd)i=netsize;else{i++;if(dist<0)dist=-dist;a=p[0]-b;if(a<0)a=-a;dist+=a;if(dist<bestd){a=p[2]-r;if(a<0)a=-a;dist+=a;if(dist<bestd){bestd=dist;best=p[3]}}}}if(j>=0){p=network[j];dist=g-p[1];if(dist>=bestd)j=-1;else{j--;if(dist<0)dist=-dist;a=p[0]-b;if(a<0)a=-a;dist+=a;if(dist<bestd){a=p[2]-r;if(a<0)a=-a;dist+=a;if(dist<bestd){bestd=dist;best=p[3]}}}}}return best}function learn(){var i;var lengthcount=pixels.length;var alphadec=30+(samplefac-1)/3;var samplepixels=lengthcount/(3*samplefac);var delta=~~(samplepixels/ncycles);var alpha=initalpha;var radius=initradius;var rad=radius>>radiusbiasshift;if(rad<=1)rad=0;for(i=0;i<rad;i++)radpower[i]=alpha*((rad*rad-i*i)*radbias/(rad*rad));var step;if(lengthcount<minpicturebytes){samplefac=1;step=3}else if(lengthcount%prime1!==0){step=3*prime1}else if(lengthcount%prime2!==0){step=3*prime2}else if(lengthcount%prime3!==0){step=3*prime3}else{step=3*prime4}var b,g,r,j;var pix=0;i=0;while(i<samplepixels){b=(pixels[pix]&255)<<netbiasshift;g=(pixels[pix+1]&255)<<netbiasshift;r=(pixels[pix+2]&255)<<netbiasshift;j=contest(b,g,r);altersingle(alpha,j,b,g,r);if(rad!==0)alterneigh(rad,j,b,g,r);pix+=step;if(pix>=lengthcount)pix-=lengthcount;i++;if(delta===0)delta=1;if(i%delta===0){alpha-=alpha/alphadec;radius-=radius/radiusdec;rad=radius>>radiusbiasshift;if(rad<=1)rad=0;for(j=0;j<rad;j++)radpower[j]=alpha*((rad*rad-j*j)*radbias/(rad*rad))}}}function buildColormap(){init();learn();unbiasnet();inxbuild()}this.buildColormap=buildColormap;function getColormap(){var map=[];var index=[];for(var i=0;i<netsize;i++)index[network[i][3]]=i;var k=0;for(var l=0;l<netsize;l++){var j=index[l];map[k++]=network[j][0];map[k++]=network[j][1];map[k++]=network[j][2]}return map}this.getColormap=getColormap;this.lookupRGB=inxsearch}module.exports=NeuQuant},{}],4:[function(require,module,exports){var GIFEncoder,renderFrame;GIFEncoder=require("./GIFEncoder.js");renderFrame=function(frame){var encoder,page,stream,transfer;encoder=new GIFEncoder(frame.width,frame.height);if(frame.index===0){encoder.writeHeader()}else{encoder.firstFrame=false}encoder.setTransparent(frame.transparent);encoder.setRepeat(frame.repeat);encoder.setDelay(frame.delay);encoder.setQuality(frame.quality);encoder.setDither(frame.dither);encoder.setGlobalPalette(frame.globalPalette);encoder.addFrame(frame.data);if(frame.last){encoder.finish()}if(frame.globalPalette===true){frame.globalPalette=encoder.getGlobalPalette()}stream=encoder.stream();frame.data=stream.pages;frame.cursor=stream.cursor;frame.pageSize=stream.constructor.pageSize;if(frame.canTransfer){transfer=function(){var i,len,ref,results;ref=frame.data;results=[];for(i=0,len=ref.length;i<len;i++){page=ref[i];results.push(page.buffer)}return results}();return self.postMessage(frame,transfer)}else{return self.postMessage(frame)}};self.onmessage=function(event){return renderFrame(event.data)}},{"./GIFEncoder.js":1}]},{},[4]);
+//# sourceMappingURL=gif.worker.js.map`;
+            const workerBlob = new Blob([workerScript], { type: 'application/javascript' });
+            return URL.createObjectURL(workerBlob);
+        }
+
+        updateUIForConversion(isStarting) {
+            this.elements.convertButton.disabled = isStarting;
+            this.elements.progressOverlay.style.display = isStarting ? 'flex' : 'none';
+            this.elements.previewGif.style.display = 'none';
+            this.elements.downloadButton.style.display = 'none';
+        }
+
+        async processFrames(gif, settings, newWidth, newHeight) {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d', { willReadFrequently: true });
+            canvas.width = newWidth;
+            canvas.height = newHeight;
+
+            const frameInterval = 1000 / settings.fps;
+            let currentTime = settings.startTime * 1000;
+            const endTime = settings.endTime * 1000;
+
+            return new Promise((resolve, reject) => {
+                const captureFrame = () => {
+                    if (currentTime <= endTime) {
+                        ctx.drawImage(this.elements.videoPreview, 0, 0, newWidth, newHeight);
+                        gif.addFrame(ctx, { copy: true, delay: frameInterval });
+                        
+                        currentTime += frameInterval;
+                        this.elements.videoPreview.currentTime = currentTime / 1000;
+                    } else {
+                        this.elements.videoPreview.removeEventListener('seeked', captureFrame);
+                        this.finalizeGif(gif);
+                        resolve();
+                    }
+                };
+
+                this.elements.videoPreview.addEventListener('seeked', captureFrame);
+                this.elements.videoPreview.currentTime = settings.startTime;
+            });
+        }
+
+        finalizeGif(gif) {
+            gif.on('finished', (blob) => {
+                this.currentBlob = blob;
+                this.updatePreview(blob);
+                this.updateUIForConversion(false);
+                this.elements.downloadButton.style.display = 'block';
+            });
+            gif.render();
+        }
+
+        updatePreview(blob) {
+            const gifUrl = URL.createObjectURL(blob);
+            this.updateFileSize(blob);
+            this.setupPreviewImage(gifUrl);
+        }
+
+        updateFileSize(blob) {
+            const fileSizeInMB = blob.size / (1024 * 1024);
+            const fileSizeInKB = blob.size / 1024;
+            
+            this.elements.fileSizeIndicator.textContent = fileSizeInMB >= 1 
+                ? `Estimated file size: ${fileSizeInMB.toFixed(2)} MB`
+                : `Estimated file size: ${fileSizeInKB.toFixed(2)} KB`;
+        }
+
+        setupPreviewImage(gifUrl) {
+            this.elements.sizeIndicator.style.display = 'none';
+            this.elements.previewGif.onload = () => this.handlePreviewLoad();
+            this.elements.previewGif.src = gifUrl;
+            this.elements.previewGif.style.display = 'block';
+        }
+
+        handlePreviewLoad() {
+            this.updatePreviewSize();
+            
+            // Show the size indicator
+            this.elements.sizeIndicator.textContent = 
+                `${this.elements.previewGif.naturalWidth}×${this.elements.previewGif.naturalHeight}px`;
+            this.elements.sizeIndicator.style.display = 'block';
+        }
+
+        updatePreviewSize() {
+            const maxWidth = this.elements.previewGif.parentElement.clientWidth - 48; // Subtract padding
+            const maxHeight = 600;
+            
+            const aspectRatio = this.elements.previewGif.naturalWidth / this.elements.previewGif.naturalHeight;
+            let displayWidth = this.elements.previewGif.naturalWidth;
+            let displayHeight = this.elements.previewGif.naturalHeight;
+            
+            if (displayWidth > maxWidth) {
+                displayWidth = maxWidth;
+                displayHeight = displayWidth / aspectRatio;
+            }
+            if (displayHeight > maxHeight) {
+                displayHeight = maxHeight;
+                displayWidth = displayHeight * aspectRatio;
+            }
+            
+            this.elements.previewGif.removeAttribute('style');
+            this.elements.previewGif.style.display = 'block';
+            this.elements.previewGif.style.width = `${displayWidth}px`;
+            this.elements.previewGif.style.height = `${displayHeight}px`;
+        }
+
+        handleResize() {
+            if (this.elements.previewGif.src) {
+                this.updatePreviewSize();
+            }
+        }
+
+        markSettingsChanged() {
+            this.settingsChanged = true;
+            this.elements.convertButton.classList.add('attention-needed');
         }
     }
 
-    videoPreview.addEventListener('loadedmetadata', function() {
-        // Initialize end marker at the end of the video
-        const duration = videoPreview.duration;
-        endTimeInput.value = duration.toFixed(1);
-        endTimeDisplay.textContent = formatTime(duration);
-        updateMarkerPosition(endMarker, duration, duration);
-        
-        // Initialize start marker at the beginning
-        startTimeInput.value = '0.0';
-        startTimeDisplay.textContent = '0:00';
-        updateMarkerPosition(startMarker, 0, duration);
-    });
+    class TimelineController {
+        constructor(videoPreview) {
+            this.videoPreview = videoPreview;
+            this.initializeElements();
+            this.initializeEventListeners();
+            this.isDragging = false;
+            this.currentMarker = null;
+            this.isPlaying = false;
+            
+            this.loadMuteState();
+            this.updateMuteButtonUI(this.videoPreview.muted);
+        }
 
-    videoPreview.addEventListener('timeupdate', function() {
-        const position = (videoPreview.currentTime / videoPreview.duration) * 100;
-        progress.style.width = `${position}%`;
-    });
+        initializeElements() {
+            this.elements = {
+                timeline: document.querySelector('.timeline'),
+                startMarker: document.querySelector('.start-marker'),
+                endMarker: document.querySelector('.end-marker'),
+                startTimeDisplay: document.querySelector('.start-time'),
+                endTimeDisplay: document.querySelector('.end-time'),
+                startTimeInput: document.getElementById('startTime'),
+                endTimeInput: document.getElementById('endTime'),
+                durationDisplay: document.querySelector('.duration-time'),
+                playPauseBtn: document.querySelector('.play-pause-btn'),
+                playhead: document.querySelector('.playhead'),
+                muteBtn: document.querySelector('.mute-btn')
+            };
+        }
 
-    timeline.addEventListener('mousedown', function(e) {
-        const rect = timeline.getBoundingClientRect();
-        const position = (e.clientX - rect.left) / rect.width;
-        const time = position * videoPreview.duration;
-        videoPreview.currentTime = time;
-    });
+        initializeEventListeners() {
+            this.videoPreview.addEventListener('loadedmetadata', this.handleVideoLoad.bind(this));
+            this.videoPreview.addEventListener('timeupdate', this.handleTimeUpdate.bind(this));
+            this.elements.timeline.addEventListener('mousedown', this.handleTimelineClick.bind(this));
+            
+            [this.elements.startMarker, this.elements.endMarker].forEach(marker => {
+                marker.addEventListener('mousedown', this.handleMarkerDragStart.bind(this));
+            });
 
-    // Marker drag functionality
-    [startMarker, endMarker].forEach(marker => {
-        marker.addEventListener('mousedown', function(e) {
-            isDragging = true;
-            currentMarker = marker;
+            document.addEventListener('mousemove', this.handleMarkerDrag.bind(this));
+            document.addEventListener('mouseup', this.handleMarkerDragEnd.bind(this));
+            
+            this.elements.playPauseBtn.addEventListener('click', this.togglePlayPause.bind(this));
+            this.videoPreview.addEventListener('pause', () => this.updatePlayButton(false));
+            this.videoPreview.addEventListener('play', () => this.updatePlayButton(true));
+            
+            [this.elements.startTimeInput, this.elements.endTimeInput].forEach(input => {
+                input.addEventListener('change', this.handleTimeInputChange.bind(this));
+                input.addEventListener('input', this.handleTimeInputChange.bind(this));
+            });
+            
+            this.videoPreview.addEventListener('playing', () => {
+                this.isPlaying = true;
+                this.updatePlayButton(true);
+            });
+            
+            this.videoPreview.addEventListener('pause', () => {
+                this.isPlaying = false;
+                this.updatePlayButton(false);
+            });
+            
+            this.videoPreview.addEventListener('ended', () => {
+                this.isPlaying = false;
+                this.updatePlayButton(false);
+                this.videoPreview.currentTime = parseFloat(this.elements.startTimeInput.value);
+            });
+
+            this.videoPreview.addEventListener('timeupdate', this.updatePlayhead.bind(this));
+            this.elements.muteBtn.addEventListener('click', this.toggleMute.bind(this));
+        }
+
+        handleVideoLoad() {
+            const duration = this.videoPreview.duration;
+            // Round to 2 decimal places instead of flooring
+            const maxTime = Math.round(duration * 100) / 100;
+            
+            // Set max values for inputs
+            this.elements.endTimeInput.max = maxTime;
+            this.elements.startTimeInput.max = maxTime;
+            
+            // Set initial values
+            this.elements.endTimeInput.value = maxTime.toFixed(2);
+            this.elements.endTimeDisplay.textContent = this.formatTime(maxTime);
+            
+            this.elements.startTimeInput.value = '0.00';
+            this.elements.startTimeDisplay.textContent = '0:00';
+            
+            // Update step attribute to ensure proper decimal handling
+            this.elements.startTimeInput.step = '0.01';
+            this.elements.endTimeInput.step = '0.01';
+            
+            this.updateMarkerPositions();
+            this.updateDurationDisplay();
+            this.setTimelineEnabled(true);
+        }
+
+        formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${minutes}:${secs.toFixed(2).padStart(5, '0')}`;
+        }
+
+        updateMarkerPositions() {
+            const duration = this.videoPreview.duration;
+            const startTime = parseFloat(this.elements.startTimeInput.value);
+            const endTime = parseFloat(this.elements.endTimeInput.value);
+            
+            this.updateMarkerPosition(this.elements.startMarker, startTime, duration);
+            this.updateMarkerPosition(this.elements.endMarker, endTime, duration);
+        }
+
+        updateMarkerPosition(marker, time, duration) {
+            const position = (time / duration) * 100;
+            marker.style.left = `${position}%`;
+        }
+
+        updateDurationDisplay() {
+            const startTime = parseFloat(this.elements.startTimeInput.value);
+            const endTime = parseFloat(this.elements.endTimeInput.value);
+            const duration = endTime - startTime;
+            this.elements.durationDisplay.textContent = `Duration: ${duration.toFixed(1)}s`;
+        }
+
+        handleTimelineClick(e) {
+            if (!this.videoPreview.src) {
+                return;
+            }
+            const rect = this.elements.timeline.getBoundingClientRect();
+            const position = (e.clientX - rect.left) / rect.width;
+            this.videoPreview.currentTime = position * this.videoPreview.duration;
+        }
+
+        handleMarkerDragStart(e) {
+            if (!this.videoPreview.src) {
+                return;
+            }
+            this.isDragging = true;
+            this.currentMarker = e.target;
             e.stopPropagation();
-        });
+            e.preventDefault();
+        }
+
+        handleMarkerDrag(e) {
+            if (!this.isDragging || !this.currentMarker || !this.videoPreview.src) {
+                return;
+            }
+            
+            e.preventDefault();
+            
+            const rect = this.elements.timeline.getBoundingClientRect();
+            let position = (e.clientX - rect.left) / rect.width;
+            position = Math.max(0, Math.min(1, position));
+            
+            const time = position * this.videoPreview.duration;
+            this.updateTimeFromDrag(time);
+            
+            // Force playhead to be visible during drag
+            this.elements.playhead.style.display = 'block';
+            // Update playhead position immediately
+            this.elements.playhead.style.left = `${position * 100}%`;
+        }
+
+        updateTimeFromDrag(time) {
+            const isStartMarker = this.currentMarker === this.elements.startMarker;
+            const otherTime = isStartMarker 
+                ? parseFloat(this.elements.endTimeInput.value)
+                : parseFloat(this.elements.startTimeInput.value);
+
+            if ((isStartMarker && time >= otherTime) || (!isStartMarker && time <= otherTime)) {
+                return;
+            }
+
+            this.updateMarkerPosition(this.currentMarker, time, this.videoPreview.duration);
+            this.updateTimeDisplay(isStartMarker, time);
+            this.videoPreview.currentTime = time;
+            this.updateDurationDisplay();
+        }
+
+        updateTimeDisplay(isStartMarker, time) {
+            const input = isStartMarker ? this.elements.startTimeInput : this.elements.endTimeInput;
+            const display = isStartMarker ? this.elements.startTimeDisplay : this.elements.endTimeDisplay;
+            
+            input.value = time.toFixed(2);
+            display.textContent = this.formatTime(time);
+        }
+
+        handleMarkerDragEnd() {
+            this.isDragging = false;
+            this.currentMarker = null;
+        }
+
+        handleTimeInputChange(e) {
+            const input = e.target;
+            const isStartInput = input === this.elements.startTimeInput;
+            
+            // Parse the input value, defaulting to 0 if invalid
+            let time = parseFloat(input.value) || 0;
+            
+            // Clamp the time value
+            time = this.clampTimeValue(time, isStartInput);
+            
+            // Update the input value
+            input.value = time.toFixed(2);
+            
+            // Update marker position
+            this.updateMarkerPosition(
+                isStartInput ? this.elements.startMarker : this.elements.endMarker,
+                time,
+                this.videoPreview.duration
+            );
+            
+            // Update time display
+            this.updateTimeDisplay(isStartInput, time);
+            this.updateDurationDisplay();
+        }
+
+        clampTimeValue(time, isStartInput) {
+            const videoDuration = this.videoPreview.duration;
+            // Round to 2 decimal places instead of flooring
+            const maxTime = Math.round(videoDuration * 100) / 100;
+            
+            // Ensure time is within valid range
+            time = Math.max(0, Math.min(time, maxTime));
+            
+            if (isStartInput) {
+                const endTime = parseFloat(this.elements.endTimeInput.value);
+                time = Math.min(time, endTime - 0.01);
+            } else {
+                const startTime = parseFloat(this.elements.startTimeInput.value);
+                time = Math.max(time, startTime + 0.01);
+            }
+            
+            return Math.round(time * 100) / 100;
+        }
+
+        async togglePlayPause() {
+            if (!this.videoPreview.src) {
+                return;
+            }
+
+            const startTime = parseFloat(this.elements.startTimeInput.value);
+            
+            try {
+                if (!this.isPlaying) {
+                    this.elements.playPauseBtn.disabled = true;
+                    this.videoPreview.currentTime = startTime;
+                    await this.videoPreview.play();
+                    this.isPlaying = true;
+                    this.elements.playhead.style.display = 'block';
+                } else {
+                    await this.videoPreview.pause();
+                    this.isPlaying = false;
+                    this.elements.playhead.style.display = 'none';
+                }
+            } catch (error) {
+                this.videoPreview.pause();
+                this.isPlaying = false;
+                this.videoPreview.currentTime = startTime;
+                this.elements.playhead.style.display = 'none';
+            } finally {
+                this.elements.playPauseBtn.disabled = false;
+                this.updatePlayButton(this.isPlaying);
+            }
+        }
+
+        updatePlayButton(isPlaying) {
+            this.isPlaying = isPlaying; // Ensure state is in sync
+            this.elements.playPauseBtn.textContent = isPlaying ? 'Pause' : 'Play';
+            this.elements.playPauseBtn.disabled = false;
+        }
+
+        handleTimeUpdate() {
+            const currentTime = this.videoPreview.currentTime;
+            const endTime = parseFloat(this.elements.endTimeInput.value);
+            const startTime = parseFloat(this.elements.startTimeInput.value);
+
+            // Check if video has ended or reached/exceeded endTime
+            if ((currentTime >= endTime || this.videoPreview.ended) && this.isPlaying) {
+                this.videoPreview.currentTime = startTime;
+                
+                this.videoPreview.play().catch(err => {
+                    this.isPlaying = false;
+                    this.updatePlayButton(false);
+                });
+            }
+        }
+
+        setTimelineEnabled(enabled) {
+            const opacity = enabled ? '1' : '0.5';
+            const cursor = enabled ? 'pointer' : 'not-allowed';
+            
+            this.elements.timeline.style.opacity = opacity;
+            this.elements.timeline.style.cursor = cursor;
+            this.elements.startMarker.style.opacity = opacity;
+            this.elements.endMarker.style.opacity = opacity;
+            this.elements.playPauseBtn.disabled = !enabled;
+            this.elements.playhead.style.display = 'none';
+        }
+
+        updatePlayhead() {
+            if (!this.videoPreview.src) return;
+            
+            const duration = this.videoPreview.duration;
+            const currentTime = this.videoPreview.currentTime;
+            const startTime = parseFloat(this.elements.startTimeInput.value);
+            const endTime = parseFloat(this.elements.endTimeInput.value);
+            
+            // Only hide playhead if we're not currently dragging
+            if (!this.isDragging && (currentTime > endTime || currentTime < startTime)) {
+                this.elements.playhead.style.display = 'none';
+                return;
+            }
+            
+            const position = Math.min((currentTime / duration) * 100, (endTime / duration) * 100);
+            
+            this.elements.playhead.style.left = `${position}%`;
+            this.elements.playhead.style.display = 'block';
+        }
+
+        toggleMute() {
+            this.videoPreview.muted = !this.videoPreview.muted;
+            this.saveMuteState(this.videoPreview.muted);
+            this.updateMuteButtonUI(this.videoPreview.muted);
+        }
+
+        loadMuteState() {
+            const isMuted = localStorage.getItem('videoMuted') === 'true';
+            this.videoPreview.muted = isMuted;
+            this.updateMuteButtonUI(isMuted);
+        }
+
+        saveMuteState(isMuted) {
+            localStorage.setItem('videoMuted', isMuted);
+        }
+
+        updateMuteButtonUI(isMuted) {
+            if (isMuted) {
+                this.elements.muteBtn.innerHTML = `
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                        <line x1="23" y1="9" x2="17" y2="15"></line>
+                        <line x1="17" y1="9" x2="23" y2="15"></line>
+                    </svg>`;
+                this.elements.muteBtn.style.borderColor = 'var(--error-color)';
+            } else {
+                this.elements.muteBtn.innerHTML = `
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                        <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                    </svg>`;
+                this.elements.muteBtn.style.borderColor = 'var(--text-color)';
+            }
+        }
+
+        startPlayheadAnimation() {
+            const animate = () => {
+                this.updatePlayhead();
+                this.animationFrameId = requestAnimationFrame(animate);
+            };
+            this.animationFrameId = requestAnimationFrame(animate);
+        }
+
+        stopPlayheadAnimation() {
+            if (this.animationFrameId) {
+                cancelAnimationFrame(this.animationFrameId);
+                this.animationFrameId = null;
+            }
+        }
+    }
+
+    // Initialize the application
+    document.addEventListener('DOMContentLoaded', () => {
+        const converter = new GifConverter();
+        const timeline = new TimelineController(document.getElementById('videoPreview'));
     });
+    
+    </script>
 
-    document.addEventListener('mousemove', function(e) {
-        if (!isDragging || !currentMarker) return;
+    <script>// gif.js 0.2.0 - https://github.com/jnordberg/gif.js
+        (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.GIF=f()}})(function(){var define,module,exports;return function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s}({1:[function(require,module,exports){function EventEmitter(){this._events=this._events||{};this._maxListeners=this._maxListeners||undefined}module.exports=EventEmitter;EventEmitter.EventEmitter=EventEmitter;EventEmitter.prototype._events=undefined;EventEmitter.prototype._maxListeners=undefined;EventEmitter.defaultMaxListeners=10;EventEmitter.prototype.setMaxListeners=function(n){if(!isNumber(n)||n<0||isNaN(n))throw TypeError("n must be a positive number");this._maxListeners=n;return this};EventEmitter.prototype.emit=function(type){var er,handler,len,args,i,listeners;if(!this._events)this._events={};if(type==="error"){if(!this._events.error||isObject(this._events.error)&&!this._events.error.length){er=arguments[1];if(er instanceof Error){throw er}else{var err=new Error('Uncaught, unspecified "error" event. ('+er+")");err.context=er;throw err}}}handler=this._events[type];if(isUndefined(handler))return false;if(isFunction(handler)){switch(arguments.length){case 1:handler.call(this);break;case 2:handler.call(this,arguments[1]);break;case 3:handler.call(this,arguments[1],arguments[2]);break;default:args=Array.prototype.slice.call(arguments,1);handler.apply(this,args)}}else if(isObject(handler)){args=Array.prototype.slice.call(arguments,1);listeners=handler.slice();len=listeners.length;for(i=0;i<len;i++)listeners[i].apply(this,args)}return true};EventEmitter.prototype.addListener=function(type,listener){var m;if(!isFunction(listener))throw TypeError("listener must be a function");if(!this._events)this._events={};if(this._events.newListener)this.emit("newListener",type,isFunction(listener.listener)?listener.listener:listener);if(!this._events[type])this._events[type]=listener;else if(isObject(this._events[type]))this._events[type].push(listener);else this._events[type]=[this._events[type],listener];if(isObject(this._events[type])&&!this._events[type].warned){if(!isUndefined(this._maxListeners)){m=this._maxListeners}else{m=EventEmitter.defaultMaxListeners}if(m&&m>0&&this._events[type].length>m){this._events[type].warned=true;console.error("(node) warning: possible EventEmitter memory "+"leak detected. %d listeners added. "+"Use emitter.setMaxListeners() to increase limit.",this._events[type].length);if(typeof console.trace==="function"){console.trace()}}}return this};EventEmitter.prototype.on=EventEmitter.prototype.addListener;EventEmitter.prototype.once=function(type,listener){if(!isFunction(listener))throw TypeError("listener must be a function");var fired=false;function g(){this.removeListener(type,g);if(!fired){fired=true;listener.apply(this,arguments)}}g.listener=listener;this.on(type,g);return this};EventEmitter.prototype.removeListener=function(type,listener){var list,position,length,i;if(!isFunction(listener))throw TypeError("listener must be a function");if(!this._events||!this._events[type])return this;list=this._events[type];length=list.length;position=-1;if(list===listener||isFunction(list.listener)&&list.listener===listener){delete this._events[type];if(this._events.removeListener)this.emit("removeListener",type,listener)}else if(isObject(list)){for(i=length;i-- >0;){if(list[i]===listener||list[i].listener&&list[i].listener===listener){position=i;break}}if(position<0)return this;if(list.length===1){list.length=0;delete this._events[type]}else{list.splice(position,1)}if(this._events.removeListener)this.emit("removeListener",type,listener)}return this};EventEmitter.prototype.removeAllListeners=function(type){var key,listeners;if(!this._events)return this;if(!this._events.removeListener){if(arguments.length===0)this._events={};else if(this._events[type])delete this._events[type];return this}if(arguments.length===0){for(key in this._events){if(key==="removeListener")continue;this.removeAllListeners(key)}this.removeAllListeners("removeListener");this._events={};return this}listeners=this._events[type];if(isFunction(listeners)){this.removeListener(type,listeners)}else if(listeners){while(listeners.length)this.removeListener(type,listeners[listeners.length-1])}delete this._events[type];return this};EventEmitter.prototype.listeners=function(type){var ret;if(!this._events||!this._events[type])ret=[];else if(isFunction(this._events[type]))ret=[this._events[type]];else ret=this._events[type].slice();return ret};EventEmitter.prototype.listenerCount=function(type){if(this._events){var evlistener=this._events[type];if(isFunction(evlistener))return 1;else if(evlistener)return evlistener.length}return 0};EventEmitter.listenerCount=function(emitter,type){return emitter.listenerCount(type)};function isFunction(arg){return typeof arg==="function"}function isNumber(arg){return typeof arg==="number"}function isObject(arg){return typeof arg==="object"&&arg!==null}function isUndefined(arg){return arg===void 0}},{}],2:[function(require,module,exports){var UA,browser,mode,platform,ua;ua=navigator.userAgent.toLowerCase();platform=navigator.platform.toLowerCase();UA=ua.match(/(opera|ie|firefox|chrome|version)[\s\/:]([\w\d\.]+)?.*?(safari|version[\s\/:]([\w\d\.]+)|$)/)||[null,"unknown",0];mode=UA[1]==="ie"&&document.documentMode;browser={name:UA[1]==="version"?UA[3]:UA[1],version:mode||parseFloat(UA[1]==="opera"&&UA[4]?UA[4]:UA[2]),platform:{name:ua.match(/ip(?:ad|od|hone)/)?"ios":(ua.match(/(?:webos|android)/)||platform.match(/mac|win|linux/)||["other"])[0]}};browser[browser.name]=true;browser[browser.name+parseInt(browser.version,10)]=true;browser.platform[browser.platform.name]=true;module.exports=browser},{}],3:[function(require,module,exports){var EventEmitter,GIF,browser,extend=function(child,parent){for(var key in parent){if(hasProp.call(parent,key))child[key]=parent[key]}function ctor(){this.constructor=child}ctor.prototype=parent.prototype;child.prototype=new ctor;child.__super__=parent.prototype;return child},hasProp={}.hasOwnProperty,indexOf=[].indexOf||function(item){for(var i=0,l=this.length;i<l;i++){if(i in this&&this[i]===item)return i}return-1},slice=[].slice;EventEmitter=require("events").EventEmitter;browser=require("./browser.coffee");GIF=function(superClass){var defaults,frameDefaults;extend(GIF,superClass);defaults={workerScript:"gif.worker.js",workers:2,repeat:0,background:"#fff",quality:10,width:null,height:null,transparent:null,debug:false,dither:false};frameDefaults={delay:500,copy:false};function GIF(options){var base,key,value;this.running=false;this.options={};this.frames=[];this.freeWorkers=[];this.activeWorkers=[];this.setOptions(options);for(key in defaults){value=defaults[key];if((base=this.options)[key]==null){base[key]=value}}}GIF.prototype.setOption=function(key,value){this.options[key]=value;if(this._canvas!=null&&(key==="width"||key==="height")){return this._canvas[key]=value}};GIF.prototype.setOptions=function(options){var key,results,value;results=[];for(key in options){if(!hasProp.call(options,key))continue;value=options[key];results.push(this.setOption(key,value))}return results};GIF.prototype.addFrame=function(image,options){var frame,key;if(options==null){options={}}frame={};frame.transparent=this.options.transparent;for(key in frameDefaults){frame[key]=options[key]||frameDefaults[key]}if(this.options.width==null){this.setOption("width",image.width)}if(this.options.height==null){this.setOption("height",image.height)}if(typeof ImageData!=="undefined"&&ImageData!==null&&image instanceof ImageData){frame.data=image.data}else if(typeof CanvasRenderingContext2D!=="undefined"&&CanvasRenderingContext2D!==null&&image instanceof CanvasRenderingContext2D||typeof WebGLRenderingContext!=="undefined"&&WebGLRenderingContext!==null&&image instanceof WebGLRenderingContext){if(options.copy){frame.data=this.getContextData(image)}else{frame.context=image}}else if(image.childNodes!=null){if(options.copy){frame.data=this.getImageData(image)}else{frame.image=image}}else{throw new Error("Invalid image")}return this.frames.push(frame)};GIF.prototype.render=function(){var i,j,numWorkers,ref;if(this.running){throw new Error("Already running")}if(this.options.width==null||this.options.height==null){throw new Error("Width and height must be set prior to rendering")}this.running=true;this.nextFrame=0;this.finishedFrames=0;this.imageParts=function(){var j,ref,results;results=[];for(i=j=0,ref=this.frames.length;0<=ref?j<ref:j>ref;i=0<=ref?++j:--j){results.push(null)}return results}.call(this);numWorkers=this.spawnWorkers();if(this.options.globalPalette===true){this.renderNextFrame()}else{for(i=j=0,ref=numWorkers;0<=ref?j<ref:j>ref;i=0<=ref?++j:--j){this.renderNextFrame()}}this.emit("start");return this.emit("progress",0)};GIF.prototype.abort=function(){var worker;while(true){worker=this.activeWorkers.shift();if(worker==null){break}this.log("killing active worker");worker.terminate()}this.running=false;return this.emit("abort")};GIF.prototype.spawnWorkers=function(){var j,numWorkers,ref,results;numWorkers=Math.min(this.options.workers,this.frames.length);(function(){results=[];for(var j=ref=this.freeWorkers.length;ref<=numWorkers?j<numWorkers:j>numWorkers;ref<=numWorkers?j++:j--){results.push(j)}return results}).apply(this).forEach(function(_this){return function(i){var worker;_this.log("spawning worker "+i);worker=new Worker(_this.options.workerScript);worker.onmessage=function(event){_this.activeWorkers.splice(_this.activeWorkers.indexOf(worker),1);_this.freeWorkers.push(worker);return _this.frameFinished(event.data)};return _this.freeWorkers.push(worker)}}(this));return numWorkers};GIF.prototype.frameFinished=function(frame){var i,j,ref;this.log("frame "+frame.index+" finished - "+this.activeWorkers.length+" active");this.finishedFrames++;this.emit("progress",this.finishedFrames/this.frames.length);this.imageParts[frame.index]=frame;if(this.options.globalPalette===true){this.options.globalPalette=frame.globalPalette;this.log("global palette analyzed");if(this.frames.length>2){for(i=j=1,ref=this.freeWorkers.length;1<=ref?j<ref:j>ref;i=1<=ref?++j:--j){this.renderNextFrame()}}}if(indexOf.call(this.imageParts,null)>=0){return this.renderNextFrame()}else{return this.finishRendering()}};GIF.prototype.finishRendering=function(){var data,frame,i,image,j,k,l,len,len1,len2,len3,offset,page,ref,ref1,ref2;len=0;ref=this.imageParts;for(j=0,len1=ref.length;j<len1;j++){frame=ref[j];len+=(frame.data.length-1)*frame.pageSize+frame.cursor}len+=frame.pageSize-frame.cursor;this.log("rendering finished - filesize "+Math.round(len/1e3)+"kb");data=new Uint8Array(len);offset=0;ref1=this.imageParts;for(k=0,len2=ref1.length;k<len2;k++){frame=ref1[k];ref2=frame.data;for(i=l=0,len3=ref2.length;l<len3;i=++l){page=ref2[i];data.set(page,offset);if(i===frame.data.length-1){offset+=frame.cursor}else{offset+=frame.pageSize}}}image=new Blob([data],{type:"image/gif"});return this.emit("finished",image,data)};GIF.prototype.renderNextFrame=function(){var frame,task,worker;if(this.freeWorkers.length===0){throw new Error("No free workers")}if(this.nextFrame>=this.frames.length){return}frame=this.frames[this.nextFrame++];worker=this.freeWorkers.shift();task=this.getTask(frame);this.log("starting frame "+(task.index+1)+" of "+this.frames.length);this.activeWorkers.push(worker);return worker.postMessage(task)};GIF.prototype.getContextData=function(ctx){return ctx.getImageData(0,0,this.options.width,this.options.height).data};GIF.prototype.getImageData=function(image){var ctx;if(this._canvas==null){this._canvas=document.createElement("canvas");this._canvas.width=this.options.width;this._canvas.height=this.options.height}ctx=this._canvas.getContext("2d");ctx.setFill=this.options.background;ctx.fillRect(0,0,this.options.width,this.options.height);ctx.drawImage(image,0,0);return this.getContextData(ctx)};GIF.prototype.getTask=function(frame){var index,task;index=this.frames.indexOf(frame);task={index:index,last:index===this.frames.length-1,delay:frame.delay,transparent:frame.transparent,width:this.options.width,height:this.options.height,quality:this.options.quality,dither:this.options.dither,globalPalette:this.options.globalPalette,repeat:this.options.repeat,canTransfer:browser.name==="chrome"};if(frame.data!=null){task.data=frame.data}else if(frame.context!=null){task.data=this.getContextData(frame.context)}else if(frame.image!=null){task.data=this.getImageData(frame.image)}else{throw new Error("Invalid frame")}return task};GIF.prototype.log=function(){var args;args=1<=arguments.length?slice.call(arguments,0):[];if(!this.options.debug){return}return console.log.apply(console,args)};return GIF}(EventEmitter);module.exports=GIF},{"./browser.coffee":2,events:1}]},{},[3])(3)});
+        //# sourceMappingURL=gif.js.map</script>
 
-        const rect = timeline.getBoundingClientRect();
-        let position = (e.clientX - rect.left) / rect.width;
-        position = Math.max(0, Math.min(1, position));
-        
-        const time = position * videoPreview.duration;
 
-        // Ensure start marker can't go past end marker and vice versa
-        if (currentMarker === startMarker && time >= endTimeInput.value) return;
-        if (currentMarker === endMarker && time <= startTimeInput.value) return;
-
-        updateMarkerPosition(currentMarker, time, videoPreview.duration);
-        updateInputs(currentMarker, time);
-        
-        // Update video position while dragging
-        videoPreview.currentTime = time;
-    });
-
-    document.addEventListener('mouseup', function() {
-        isDragging = false;
-        currentMarker = null;
-    });
-
-    // Sync manual input changes with markers
-    [startTimeInput, endTimeInput].forEach(input => {
-        input.addEventListener('change', function() {
-            const marker = input === startTimeInput ? startMarker : endMarker;
-            const time = parseFloat(input.value);
-            updateMarkerPosition(marker, time, videoPreview.duration);
-            updateInputs(marker, time);
-        });
-    });
-});
-</script>
 </body>
 </html>
