@@ -1,4 +1,4 @@
-# [Video To GIF Converter](https://dylansallred.github.io/Video-To-Gif/)
+# [Video To GIF Converter](https://dylansallred.github.io/Video-To-Gif)
 
 A modern, browser-based tool for converting video clips to GIF animations with advanced customization options.
 
