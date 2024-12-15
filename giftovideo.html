@@ -251,17 +251,16 @@
         }
 
         .size-indicator {
-            position: absolute;
-            top: 59px;
-            left: 30px;
+            position: relative;
             background: #3341556b;
-            color: var(--success-color);
+            color: var(--text-color);
             padding: 6px 12px;
             border-radius: 6px;
             font-size: 0.75em;
             font-weight: 500;
             display: none;
-            z-index: 2;
+            margin: 10px 0;
+            text-align: center;
         }
 
         #previewGif {
@@ -347,7 +346,7 @@
             margin-bottom: 5px;
             font-size: 0.875em;
             color: var(--text-color);
-            text-align: right;
+            text-align: center;
         }
 
         .video-controls {
@@ -689,25 +688,21 @@
             outline: none;
         }
 
-        /* Add these styles in the <style> section */
-
-        /* Improve touch targets for mobile */
         @media (max-width: 768px) {
             .timeline-marker {
                 touch-action: none;
             }
 
             .start-marker::before {
-                font-size: 28px; /* Increased from 20px */
+                font-size: 28px;
                 left: -4px;
             }
 
             .end-marker::before {
-                font-size: 28px; /* Increased from 20px */
+                font-size: 28px;
                 right: -4px;
             }
 
-            /* Improve mobile form controls */
             .setting-group {
                 flex-direction: column;
                 align-items: flex-start;
@@ -721,11 +716,10 @@
 
             select, .time-input {
                 width: 100%;
-                padding: 12px;  /* Increased padding for better touch targets */
-                font-size: 16px; /* Prevent iOS zoom on focus */
+                padding: 12px;
+                font-size: 16px;
             }
 
-            /* Improve time controls for mobile */
             .time-control {
                 flex-direction: column;
                 width: 100%;
@@ -751,37 +745,32 @@
                 padding: 16px;
             }
 
-            /* Improve spacing for mobile */
             .setting-group {
                 margin: 10px 0;
             }
 
-            /* Make the timeline easier to interact with on mobile */
             .timeline-container {
-                height: 40px;  /* Increased touch area */
+                height: 40px;
                 padding: 8px 0;
             }
 
             .timeline {
-                height: 8px;  /* Slightly thicker for mobile */
+                height: 8px;
             }
 
             .timeline:hover {
                 height: 10px;
             }
 
-            /* Improve button sizes for mobile */
             .play-pause-btn, .mute-btn, #convertButton, #downloadButton {
                 padding: 12px 16px;
                 font-size: 16px;
             }
 
-            /* Adjust playback controls for mobile */
             .playback-controls {
                 gap: 12px;
             }
 
-            /* Make sure inputs don't zoom on iOS */
             input[type="number"] {
                 font-size: 16px;
             }
@@ -807,6 +796,17 @@
         .progress-content {
             min-width: 300px;
             position: relative;
+        }
+
+        /* Remove the old file-size-indicator styles */
+        .file-size-indicator {
+            display: none;
+        }
+
+        /* Add styles for the dot separator */
+        .indicator-separator {
+            margin: 0 8px;
+            color: var(--primary-color);
         }
     </style>
 </head>
@@ -915,7 +915,6 @@
                             <div class="progress-fill"></div>
                         </div>
                         <p class="progress-details">Processing frame: 0/0</p>
-                        <!-- Add the cancel button -->
                         <button id="cancelConversion" class="cancel-btn">Cancel Conversion</button>
                     </div>
                 </div>
@@ -927,11 +926,9 @@
                 <h3>Converted GIF Preview</h3>
                 <img id="previewGif" alt="">
                 <div class="size-indicator" id="sizeIndicator"></div>
-                <div class="file-size-indicator" id="fileSizeIndicator"></div>
                 <button id="downloadButton" style="display: none;">Download GIF</button>
             </div>
 
-            <!-- Add the new tips container -->
             <div class="tips-container">
                 <h3>Tips for Faster Conversion</h3>
                 <ul class="tips-list">
@@ -1105,6 +1102,7 @@
             this.elements.convertButton.disabled = false;
             this.elements.previewGif.style.display = 'none';
             this.elements.downloadButton.style.display = 'none';
+            this.lastConversionSettings = null; // Reset last settings
 
             this.elements.videoPreview.onloadedmetadata = () => {
                 this.elements.endTime.value = this.elements.videoPreview.duration.toFixed(2);
@@ -1137,6 +1135,7 @@
             this.settingsChanged = false;
             this.elements.convertButton.classList.remove('attention-needed');
             this.elements.previewGif.style.opacity = '1';
+            this.elements.convertButton.disabled = true; // Disable after conversion
             this.convertToGif(settings);
         }
 
@@ -1150,7 +1149,6 @@
         }
 
         async convertToGif(settings) {
-            // If there's an existing conversion, cancel it first
             if (this.currentConversion) {
                 this.cancelConversion();
             }
@@ -1168,7 +1166,6 @@
                 workerScript: this.createWorkerScript()
             });
 
-            // Store the current conversion
             this.currentConversion = gif;
 
             this.updateUIForConversion(true);
@@ -1197,7 +1194,6 @@
             this.elements.downloadButton.style.display = 'none';
 
             if (isStarting) {
-                // Reset progress elements
                 const progressFill = document.querySelector('.progress-fill');
                 const progressDetails = document.querySelector('.progress-details');
                 const progressStatus = document.querySelector('.progress-status');
@@ -1229,7 +1225,6 @@
             const progressStatus = document.querySelector('.progress-status');
 
             return new Promise((resolve, reject) => {
-                // Store the captureFrame function as a property so we can remove it later
                 this.currentCaptureFrame = () => {
                     if (currentTime <= endTime) {
                         ctx.drawImage(this.elements.videoPreview, 0, 0, newWidth, newHeight);
@@ -1256,7 +1251,6 @@
             });
         }
 
-        // Add this new method to clean up video events
         cleanupVideoEvents() {
             if (this.currentCaptureFrame) {
                 this.elements.videoPreview.removeEventListener('seeked', this.currentCaptureFrame);
@@ -1265,15 +1259,13 @@
         }
 
         finalizeGif(gif) {
-            // Add progress handlers for the GIF encoding process
             gif.on('progress', (p) => {
-                if (!this.currentConversion) return; // Skip if cancelled
+                if (!this.currentConversion) return;
                 
                 const progressStatus = document.querySelector('.progress-status');
                 const progressDetails = document.querySelector('.progress-details');
                 const progressFill = document.querySelector('.progress-fill');
                 
-                // Convert progress to percentage
                 const percent = Math.round(p * 100);
                 
                 progressStatus.textContent = 'Finalizing GIF... ' + percent + '%';
@@ -1282,7 +1274,7 @@
             });
 
             gif.on('finished', (blob) => {
-                if (!this.currentConversion) return; // Skip if cancelled
+                if (!this.currentConversion) return;
                 
                 const conversionEndTime = performance.now();
                 const conversionTime = ((conversionEndTime - this.conversionStartTime) / 1000).toFixed(2);
@@ -1291,6 +1283,8 @@
                 this.updatePreview(blob, conversionTime);
                 this.updateUIForConversion(false);
                 this.elements.downloadButton.style.display = 'block';
+                this.elements.convertButton.disabled = true; // Ensure button is disabled
+                this.elements.previewGif.style.opacity = '1'; // Ensure preview is fully visible
                 this.currentConversion = null;
             });
 
@@ -1300,6 +1294,7 @@
                 progressStatus.textContent = 'Error: GIF conversion failed';
                 progressStatus.style.color = 'var(--error-color)';
                 this.currentConversion = null;
+                this.elements.convertButton.disabled = false; // Enable button on error
             });
 
             gif.render();
@@ -1307,8 +1302,8 @@
 
         updatePreview(blob, conversionTime) {
             const gifUrl = URL.createObjectURL(blob);
-            this.updateFileSize(blob, conversionTime);
-            this.setupPreviewImage(gifUrl);
+            this.setupPreviewImage(gifUrl, blob, conversionTime);
+            this.elements.convertButton.disabled = true; // Disable when showing preview
         }
 
         updateFileSize(blob, conversionTime) {
@@ -1319,26 +1314,24 @@
                 ? `${fileSizeInMB.toFixed(2)} MB`
                 : `${fileSizeInKB.toFixed(2)} KB`;
             
-            this.elements.fileSizeIndicator.innerHTML = `
-                Estimated file size: ${sizeText}<br>
-                <span style="color: var(--primary-color)">Conversion time: ${conversionTime}s</span>
+            this.elements.sizeIndicator.innerHTML = `
+                <span style="color: var(--success-color)">${this.elements.previewGif.naturalWidth}×${this.elements.previewGif.naturalHeight}px</span>
+                <span class="indicator-separator">•</span>
+                <span style="color: orange">${sizeText}</span>
+                <span class="indicator-separator">•</span>
+                <span>Convert Time: <span style="color: var(--primary-color)">${conversionTime}s</span></span>
             `;
+            this.elements.sizeIndicator.style.display = 'block';
         }
 
-        setupPreviewImage(gifUrl) {
+        setupPreviewImage(gifUrl, blob, conversionTime) {
             this.elements.sizeIndicator.style.display = 'none';
-            this.elements.previewGif.onload = () => this.handlePreviewLoad();
+            this.elements.previewGif.onload = () => {
+                this.updatePreviewSize();
+                this.updateFileSize(blob, conversionTime);
+            };
             this.elements.previewGif.src = gifUrl;
             this.elements.previewGif.style.display = 'block';
-        }
-
-        handlePreviewLoad() {
-            this.updatePreviewSize();
-            
-            // Show the size indicator
-            this.elements.sizeIndicator.textContent = 
-                `${this.elements.previewGif.naturalWidth}×${this.elements.previewGif.naturalHeight}px`;
-            this.elements.sizeIndicator.style.display = 'block';
         }
 
         updatePreviewSize() {
@@ -1372,7 +1365,6 @@
 
         markSettingsChanged() {
             if (!this.lastConversionSettings || !this.elements.previewGif.src) {
-                // No GIF has been generated yet, don't show animation
                 return;
             }
 
@@ -1385,7 +1377,6 @@
                 speed: parseFloat(this.elements.speedSelect.value)
             };
 
-            // Compare current settings with last conversion settings
             const settingsChanged = Object.keys(currentSettings).some(key => 
                 currentSettings[key] !== this.lastConversionSettings[key]
             );
@@ -1393,9 +1384,13 @@
             if (settingsChanged) {
                 this.settingsChanged = true;
                 this.elements.convertButton.classList.add('attention-needed');
+                this.elements.convertButton.disabled = false;
+                this.elements.previewGif.style.opacity = '0.7';
             } else {
                 this.settingsChanged = false;
                 this.elements.convertButton.classList.remove('attention-needed');
+                this.elements.convertButton.disabled = true;
+                this.elements.previewGif.style.opacity = '1';
             }
         }
 
@@ -1403,13 +1398,10 @@
             this.elements.previewOverlay = document.getElementById('previewOverlay');
             this.elements.overlayGif = document.getElementById('overlayGif');
     
-            // Double click on preview to open overlay
             this.elements.previewGif.addEventListener('dblclick', () => this.openPreviewOverlay());
             
-            // Click anywhere in the overlay to close it
             this.elements.previewOverlay.addEventListener('click', () => this.closePreviewOverlay());
             
-            // ESC key to close overlay
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape' && this.elements.previewOverlay.style.display === 'flex') {
                     this.closePreviewOverlay();
@@ -1422,14 +1414,13 @@
                 const gifUrl = URL.createObjectURL(this.currentBlob);
                 this.elements.overlayGif.src = gifUrl;
                 this.elements.previewOverlay.style.display = 'flex';
-                document.body.style.overflow = 'hidden'; // Prevent scrolling when overlay is open
+                document.body.style.overflow = 'hidden';
             }
         }
 
         closePreviewOverlay() {
             this.elements.previewOverlay.style.display = 'none';
-            document.body.style.overflow = ''; // Restore scrolling
-            // Clean up the object URL when closing
+            document.body.style.overflow = '';
             if (this.elements.overlayGif.src) {
                 URL.revokeObjectURL(this.elements.overlayGif.src);
                 this.elements.overlayGif.src = '';
@@ -1455,18 +1446,14 @@
 
         cancelConversion() {
             if (this.currentConversion) {
-                // Clean up video events first
                 this.cleanupVideoEvents();
                 
-                // Reset video playback
                 const startTime = parseFloat(this.elements.startTime.value);
                 this.elements.videoPreview.currentTime = startTime;
                 this.elements.videoPreview.pause();
                 
-                // Abort the current conversion
                 this.currentConversion.abort();
                 
-                // Terminate all workers
                 if (this.currentConversion.freeWorkers) {
                     this.currentConversion.freeWorkers.forEach(worker => worker.terminate());
                 }
@@ -1474,15 +1461,12 @@
                     this.currentConversion.activeWorkers.forEach(worker => worker.terminate());
                 }
                 
-                // Clear the current conversion
                 this.currentConversion = null;
                 
-                // Reset UI elements
                 this.elements.convertButton.disabled = false;
                 this.elements.previewGif.style.display = 'none';
                 this.elements.downloadButton.style.display = 'none';
                 
-                // Show feedback
                 const progressStatus = document.querySelector('.progress-status');
                 const progressFill = document.querySelector('.progress-fill');
                 const progressDetails = document.querySelector('.progress-details');
@@ -1492,7 +1476,6 @@
                 progressFill.style.width = '0%';
                 progressDetails.textContent = '';
                 
-                // Hide the overlay after a short delay
                 setTimeout(() => {
                     this.elements.progressOverlay.style.display = 'none';
                     progressStatus.style.color = '';
@@ -1500,7 +1483,6 @@
                     progressDetails.textContent = 'Processing frame: 0/0';
                 }, 1500);
                 
-                // Reset any other state
                 this.currentBlob = null;
                 this.settingsChanged = false;
                 this.elements.convertButton.classList.remove('attention-needed');
@@ -1580,16 +1562,13 @@
             this.videoPreview.addEventListener('timeupdate', this.updatePlayhead.bind(this));
             this.elements.muteBtn.addEventListener('click', this.toggleMute.bind(this));
             
-            // Add these new event listeners
             this.elements.playhead.addEventListener('mousedown', this.handlePlayheadDragStart.bind(this));
             document.addEventListener('mousemove', this.handlePlayheadDrag.bind(this));
             document.addEventListener('mouseup', this.handlePlayheadDragEnd.bind(this));
 
-            // Add keyboard event listener for arrow keys
             document.addEventListener('keydown', this.handleKeyDown.bind(this));
             document.addEventListener('keyup', this.handleKeyUp.bind(this));
             
-            // Add touch events for markers
             [this.elements.startMarker, this.elements.endMarker].forEach(marker => {
                 marker.addEventListener('touchstart', this.handleMarkerTouchStart.bind(this), { passive: false });
             });
@@ -1600,21 +1579,17 @@
 
         handleVideoLoad() {
             const duration = this.videoPreview.duration;
-            // Round to 2 decimal places instead of flooring
             const maxTime = Math.round(duration * 100) / 100;
             
-            // Set max values for inputs
             this.elements.endTimeInput.max = maxTime;
             this.elements.startTimeInput.max = maxTime;
             
-            // Set initial values
             this.elements.endTimeInput.value = maxTime.toFixed(2);
             this.elements.endTimeDisplay.textContent = this.formatTime(maxTime);
             
             this.elements.startTimeInput.value = '0.00';
             this.elements.startTimeDisplay.textContent = '0:00';
             
-            // Update step attribute to ensure proper decimal handling
             this.elements.startTimeInput.step = '0.01';
             this.elements.endTimeInput.step = '0.01';
             
@@ -1656,7 +1631,12 @@
             }
             const rect = this.elements.timeline.getBoundingClientRect();
             const position = (e.clientX - rect.left) / rect.width;
-            this.videoPreview.currentTime = position * this.videoPreview.duration;
+            const clickTime = position * this.videoPreview.duration;
+            
+            // Always update video time and show playhead where clicked
+            this.videoPreview.currentTime = clickTime;
+            this.elements.playhead.style.display = 'block';
+            this.elements.playhead.style.left = `${position * 100}%`;
         }
 
         handleMarkerDragStart(e) {
@@ -1683,9 +1663,7 @@
             const time = position * this.videoPreview.duration;
             this.updateTimeFromDrag(time);
             
-            // Force playhead to be visible during drag
             this.elements.playhead.style.display = 'block';
-            // Update playhead position immediately
             this.elements.playhead.style.left = `${position * 100}%`;
         }
 
@@ -1722,33 +1700,26 @@
             const input = e.target;
             const isStartInput = input === this.elements.startTimeInput;
             
-            // Parse the input value, defaulting to 0 if invalid
             let time = parseFloat(input.value) || 0;
             
-            // Clamp the time value
             time = this.clampTimeValue(time, isStartInput);
             
-            // Update the input value
             input.value = time.toFixed(2);
             
-            // Update marker position
             this.updateMarkerPosition(
                 isStartInput ? this.elements.startMarker : this.elements.endMarker,
                 time,
                 this.videoPreview.duration
             );
             
-            // Update time display
             this.updateTimeDisplay(isStartInput, time);
             this.updateDurationDisplay();
         }
 
         clampTimeValue(time, isStartInput) {
             const videoDuration = this.videoPreview.duration;
-            // Round to 2 decimal places instead of flooring
             const maxTime = Math.round(videoDuration * 100) / 100;
             
-            // Ensure time is within valid range
             time = Math.max(0, Math.min(time, maxTime));
             
             if (isStartInput) {
@@ -1772,6 +1743,7 @@
             try {
                 if (!this.isPlaying) {
                     this.elements.playPauseBtn.disabled = true;
+                    // Always start playing from the range start time
                     this.videoPreview.currentTime = startTime;
                     await this.videoPreview.play();
                     this.isPlaying = true;
@@ -1779,13 +1751,11 @@
                 } else {
                     await this.videoPreview.pause();
                     this.isPlaying = false;
-                    this.elements.playhead.style.display = 'none';
                 }
             } catch (error) {
                 this.videoPreview.pause();
                 this.isPlaying = false;
                 this.videoPreview.currentTime = startTime;
-                this.elements.playhead.style.display = 'none';
             } finally {
                 this.elements.playPauseBtn.disabled = false;
                 this.updatePlayButton(this.isPlaying);
@@ -1793,7 +1763,7 @@
         }
 
         updatePlayButton(isPlaying) {
-            this.isPlaying = isPlaying; // Ensure state is in sync
+            this.isPlaying = isPlaying;
             this.elements.playPauseBtn.textContent = isPlaying ? 'Pause' : 'Play';
             this.elements.playPauseBtn.disabled = false;
         }
@@ -1803,7 +1773,6 @@
             const endTime = parseFloat(this.elements.endTimeInput.value);
             const startTime = parseFloat(this.elements.startTimeInput.value);
 
-            // Check if video has ended or reached/exceeded endTime
             if ((currentTime >= endTime || this.videoPreview.ended) && this.isPlaying) {
                 this.videoPreview.currentTime = startTime;
                 
@@ -1829,7 +1798,6 @@
         updatePlayhead() {
             if (!this.videoPreview.src) return;
             
-            // Don't update position while scrubbing
             if (this.isScrubbingPlayhead) return;
             
             const duration = this.videoPreview.duration;
@@ -1837,12 +1805,14 @@
             const startTime = parseFloat(this.elements.startTimeInput.value);
             const endTime = parseFloat(this.elements.endTimeInput.value);
             
-            if (!this.isDragging && (currentTime > endTime || currentTime < startTime)) {
+            // Remove the check that was hiding the playhead
+            // Only hide playhead if we're playing and outside the range
+            if (this.isPlaying && (currentTime > endTime || currentTime < startTime)) {
                 this.elements.playhead.style.display = 'none';
                 return;
             }
             
-            const position = Math.min((currentTime / duration) * 100, (endTime / duration) * 100);
+            const position = (currentTime / duration) * 100;
             
             this.elements.playhead.style.left = `${position}%`;
             this.elements.playhead.style.display = 'block';
@@ -1924,16 +1894,32 @@
             const endTime = parseFloat(this.elements.endTimeInput.value);
             const duration = this.videoPreview.duration;
             
-            // Calculate time based on position
             let time = position * duration;
             
-            // Clamp time between start and end markers
-            time = Math.max(startTime, Math.min(endTime, time));
+            // Only adjust ranges if we're moving beyond them and holding Shift
+            if (e.shiftKey) {
+                if (time > endTime) {
+                    // Adjust end time when dragging right with Shift
+                    const newEndTime = Math.min(time, duration);
+                    this.elements.endTimeInput.value = newEndTime.toFixed(2);
+                    this.updateTimeDisplay(false, newEndTime);
+                    this.updateMarkerPosition(this.elements.endMarker, newEndTime, duration);
+                    this.updateDurationDisplay();
+                } else if (time < startTime) {
+                    // Adjust start time when dragging left with Shift
+                    const newStartTime = Math.max(time, 0);
+                    this.elements.startTimeInput.value = newStartTime.toFixed(2);
+                    this.updateTimeDisplay(true, newStartTime);
+                    this.updateMarkerPosition(this.elements.startMarker, newStartTime, duration);
+                    this.updateDurationDisplay();
+                }
+            } else {
+                // Without Shift, constrain playhead within the current range
+                time = Math.max(startTime, Math.min(endTime, time));
+            }
             
-            // Update video time
             this.videoPreview.currentTime = time;
             
-            // Update playhead position
             const playheadPosition = (time / duration) * 100;
             this.elements.playhead.style.left = `${playheadPosition}%`;
         }
@@ -1943,7 +1929,6 @@
             
             this.isScrubbingPlayhead = false;
             
-            // Resume playback if it was playing before
             if (this.wasPlaying) {
                 this.videoPreview.play().catch(() => {
                     this.isPlaying = false;
@@ -1955,12 +1940,11 @@
         handleKeyDown(e) {
             if (!this.videoPreview.src || this.isKeyHeld) return;
             
-            const frameTime = 1 / 30; // Assuming 30fps, adjust frame time accordingly
+            const frameTime = 1 / 30;
             
             if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
-                e.preventDefault(); // Prevent page scrolling
+                e.preventDefault();
                 
-                // Pause video if playing
                 if (this.isPlaying) {
                     this.videoPreview.pause();
                     this.isPlaying = false;
@@ -1968,6 +1952,16 @@
                 }
                 
                 this.isKeyHeld = true;
+                
+                // If current time is outside the range, start from nearest range boundary
+                const startTime = parseFloat(this.elements.startTimeInput.value);
+                const endTime = parseFloat(this.elements.endTimeInput.value);
+                const currentTime = this.videoPreview.currentTime;
+                
+                if (currentTime < startTime || currentTime > endTime) {
+                    this.videoPreview.currentTime = currentTime < startTime ? startTime : endTime;
+                }
+                
                 this.startFrameStep(e.key === 'ArrowLeft' ? -frameTime : frameTime);
             }
         }
@@ -1988,31 +1982,26 @@
                 const endTime = parseFloat(this.elements.endTimeInput.value);
                 let newTime = this.videoPreview.currentTime + timeStep;
                 
-                // Handle looping in both directions
                 if (newTime > endTime) {
                     newTime = startTime;
                 } else if (newTime < startTime) {
                     newTime = endTime;
                 }
                 
-                // Update video time
                 this.videoPreview.currentTime = newTime;
                 
-                // Show playhead during frame stepping
                 this.elements.playhead.style.display = 'block';
                 this.updatePlayhead();
             };
             
-            // Execute immediately for single press
             stepFrame();
             
-            // Use requestAnimationFrame for smoother continuous stepping
             let lastTimestamp = performance.now();
             const animate = (timestamp) => {
                 if (!this.isKeyHeld) return;
                 
                 const deltaTime = timestamp - lastTimestamp;
-                if (deltaTime >= 16) { // Limit to ~60fps (1000ms/60 ≈ 16.67ms)
+                if (deltaTime >= 16) {
                     stepFrame();
                     lastTimestamp = timestamp;
                 }
@@ -2020,12 +2009,11 @@
                 requestAnimationFrame(animate);
             };
             
-            // Start animation after a short delay
             setTimeout(() => {
                 if (this.isKeyHeld) {
                     requestAnimationFrame(animate);
                 }
-            }, 200); // Delay before continuous stepping begins
+            }, 200);
         }
 
         handleMarkerTouchStart(e) {
@@ -2060,14 +2048,12 @@
             const end = parseFloat(this.elements.endTimeInput.value);
             const duration = this.videoPreview.duration;
             
-            // Ensure values are within valid range
             const validStart = Math.max(0, Math.min(start, duration - 0.1));
             const validEnd = Math.max(validStart + 0.1, Math.min(end, duration));
             
             this.elements.startTimeInput.value = validStart.toFixed(2);
             this.elements.endTimeInput.value = validEnd.toFixed(2);
             
-            // Update markers and displays
             this.updateMarkerPositions();
             this.updateTimeDisplay(true, validStart);
             this.updateTimeDisplay(false, validEnd);
