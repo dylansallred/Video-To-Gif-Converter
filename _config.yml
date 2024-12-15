@@ -1,7 +1,7 @@
 # Site settings
 title: Video To GIF Converter
 description: A modern, browser-based tool for converting video clips to GIF animations
-url: https://dylansallred.github.io/Video-To-Gif/
+url: https://dylansallred.github.io/Video-To-Gif-Converter/
 
 # Theme settings
 theme: jekyll-theme-minimal
