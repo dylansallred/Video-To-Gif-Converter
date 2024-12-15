@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <!-- Enhanced meta descriptions -->
     <meta name="description" content="Free online Video to GIF converter. Convert videos to high-quality GIFs with customizable frame rate, size, speed, and dithering options. No upload required - works directly in your browser.">
     <meta name="keywords" content="video to gif, gif converter, gif maker, online gif tool, video converter, free gif maker, browser gif converter">
@@ -1005,6 +1005,22 @@
             font-size: 14px;
             line-height: 1;
             transition: all 0.2s ease;
+            /* Add these properties to prevent zoom */
+            touch-action: manipulation;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Update mobile styles */
+        @media (max-width: 768px) {
+            .time-stepper-btn {
+                padding: 8px 12px;
+                font-size: 16px;
+                min-height: 36px; /* Add minimum touch target size */
+                min-width: 36px;  /* Add minimum touch target size */
+            }
         }
 
         .time-stepper-btn:hover {
