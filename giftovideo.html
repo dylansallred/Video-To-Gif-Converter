@@ -41,7 +41,7 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             align-items: start;
-            max-width: 1400px;
+            max-width: 1100px;
             gap: 10px;
             padding: 5px 10px 10px 10px;
         }
@@ -78,7 +78,7 @@
             padding: 24px;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 
                         0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+
         }
 
         #videoPreview, #previewGif {
@@ -95,7 +95,6 @@
             padding: 24px;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 
                         0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
         .setting-group {
@@ -369,7 +368,7 @@
 
         .timeline {
             position: relative;
-            height: 6px;
+            height: 10px;
             background: var(--border-color);
             border-radius: 2px;
             cursor: pointer;
@@ -377,7 +376,7 @@
         }
 
         .timeline:hover {
-            height: 8px;
+            height: 12px;
         }
         
 
@@ -494,7 +493,7 @@
         .playback-controls {
             display: flex;
             gap: 8px;
-            margin-top: 10px;
+            margin-top: 15px;
         }
 
         .play-pause-btn {
@@ -520,6 +519,10 @@
         
         button svg {
             vertical-align: middle;
+        }
+        
+        button:hover svg {
+            transform: scale(1.1);
         }
 
         #convertButton.attention-needed {
@@ -585,7 +588,7 @@
         }
 
         #previewGif:hover {
-            transform: scale(1.02);
+            transform: scale(1.01);
         }
 
         @media (max-width: 768px) {
@@ -624,22 +627,15 @@
         }
 
         .tips-container {
-            margin-top: 20px;
+            margin-top: 10px;
             background: var(--panel-bg);
             border: 1px solid var(--border-color);
             border-radius: 16px;
-            padding: 20px;
+            padding: 24px;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
 
-        .tips-container h3 {
-            color: var(--text-color);
-            margin: 0 0 15px 0;
-            font-size: 1.1em;
-            border-bottom: 1px solid;
-            border-image: linear-gradient(to right, var(--primary-color) 30%, transparent) 1;
-            padding-bottom: 8px;
-        }
+
 
         .tips-list {
             list-style: none;
@@ -648,13 +644,13 @@
         }
 
         .tips-list li {
-            margin-bottom: 12px;
+            margin-bottom: 3px;
             display: flex;
             align-items: flex-start;
             gap: 10px;
             color: var(--text-color);
             font-size: 0.9em;
-            line-height: 1.4;
+
         }
 
         .tips-list li:last-child {
@@ -664,6 +660,7 @@
         .tip-icon {
             font-size: 1.2em;
             flex-shrink: 0;
+            margin-left: 5px;
         }
 
         .tips-list strong {
@@ -671,143 +668,228 @@
             margin-right: 4px;
         }
 
+
         @media (max-width: 768px) {
             .tips-container {
                 margin-top: 15px;
                 padding: 15px;
             }
 
-            .tips-list li {
-                font-size: 0.85em;
-            }
+            
         }
 
-        /* Add these new rules */
-        button:focus,
-        input[type="file"]:focus {
-            outline: none;
-        }
-
-        @media (max-width: 768px) {
-            .timeline-marker {
-                touch-action: none;
+            button:focus,
+            input[type="file"]:focus {
+                outline: none;
             }
 
-            .start-marker::before {
-                font-size: 28px;
-                left: -4px;
+            @media (max-width: 768px) {
+                .timeline-marker {
+                    touch-action: none;
+                }
+
+                .start-marker::before {
+                    font-size: 28px;
+                    left: -4px;
+                }
+
+                .end-marker::before {
+                    font-size: 28px;
+                    right: -4px;
+                }
+
+                .setting-group {
+                    flex-direction: column;
+                    align-items: flex-start;
+                    gap: 8px;
+                    margin: 16px 0;
+                }
+
+                .setting-group label {
+                    min-width: auto;
+                }
+
+                select, .time-input {
+                    width: 100%;
+                    padding: 12px;
+                    font-size: 16px;
+                }
+
+                .time-control {
+                    flex-direction: column;
+                    width: 100%;
+                    gap: 8px;
+                    align-items: baseline;
+                }
+
+                .time-control label {
+                    width: auto;
+                }
+
+                .time-input {
+                    width: 100%;
+                    box-sizing: border-box;
+                }
+
+                .container {
+                    grid-template-columns: 1fr;
+                    padding: 10px;
+                }
+
+                .preview-container, .settings-panel {
+                    padding: 16px;
+                }
+
+                .setting-group {
+                    margin: 10px 0;
+                }
+
+                .timeline-container {
+                    height: 40px;
+                    padding: 8px 0;
+                }
+
+                .play-pause-btn, .mute-btn, #convertButton, #downloadButton {
+                    padding: 12px 16px;
+                    font-size: 16px;
+                }
+
+                .playback-controls {
+                    gap: 12px;
+                }
+
+                input[type="number"] {
+                    font-size: 16px;
+                }
             }
 
-            .end-marker::before {
-                font-size: 28px;
-                right: -4px;
+            .cancel-btn {
+                margin-top: 15px;
+                padding: 8px 16px;
+                background: var(--panel-bg);
+                border: 1px solid var(--error-color);
+                color: var(--error-color);
+                border-radius: 8px;
+                cursor: pointer;
+                font-weight: 500;
+                transition: all 0.2s ease;
             }
 
-            .setting-group {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 8px;
-                margin: 16px 0;
+            .cancel-btn:hover {
+                background: var(--error-color);
+                color: white;
             }
 
-            .setting-group label {
-                min-width: auto;
+            .progress-content {
+                min-width: 300px;
+                position: relative;
             }
 
-            select, .time-input {
-                width: 100%;
-                padding: 12px;
-                font-size: 16px;
+            .file-size-indicator {
+                display: none;
             }
 
-            .time-control {
-                flex-direction: column;
-                width: 100%;
-                gap: 8px;
-                align-items: baseline;
-            }
-
-            .time-control label {
-                width: auto;
-            }
-
-            .time-input {
-                width: 100%;
-                box-sizing: border-box;
-            }
-
-            .container {
-                grid-template-columns: 1fr;
-                padding: 10px;
-            }
-
-            .preview-container, .settings-panel {
-                padding: 16px;
-            }
-
-            .setting-group {
-                margin: 10px 0;
-            }
-
-            .timeline-container {
-                height: 40px;
-                padding: 8px 0;
-            }
-
-            .timeline {
-                height: 8px;
-            }
-
-            .timeline:hover {
-                height: 10px;
-            }
-
-            .play-pause-btn, .mute-btn, #convertButton, #downloadButton {
-                padding: 12px 16px;
-                font-size: 16px;
-            }
-
-            .playback-controls {
-                gap: 12px;
-            }
-
-            input[type="number"] {
-                font-size: 16px;
-            }
-        }
-
-        .cancel-btn {
-            margin-top: 15px;
-            padding: 8px 16px;
-            background: var(--panel-bg);
-            border: 1px solid var(--error-color);
-            color: var(--error-color);
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.2s ease;
-        }
-
-        .cancel-btn:hover {
-            background: var(--error-color);
-            color: white;
-        }
-
-        .progress-content {
-            min-width: 300px;
-            position: relative;
-        }
-
-        /* Remove the old file-size-indicator styles */
-        .file-size-indicator {
-            display: none;
-        }
-
-        /* Add styles for the dot separator */
         .indicator-separator {
             margin: 0 8px;
             color: var(--primary-color);
         }
+
+        .keyboard-key {
+            display: inline-block;
+            padding: 2px 6px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background: var(--panel-bg);
+            font-family: monospace;
+            font-size: 1.1em;
+            font-weight: bolder;
+            color: var(--text-color);
+            min-width: 12px;
+            text-align: center;
+            box-shadow: 0 1px 1px rgba(0,0,0,0.2);
+            margin-right: 5px;
+        }
+
+
+        .container-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .expand-button {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            cursor: pointer;
+            padding: 4px;
+            opacity: 0.7;
+            transition: opacity 0.2s ease;
+            margin-right: -15px;
+            margin-top: -30px;
+        }
+
+        .expand-button:hover {
+            opacity: 1;
+        }
+
+        /* Base fullscreen container style */
+        .fullscreen-container {
+            grid-column: 1 / -1 !important;
+            width: 100% !important;
+            max-width: none !important;
+            position: relative !important;
+        }
+
+        /* Fullscreen state for both columns */
+        .fullscreen-container.preview-container,
+        .fullscreen-container.settings-panel,
+        .fullscreen-container.tips-container {
+            width: calc(200% - 40px) !important;
+            position: relative !important;
+            margin: 0 !important;
+        }
+
+        /* Left column specific adjustment */
+        .left-column .fullscreen-container.preview-container,
+        .left-column .fullscreen-container.settings-panel,
+        .left-column .fullscreen-container.tips-container {
+            transform: translateX(0%) !important; 
+            margin-right: 0 !important;
+        }
+
+        /* Right column specific adjustment */
+        .right-column .fullscreen-container.preview-container,
+        .right-column .fullscreen-container.settings-panel,
+        .right-column .fullscreen-container.tips-container {
+            transform: translateX(-50.5%) !important;
+            margin-left: 0 !important;
+        }
+
+        @media (max-width: 768px) {
+            .fullscreen-container.preview-container,
+            .fullscreen-container.settings-panel,
+            .fullscreen-container.tips-container {
+                width: 100% !important;
+                transform: none !important;
+                margin: 0 !important;
+            }
+        }
+
+        .hidden-container {
+            display: none !important;
+        }
+
+        h3 {
+            margin: 0;
+            border-bottom: 1px solid;
+            border-image: linear-gradient(to right, var(--primary-color) 30%, transparent) 1;
+            flex-grow: 1;
+        }
+
+
+  
     </style>
 </head>
 <body>
@@ -816,7 +898,14 @@
         
         <div class="left-column">
             <div class="preview-container">
-                <h3>Original Video</h3>
+                <div class="container-header">
+                    <h3>Original Video</h3>
+                    <button class="expand-button" aria-label="Toggle fullscreen">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
+                        </svg>
+                    </button>
+                </div>
                 <input type="file" id="videoInput" accept="video/*">
                 <video id="videoPreview" style="display: none;" playsinline webkit-playsinline></video>
                 <div class="video-controls">
@@ -845,7 +934,14 @@
             </div>
 
             <div class="settings-panel">
-                <h3>GIF Settings</h3>
+                <div class="container-header">
+                    <h3>GIF Settings</h3>
+                    <!-- <button class="expand-button" aria-label="Toggle fullscreen">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
+                        </svg>
+                    </button> -->
+                </div>
                 
                 <div class="setting-group">
                     <label for="fpsSelect">Frame Rate</label>
@@ -923,14 +1019,28 @@
 
         <div class="right-column">
             <div class="preview-container">
-                <h3>Converted GIF Preview</h3>
+                <div class="container-header">
+                    <h3>Converted GIF Preview</h3>
+                    <button class="expand-button" aria-label="Toggle fullscreen">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
+                        </svg>
+                    </button>
+                </div>
                 <img id="previewGif" alt="">
                 <div class="size-indicator" id="sizeIndicator"></div>
                 <button id="downloadButton" style="display: none;">Download GIF</button>
             </div>
 
             <div class="tips-container">
-                <h3>Tips for Faster Conversion</h3>
+                <div class="container-header">
+                    <h3>Tips for Faster Conversion</h3>
+                    <!-- <button class="expand-button" aria-label="Toggle fullscreen">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
+                        </svg>
+                    </button> -->
+                </div>
                 <ul class="tips-list">
                     <li>
                         <span class="tip-icon">
@@ -963,6 +1073,26 @@
                         </span>
                         <strong>Skip Dithering:</strong> Only use when color accuracy is crucial
                     </li>
+                </ul>
+
+                <h3 style="margin-top: 10px;margin-bottom: 10px;">Timeline Shortcuts</h3>
+                <ul class="tips-list">
+                    <li>
+                        <span><span class="keyboard-key">[</span> Set start marker at playhead position</span>
+                    </li>
+                    <li>
+                        <span><span class="keyboard-key">]</span> Set end marker at playhead position</span>
+                    </li>
+                    <li>
+                        <span><span class="keyboard-key">←</span> Step backward frame by frame (hold to continue)</span>
+                    </li>
+                    <li>
+                        <span><span class="keyboard-key">→</span> Step forward frame by frame (hold to continue)</span>
+                    </li>
+                    <li>
+                        <span><span class="keyboard-key">Space</span> Play/pause video</span>
+                    </li>
+                    
                 </ul>
             </div>
         </div>
@@ -1044,19 +1174,34 @@
             const settingsInputs = [
                 this.elements.fpsSelect,
                 this.elements.sizeSelect,
-                this.elements.startTime,
-                this.elements.endTime,
                 this.elements.ditherSelect,
                 this.elements.speedSelect,
             ];
 
+            // Handle regular settings inputs
             settingsInputs.forEach(input => {
-                input.addEventListener('change', () => this.markSettingsChanged());
+                ['change', 'input'].forEach(eventType => {
+                    input.addEventListener(eventType, () => this.markSettingsChanged());
+                });
+            });
+
+            // Handle time inputs separately
+            [this.elements.startTime, this.elements.endTime].forEach(input => {
+                input.addEventListener('timechange', () => this.markSettingsChanged());
             });
 
             this.elements.speedSelect.addEventListener('change', (e) => {
                 this.saveSetting('gifSpeed', e.target.value);
                 this.markSettingsChanged();
+            });
+
+            // Prevent space from triggering buttons
+            document.querySelectorAll('button').forEach(button => {
+                button.addEventListener('keydown', (e) => {
+                    if (e.code === 'Space') {
+                        e.preventDefault();
+                    }
+                });
             });
         }
 
@@ -1212,12 +1357,13 @@
             canvas.height = newHeight;
 
             const speedMultiplier = parseFloat(this.elements.speedSelect.value);
-            const frameInterval = 1000 / (settings.fps * speedMultiplier);
+            const frameInterval = 1000 / settings.fps; // Remove speed from interval calculation
             let currentTime = settings.startTime * 1000;
             const endTime = settings.endTime * 1000;
 
             const duration = endTime - currentTime;
-            const totalFrames = Math.ceil(duration / frameInterval);
+            // Adjust total frames based on speed
+            const totalFrames = Math.ceil((duration / frameInterval) / speedMultiplier);
             let processedFrames = 0;
 
             const progressFill = document.querySelector('.progress-fill');
@@ -1236,6 +1382,7 @@
                         progressDetails.textContent = `Processing frame: ${processedFrames}/${totalFrames}`;
                         progressStatus.textContent = `Converting... ${Math.round(progress)}%`;
                         
+                        // Skip frames based on speed multiplier
                         currentTime += frameInterval * speedMultiplier;
                         this.elements.videoPreview.currentTime = currentTime / 1000;
                     } else {
@@ -1314,10 +1461,18 @@
                 ? `${fileSizeInMB.toFixed(2)} MB`
                 : `${fileSizeInKB.toFixed(2)} KB`;
             
+            // Calculate GIF duration using the timeline's elements
+            const startTime = parseFloat(this.timeline.elements.startTimeInput.value);
+            const endTime = parseFloat(this.timeline.elements.endTimeInput.value);
+            const speedSelect = document.getElementById('speedSelect'); // Get speed directly
+            const duration = ((endTime - startTime) / parseFloat(speedSelect.value)).toFixed(1);
+            
             this.elements.sizeIndicator.innerHTML = `
                 <span style="color: var(--success-color)">${this.elements.previewGif.naturalWidth}×${this.elements.previewGif.naturalHeight}px</span>
                 <span class="indicator-separator">•</span>
                 <span style="color: orange">${sizeText}</span>
+                <span class="indicator-separator">•</span>
+                <span>${duration}s</span>
                 <span class="indicator-separator">•</span>
                 <span>Convert Time: <span style="color: var(--primary-color)">${conversionTime}s</span></span>
             `;
@@ -1385,12 +1540,12 @@
                 this.settingsChanged = true;
                 this.elements.convertButton.classList.add('attention-needed');
                 this.elements.convertButton.disabled = false;
-                this.elements.previewGif.style.opacity = '0.7';
+                
             } else {
                 this.settingsChanged = false;
                 this.elements.convertButton.classList.remove('attention-needed');
                 this.elements.convertButton.disabled = true;
-                this.elements.previewGif.style.opacity = '1';
+               
             }
         }
 
@@ -1488,6 +1643,10 @@
                 this.elements.convertButton.classList.remove('attention-needed');
             }
         }
+
+        setTimeline(timeline) {
+            this.timeline = timeline;
+        }
     }
 
     class TimelineController {
@@ -1575,6 +1734,15 @@
             
             document.addEventListener('touchmove', this.handleMarkerTouchMove.bind(this), { passive: false });
             document.addEventListener('touchend', this.handleMarkerTouchEnd.bind(this));
+
+            // Prevent space from triggering buttons
+            document.querySelectorAll('button').forEach(button => {
+                button.addEventListener('keydown', (e) => {
+                    if (e.code === 'Space') {
+                        e.preventDefault();
+                    }
+                });
+            });
         }
 
         handleVideoLoad() {
@@ -1681,6 +1849,14 @@
             this.updateTimeDisplay(isStartMarker, time);
             this.videoPreview.currentTime = time;
             this.updateDurationDisplay();
+
+            // Dispatch the custom timechange event instead of regular change event
+            const input = isStartMarker ? this.elements.startTimeInput : this.elements.endTimeInput;
+            const customEvent = new CustomEvent('timechange', { 
+                bubbles: true,
+                detail: { time: time }
+            });
+            input.dispatchEvent(customEvent);
         }
 
         updateTimeDisplay(isStartMarker, time) {
@@ -1697,6 +1873,9 @@
         }
 
         handleTimeInputChange(e) {
+            // If this is a programmatic event (from our own dispatchEvent call), ignore it
+            if (e.isTrusted === false) return;
+            
             const input = e.target;
             const isStartInput = input === this.elements.startTimeInput;
             
@@ -1714,6 +1893,13 @@
             
             this.updateTimeDisplay(isStartInput, time);
             this.updateDurationDisplay();
+
+            // Create a custom event that won't trigger the handler again
+            const customEvent = new CustomEvent('timechange', { 
+                bubbles: true,
+                detail: { time: time }
+            });
+            input.dispatchEvent(customEvent);
         }
 
         clampTimeValue(time, isStartInput) {
@@ -1739,12 +1925,16 @@
             }
 
             const startTime = parseFloat(this.elements.startTimeInput.value);
+            const endTime = parseFloat(this.elements.endTimeInput.value);
+            const currentTime = this.videoPreview.currentTime;
             
             try {
                 if (!this.isPlaying) {
                     this.elements.playPauseBtn.disabled = true;
-                    // Always start playing from the range start time
-                    this.videoPreview.currentTime = startTime;
+                    // Only reset to start time if current time is outside the range
+                    if (currentTime < startTime || currentTime > endTime) {
+                        this.videoPreview.currentTime = startTime;
+                    }
                     await this.videoPreview.play();
                     this.isPlaying = true;
                     this.elements.playhead.style.display = 'block';
@@ -1805,8 +1995,6 @@
             const startTime = parseFloat(this.elements.startTimeInput.value);
             const endTime = parseFloat(this.elements.endTimeInput.value);
             
-            // Remove the check that was hiding the playhead
-            // Only hide playhead if we're playing and outside the range
             if (this.isPlaying && (currentTime > endTime || currentTime < startTime)) {
                 this.elements.playhead.style.display = 'none';
                 return;
@@ -1896,17 +2084,14 @@
             
             let time = position * duration;
             
-            // Only adjust ranges if we're moving beyond them and holding Shift
             if (e.shiftKey) {
                 if (time > endTime) {
-                    // Adjust end time when dragging right with Shift
                     const newEndTime = Math.min(time, duration);
                     this.elements.endTimeInput.value = newEndTime.toFixed(2);
                     this.updateTimeDisplay(false, newEndTime);
                     this.updateMarkerPosition(this.elements.endMarker, newEndTime, duration);
                     this.updateDurationDisplay();
                 } else if (time < startTime) {
-                    // Adjust start time when dragging left with Shift
                     const newStartTime = Math.max(time, 0);
                     this.elements.startTimeInput.value = newStartTime.toFixed(2);
                     this.updateTimeDisplay(true, newStartTime);
@@ -1914,7 +2099,6 @@
                     this.updateDurationDisplay();
                 }
             } else {
-                // Without Shift, constrain playhead within the current range
                 time = Math.max(startTime, Math.min(endTime, time));
             }
             
@@ -1941,6 +2125,34 @@
             if (!this.videoPreview.src || this.isKeyHeld) return;
             
             const frameTime = 1 / 30;
+            
+            if (e.code === 'Space') {
+                e.preventDefault();
+                this.togglePlayPause();
+                return;
+            }
+            
+            if (e.key === '[' || e.key === ']') {
+                e.preventDefault();
+                const currentTime = this.videoPreview.currentTime;
+                const startTime = parseFloat(this.elements.startTimeInput.value);
+                const endTime = parseFloat(this.elements.endTimeInput.value);
+
+                if (e.key === '[' && currentTime < endTime) {
+                    // Set start marker
+                    this.elements.startTimeInput.value = currentTime.toFixed(2);
+                    this.updateTimeDisplay(true, currentTime);
+                    this.updateMarkerPosition(this.elements.startMarker, currentTime, this.videoPreview.duration);
+                    this.updateDurationDisplay();
+                } else if (e.key === ']' && currentTime > startTime) {
+                    // Set end marker
+                    this.elements.endTimeInput.value = currentTime.toFixed(2);
+                    this.updateTimeDisplay(false, currentTime);
+                    this.updateMarkerPosition(this.elements.endMarker, currentTime, this.videoPreview.duration);
+                    this.updateDurationDisplay();
+                }
+                return;
+            }
             
             if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
                 e.preventDefault();
@@ -2065,6 +2277,8 @@
     document.addEventListener('DOMContentLoaded', () => {
         const converter = new GifConverter();
         const timeline = new TimelineController(document.getElementById('videoPreview'));
+        // Share the timeline instance with the converter
+        converter.setTimeline(timeline);
     });
     
     </script>
@@ -2073,6 +2287,37 @@
         (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.GIF=f()}})(function(){var define,module,exports;return function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s}({1:[function(require,module,exports){function EventEmitter(){this._events=this._events||{};this._maxListeners=this._maxListeners||undefined}module.exports=EventEmitter;EventEmitter.EventEmitter=EventEmitter;EventEmitter.prototype._events=undefined;EventEmitter.prototype._maxListeners=undefined;EventEmitter.defaultMaxListeners=10;EventEmitter.prototype.setMaxListeners=function(n){if(!isNumber(n)||n<0||isNaN(n))throw TypeError("n must be a positive number");this._maxListeners=n;return this};EventEmitter.prototype.emit=function(type){var er,handler,len,args,i,listeners;if(!this._events)this._events={};if(type==="error"){if(!this._events.error||isObject(this._events.error)&&!this._events.error.length){er=arguments[1];if(er instanceof Error){throw er}else{var err=new Error('Uncaught, unspecified "error" event. ('+er+")");err.context=er;throw err}}}handler=this._events[type];if(isUndefined(handler))return false;if(isFunction(handler)){switch(arguments.length){case 1:handler.call(this);break;case 2:handler.call(this,arguments[1]);break;case 3:handler.call(this,arguments[1],arguments[2]);break;default:args=Array.prototype.slice.call(arguments,1);handler.apply(this,args)}}else if(isObject(handler)){args=Array.prototype.slice.call(arguments,1);listeners=handler.slice();len=listeners.length;for(i=0;i<len;i++)listeners[i].apply(this,args)}return true};EventEmitter.prototype.addListener=function(type,listener){var m;if(!isFunction(listener))throw TypeError("listener must be a function");if(!this._events)this._events={};if(this._events.newListener)this.emit("newListener",type,isFunction(listener.listener)?listener.listener:listener);if(!this._events[type])this._events[type]=listener;else if(isObject(this._events[type]))this._events[type].push(listener);else this._events[type]=[this._events[type],listener];if(isObject(this._events[type])&&!this._events[type].warned){if(!isUndefined(this._maxListeners)){m=this._maxListeners}else{m=EventEmitter.defaultMaxListeners}if(m&&m>0&&this._events[type].length>m){this._events[type].warned=true;console.error("(node) warning: possible EventEmitter memory "+"leak detected. %d listeners added. "+"Use emitter.setMaxListeners() to increase limit.",this._events[type].length);if(typeof console.trace==="function"){console.trace()}}}return this};EventEmitter.prototype.on=EventEmitter.prototype.addListener;EventEmitter.prototype.once=function(type,listener){if(!isFunction(listener))throw TypeError("listener must be a function");var fired=false;function g(){this.removeListener(type,g);if(!fired){fired=true;listener.apply(this,arguments)}}g.listener=listener;this.on(type,g);return this};EventEmitter.prototype.removeListener=function(type,listener){var list,position,length,i;if(!isFunction(listener))throw TypeError("listener must be a function");if(!this._events||!this._events[type])return this;list=this._events[type];length=list.length;position=-1;if(list===listener||isFunction(list.listener)&&list.listener===listener){delete this._events[type];if(this._events.removeListener)this.emit("removeListener",type,listener)}else if(isObject(list)){for(i=length;i-- >0;){if(list[i]===listener||list[i].listener&&list[i].listener===listener){position=i;break}}if(position<0)return this;if(list.length===1){list.length=0;delete this._events[type]}else{list.splice(position,1)}if(this._events.removeListener)this.emit("removeListener",type,listener)}return this};EventEmitter.prototype.removeAllListeners=function(type){var key,listeners;if(!this._events)return this;if(!this._events.removeListener){if(arguments.length===0)this._events={};else if(this._events[type])delete this._events[type];return this}if(arguments.length===0){for(key in this._events){if(key==="removeListener")continue;this.removeAllListeners(key)}this.removeAllListeners("removeListener");this._events={};return this}listeners=this._events[type];if(isFunction(listeners)){this.removeListener(type,listeners)}else if(listeners){while(listeners.length)this.removeListener(type,listeners[listeners.length-1])}delete this._events[type];return this};EventEmitter.prototype.listeners=function(type){var ret;if(!this._events||!this._events[type])ret=[];else if(isFunction(this._events[type]))ret=[this._events[type]];else ret=this._events[type].slice();return ret};EventEmitter.prototype.listenerCount=function(type){if(this._events){var evlistener=this._events[type];if(isFunction(evlistener))return 1;else if(evlistener)return evlistener.length}return 0};EventEmitter.listenerCount=function(emitter,type){return emitter.listenerCount(type)};function isFunction(arg){return typeof arg==="function"}function isNumber(arg){return typeof arg==="number"}function isObject(arg){return typeof arg==="object"&&arg!==null}function isUndefined(arg){return arg===void 0}},{}],2:[function(require,module,exports){var UA,browser,mode,platform,ua;ua=navigator.userAgent.toLowerCase();platform=navigator.platform.toLowerCase();UA=ua.match(/(opera|ie|firefox|chrome|version)[\s\/:]([\w\d\.]+)?.*?(safari|version[\s\/:]([\w\d\.]+)|$)/)||[null,"unknown",0];mode=UA[1]==="ie"&&document.documentMode;browser={name:UA[1]==="version"?UA[3]:UA[1],version:mode||parseFloat(UA[1]==="opera"&&UA[4]?UA[4]:UA[2]),platform:{name:ua.match(/ip(?:ad|od|hone)/)?"ios":(ua.match(/(?:webos|android)/)||platform.match(/mac|win|linux/)||["other"])[0]}};browser[browser.name]=true;browser[browser.name+parseInt(browser.version,10)]=true;browser.platform[browser.platform.name]=true;module.exports=browser},{}],3:[function(require,module,exports){var EventEmitter,GIF,browser,extend=function(child,parent){for(var key in parent){if(hasProp.call(parent,key))child[key]=parent[key]}function ctor(){this.constructor=child}ctor.prototype=parent.prototype;child.prototype=new ctor;child.__super__=parent.prototype;return child},hasProp={}.hasOwnProperty,indexOf=[].indexOf||function(item){for(var i=0,l=this.length;i<l;i++){if(i in this&&this[i]===item)return i}return-1},slice=[].slice;EventEmitter=require("events").EventEmitter;browser=require("./browser.coffee");GIF=function(superClass){var defaults,frameDefaults;extend(GIF,superClass);defaults={workerScript:"gif.worker.js",workers:2,repeat:0,background:"#fff",quality:10,width:null,height:null,transparent:null,debug:false,dither:false};frameDefaults={delay:500,copy:false};function GIF(options){var base,key,value;this.running=false;this.options={};this.frames=[];this.freeWorkers=[];this.activeWorkers=[];this.setOptions(options);for(key in defaults){value=defaults[key];if((base=this.options)[key]==null){base[key]=value}}}GIF.prototype.setOption=function(key,value){this.options[key]=value;if(this._canvas!=null&&(key==="width"||key==="height")){return this._canvas[key]=value}};GIF.prototype.setOptions=function(options){var key,results,value;results=[];for(key in options){if(!hasProp.call(options,key))continue;value=options[key];results.push(this.setOption(key,value))}return results};GIF.prototype.addFrame=function(image,options){var frame,key;if(options==null){options={}}frame={};frame.transparent=this.options.transparent;for(key in frameDefaults){frame[key]=options[key]||frameDefaults[key]}if(this.options.width==null){this.setOption("width",image.width)}if(this.options.height==null){this.setOption("height",image.height)}if(typeof ImageData!=="undefined"&&ImageData!==null&&image instanceof ImageData){frame.data=image.data}else if(typeof CanvasRenderingContext2D!=="undefined"&&CanvasRenderingContext2D!==null&&image instanceof CanvasRenderingContext2D||typeof WebGLRenderingContext!=="undefined"&&WebGLRenderingContext!==null&&image instanceof WebGLRenderingContext){if(options.copy){frame.data=this.getContextData(image)}else{frame.context=image}}else if(image.childNodes!=null){if(options.copy){frame.data=this.getImageData(image)}else{frame.image=image}}else{throw new Error("Invalid image")}return this.frames.push(frame)};GIF.prototype.render=function(){var i,j,numWorkers,ref;if(this.running){throw new Error("Already running")}if(this.options.width==null||this.options.height==null){throw new Error("Width and height must be set prior to rendering")}this.running=true;this.nextFrame=0;this.finishedFrames=0;this.imageParts=function(){var j,ref,results;results=[];for(i=j=0,ref=this.frames.length;0<=ref?j<ref:j>ref;i=0<=ref?++j:--j){results.push(null)}return results}.call(this);numWorkers=this.spawnWorkers();if(this.options.globalPalette===true){this.renderNextFrame()}else{for(i=j=0,ref=numWorkers;0<=ref?j<ref:j>ref;i=0<=ref?++j:--j){this.renderNextFrame()}}this.emit("start");return this.emit("progress",0)};GIF.prototype.abort=function(){var worker;while(true){worker=this.activeWorkers.shift();if(worker==null){break}this.log("killing active worker");worker.terminate()}this.running=false;return this.emit("abort")};GIF.prototype.spawnWorkers=function(){var j,numWorkers,ref,results;numWorkers=Math.min(this.options.workers,this.frames.length);(function(){results=[];for(var j=ref=this.freeWorkers.length;ref<=numWorkers?j<numWorkers:j>numWorkers;ref<=numWorkers?j++:j--){results.push(j)}return results}).apply(this).forEach(function(_this){return function(i){var worker;_this.log("spawning worker "+i);worker=new Worker(_this.options.workerScript);worker.onmessage=function(event){_this.activeWorkers.splice(_this.activeWorkers.indexOf(worker),1);_this.freeWorkers.push(worker);return _this.frameFinished(event.data)};return _this.freeWorkers.push(worker)}}(this));return numWorkers};GIF.prototype.frameFinished=function(frame){var i,j,ref;this.log("frame "+frame.index+" finished - "+this.activeWorkers.length+" active");this.finishedFrames++;this.emit("progress",this.finishedFrames/this.frames.length);this.imageParts[frame.index]=frame;if(this.options.globalPalette===true){this.options.globalPalette=frame.globalPalette;this.log("global palette analyzed");if(this.frames.length>2){for(i=j=1,ref=this.freeWorkers.length;1<=ref?j<ref:j>ref;i=1<=ref?++j:--j){this.renderNextFrame()}}}if(indexOf.call(this.imageParts,null)>=0){return this.renderNextFrame()}else{return this.finishRendering()}};GIF.prototype.finishRendering=function(){var data,frame,i,image,j,k,l,len,len1,len2,len3,offset,page,ref,ref1,ref2;len=0;ref=this.imageParts;for(j=0,len1=ref.length;j<len1;j++){frame=ref[j];len+=(frame.data.length-1)*frame.pageSize+frame.cursor}len+=frame.pageSize-frame.cursor;this.log("rendering finished - filesize "+Math.round(len/1e3)+"kb");data=new Uint8Array(len);offset=0;ref1=this.imageParts;for(k=0,len2=ref1.length;k<len2;k++){frame=ref1[k];ref2=frame.data;for(i=l=0,len3=ref2.length;l<len3;i=++l){page=ref2[i];data.set(page,offset);if(i===frame.data.length-1){offset+=frame.cursor}else{offset+=frame.pageSize}}}image=new Blob([data],{type:"image/gif"});return this.emit("finished",image,data)};GIF.prototype.renderNextFrame=function(){var frame,task,worker;if(this.freeWorkers.length===0){throw new Error("No free workers")}if(this.nextFrame>=this.frames.length){return}frame=this.frames[this.nextFrame++];worker=this.freeWorkers.shift();task=this.getTask(frame);this.log("starting frame "+(task.index+1)+" of "+this.frames.length);this.activeWorkers.push(worker);return worker.postMessage(task)};GIF.prototype.getContextData=function(ctx){return ctx.getImageData(0,0,this.options.width,this.options.height).data};GIF.prototype.getImageData=function(image){var ctx;if(this._canvas==null){this._canvas=document.createElement("canvas");this._canvas.width=this.options.width;this._canvas.height=this.options.height}ctx=this._canvas.getContext("2d");ctx.setFill=this.options.background;ctx.fillRect(0,0,this.options.width,this.options.height);ctx.drawImage(image,0,0);return this.getContextData(ctx)};GIF.prototype.getTask=function(frame){var index,task;index=this.frames.indexOf(frame);task={index:index,last:index===this.frames.length-1,delay:frame.delay,transparent:frame.transparent,width:this.options.width,height:this.options.height,quality:this.options.quality,dither:this.options.dither,globalPalette:this.options.globalPalette,repeat:this.options.repeat,canTransfer:browser.name==="chrome"};if(frame.data!=null){task.data=frame.data}else if(frame.context!=null){task.data=this.getContextData(frame.context)}else if(frame.image!=null){task.data=this.getImageData(frame.image)}else{throw new Error("Invalid frame")}return task};GIF.prototype.log=function(){var args;args=1<=arguments.length?slice.call(arguments,0):[];if(!this.options.debug){return}return console.log.apply(console,args)};return GIF}(EventEmitter);module.exports=GIF},{"./browser.coffee":2,events:1}]},{},[3])(3)});
         //# sourceMappingURL=gif.js.map</script>
 
+    <script>
+        // Initialize fullscreen functionality
+        document.querySelectorAll('.expand-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const container = this.closest('.preview-container, .settings-panel, .tips-container');
+                const expandIcon = this.querySelector('svg');
+                const isFullscreen = container.classList.contains('fullscreen-container');
 
+                // Toggle fullscreen class
+                container.classList.toggle('fullscreen-container');
+
+                // Update the expand/collapse icon
+                if (isFullscreen) {
+                    expandIcon.innerHTML = '<path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>';
+                } else {
+                    expandIcon.innerHTML = '<polyline points="4 14 10 14 10 20"></polyline><polyline points="20 10 14 10 14 4"></polyline><line x1="14" y1="10" x2="21" y2="3"></line><line x1="3" y1="21" x2="10" y2="14"></line>';
+                }
+
+                // Toggle visibility of other containers
+                const allContainers = document.querySelectorAll('.preview-container, .settings-panel, .tips-container');
+                allContainers.forEach(otherContainer => {
+                    if (otherContainer !== container) {
+                        otherContainer.classList.toggle('hidden-container', !isFullscreen);
+                    }
+                });
+
+                // Trigger window resize event to update any responsive elements
+                window.dispatchEvent(new Event('resize'));
+            });
+        });
+    </script>
 </body>
 </html>
+
