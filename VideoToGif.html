@@ -1067,7 +1067,7 @@
                         </svg>
                     </button>
                 </div>
-                <input type="file" id="videoInput" accept="video/*">
+                <input type="file" id="videoInput" accept="video/mp4,video/webm,video/ogg,video/quicktime">
                 <video id="videoPreview" style="display: none;" playsinline webkit-playsinline></video>
                 <div class="video-controls">
                     <div class="timeline-container">
@@ -1224,6 +1224,14 @@
                     </button> -->
                 </div>
                 <ul class="tips-list">
+                    <li>
+                        <span class="tip-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                            </svg>
+                        </span>
+                        <strong>Use WebM:</strong> WebM files convert faster than other formats
+                    </li>
                     <li>
                         <span class="tip-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-layers">
@@ -1485,6 +1493,21 @@
             const file = e.target.files[0];
             if (!file) return;
 
+            // List of supported MIME types
+            const supportedTypes = [
+                'video/mp4',
+                'video/webm',
+                'video/ogg',
+                'video/quicktime'
+            ];
+
+            // Check if file type is supported
+            if (!supportedTypes.includes(file.type)) {
+                alert('Unsupported video format. Please use MP4, WebM, OGG, or MOV files.');
+                this.elements.videoInput.value = ''; // Clear the input
+                return;
+            }
+
             this.originalFileName = file.name.replace(/\.[^/.]+$/, '');
             const videoUrl = URL.createObjectURL(file);
             
@@ -1503,7 +1526,13 @@
             
             };
 
-  
+            // Add error handling for video loading
+            this.elements.videoPreview.onerror = () => {
+                alert('Error loading video. Please try another file.');
+                this.elements.videoInput.value = '';
+                this.elements.videoPreview.style.display = 'none';
+                this.elements.convertButton.disabled = true;
+            };
         }
 
         validateTimeInputs() {
