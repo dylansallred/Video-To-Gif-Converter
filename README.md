@@ -3,7 +3,7 @@
 A modern, browser-based tool for converting video clips to GIF animations with advanced customization options.
 
 ## Live Demo
-Visit [GIF TO VIDEO](https://dylansallred.github.io/Video-To-Gif/giftovideo.html)
+Visit [GIF TO VIDEO](https://dylansallred.github.io/Video-To-Gif/VideoToGif.html)
 
 ## Features
 
