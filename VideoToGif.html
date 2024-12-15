@@ -1487,22 +1487,57 @@
             this.elements.convertButton.disabled = false;
             this.elements.previewGif.style.display = 'none';
             this.elements.downloadButton.style.display = 'none';
-            this.lastConversionSettings = null; // Reset last settings
+            this.lastConversionSettings = null;
 
-            // Add these lines to force first frame display
-            this.elements.videoPreview.onloadedmetadata = () => {
+            // Create a promise to handle video loading
+            const loadVideo = new Promise((resolve) => {
+                const events = ['loadedmetadata', 'loadeddata', 'canplay'];
+                let completed = 0;
+
+                const handleEvent = (event) => {
+                    completed++;
+                    if (completed === events.length) {
+                        events.forEach(e => this.elements.videoPreview.removeEventListener(e, handleEvent));
+                        resolve();
+                    }
+                };
+
+                events.forEach(event => {
+                    this.elements.videoPreview.addEventListener(event, handleEvent, { once: true });
+                });
+            });
+
+            // Handle video loading
+            loadVideo.then(() => {
+                // Set initial metadata
                 this.elements.endTime.value = this.elements.videoPreview.duration.toFixed(2);
                 this.elements.endTime.max = Math.ceil(this.elements.videoPreview.duration * 100) / 100;
                 this.elements.startTime.max = Math.ceil(this.elements.videoPreview.duration * 100) / 100;
-                
-                // Force video to show first frame
-                this.elements.videoPreview.currentTime = 0.001;
-            };
 
-            // Add this to ensure the first frame is displayed
-            this.elements.videoPreview.addEventListener('loadeddata', () => {
-                this.elements.videoPreview.currentTime = 0.001;
-            }, { once: true });
+                // Force first frame display with multiple attempts
+                const showFirstFrame = () => {
+                    this.elements.videoPreview.currentTime = 0;
+                    
+                    // Add a small delay and try again
+                    setTimeout(() => {
+                        this.elements.videoPreview.currentTime = 0.001;
+                    }, 100);
+
+                    // One more attempt after a longer delay
+                    setTimeout(() => {
+                        if (!this.elements.videoPreview.currentTime) {
+                            this.elements.videoPreview.currentTime = 0.001;
+                        }
+                    }, 500);
+                };
+
+                showFirstFrame();
+
+                // Add play/pause attempt for iOS
+                const playAttempt = this.elements.videoPreview.play()
+                    .then(() => this.elements.videoPreview.pause())
+                    .catch(() => {/* Ignore play errors */});
+            });
         }
 
         validateTimeInputs() {
