@@ -4,10 +4,10 @@ A modern, browser-based tool for converting video clips to GIF animations with a
 
 ![Main Application Interface](./images/main-interface.gif)
 
+The example GIF above was created using this tool.
+
 ## Live Demo
 Visit [Video To GIF Converter](https://dylansallred.github.io/Video-To-Gif-Converter/VideoToGif.html)
-
-The example GIF above was created using this tool.
 
 
 
