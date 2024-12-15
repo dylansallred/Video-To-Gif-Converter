@@ -1,6 +1,3 @@
-<div align="center">
-  <div style="background-color: #0d1117; color: #c9d1d9; padding: 20px; border-radius: 6px;">
-
 # Video To GIF Converter
 
 A modern, browser-based tool for converting video clips to GIF animations with advanced customization options.
@@ -128,6 +125,3 @@ MIT License - feel free to use and modify as needed.
 - Uses [gif.js](https://jnordberg.github.io/gif.js/) for GIF encoding
 - Interface design inspired by modern web applications
 - Icons from [Feather Icons](https://feathericons.com/)
-
-  </div>
-</div>
