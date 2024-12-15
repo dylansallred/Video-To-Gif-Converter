@@ -1011,6 +1011,7 @@
             -webkit-user-select: none;
             user-select: none;
             -webkit-tap-highlight-color: transparent;
+            opacity: 1;
         }
 
         /* Update mobile styles */
@@ -1032,6 +1033,13 @@
                 padding: 8px 12px;
                 font-size: 16px;
             }
+        }
+
+        .time-stepper-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: var(--disabled-color);
+            border-color: var(--border-color);
         }
 
   
@@ -1098,16 +1106,16 @@
                          <div class="time-input-group">
                              <input type="number" id="startTime" class="time-input" value="0.00" min="0" step="0.01" pattern="\d*\.?\d{0,2}">
                              <div class="time-stepper">
-                                 <button class="time-stepper-btn" onclick="adjustTime('startTime', 0.1)">+</button>
-                                 <button class="time-stepper-btn" onclick="adjustTime('startTime', -0.1)">−</button>
+                                 <button class="time-stepper-btn" onclick="adjustTime('startTime', 0.1)" disabled>+</button>
+                                 <button class="time-stepper-btn" onclick="adjustTime('startTime', -0.1)" disabled>−</button>
                              </div>
                          </div>
                          <label style="color: var(--error-color)">End:</label>
                          <div class="time-input-group">
                              <input type="number" id="endTime" class="time-input" value="0.00" min="0" step="0.01" pattern="\d*\.?\d{0,2}">
                              <div class="time-stepper">
-                                 <button class="time-stepper-btn" onclick="adjustTime('endTime', 0.1)">+</button>
-                                 <button class="time-stepper-btn" onclick="adjustTime('endTime', -0.1)">−</button>
+                                 <button class="time-stepper-btn" onclick="adjustTime('endTime', 0.1)" disabled>+</button>
+                                 <button class="time-stepper-btn" onclick="adjustTime('endTime', -0.1)" disabled>−</button>
                              </div>
                          </div>
                      </div>
@@ -1962,6 +1970,11 @@
             
             this.elements.startTimeInput.step = '0.01';
             this.elements.endTimeInput.step = '0.01';
+            
+            // Enable the stepper buttons
+            document.querySelectorAll('.time-stepper-btn').forEach(btn => {
+                btn.disabled = false;
+            });
             
             this.updateMarkerPositions();
             this.updateDurationDisplay();
