@@ -1483,11 +1483,20 @@
             this.elements.downloadButton.style.display = 'none';
             this.lastConversionSettings = null; // Reset last settings
 
+            // Add these lines to force first frame display
             this.elements.videoPreview.onloadedmetadata = () => {
                 this.elements.endTime.value = this.elements.videoPreview.duration.toFixed(2);
                 this.elements.endTime.max = Math.ceil(this.elements.videoPreview.duration * 100) / 100;
                 this.elements.startTime.max = Math.ceil(this.elements.videoPreview.duration * 100) / 100;
+                
+                // Force video to show first frame
+                this.elements.videoPreview.currentTime = 0.001;
             };
+
+            // Add this to ensure the first frame is displayed
+            this.elements.videoPreview.addEventListener('loadeddata', () => {
+                this.elements.videoPreview.currentTime = 0.001;
+            }, { once: true });
         }
 
         validateTimeInputs() {
