@@ -115,7 +115,7 @@ Processing time depends on:
 ## Development
 
 1. Clone the repository
-2. Open `giftovideo.html` in a modern web browser
+2. Open `VideoToGif.html` in a modern web browser
 3. No build process or dependencies required
 
 ## License
@@ -124,4 +124,4 @@ MIT License - feel free to use and modify as needed.
 ## Credits
 - Uses [gif.js](https://jnordberg.github.io/gif.js/) for GIF encoding
 - Interface design inspired by modern web applications
-- Icons from [Feather Icons](https://feathericons.com/)
+- SVG Icons from [Feather Icons](https://feathericons.com/)
