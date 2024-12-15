@@ -2,6 +2,9 @@
 
 A modern, browser-based tool for converting video clips to GIF animations with advanced customization options.
 
+## Live Demo
+Visit [GIF TO VIDEO](https://dylansallred.github.io/Video-To-Gif/giftovideo.html)
+
 ## Features
 
 ### Video Preview
@@ -10,22 +13,48 @@ A modern, browser-based tool for converting video clips to GIF animations with a
 - Play/Pause functionality
 - Audio mute toggle
 - Loop playback within the selected range
+- Frame-by-frame navigation using arrow keys
+- Playhead scrubbing for precise frame selection
 
 ### Customization Options
 - **Frame Rate Selection:** Choose between 5-30 fps
 - **Output Size Control:** Adjust from 25% to 100% of the original size
+- **Speed Control:** Adjust playback speed from 1x to 5x
 - **Dithering Options:**
-  - No Dithering
-  - Floyd-Steinberg (default)
+  - No Dithering (default)
+  - Floyd-Steinberg
   - Light Dithering
   - Stucki
 - Real-time GIF preview
 - File size estimation
+- Double-click GIF preview for fullscreen view
+
+### User Interface
+- Expandable panels for better workspace organization
+- Detailed conversion progress with status updates
+- Conversion time and file statistics display
+- Keyboard shortcuts for efficient timeline control
+- Cancel conversion option
+- Mobile-optimized touch controls
+
+### Keyboard Shortcuts
+- **Space:** Play/Pause video
+- **[:** Set start marker at current position
+- **]:** Set end marker at current position
+- **←/→:** Step frame by frame (hold for continuous stepping)
+
+### Progress Tracking
+- Real-time conversion progress bar
+- Detailed frame processing information
+- Estimated file size and dimensions display
+- Conversion time tracking
 
 ### User Experience
 - Responsive design for desktop and mobile
 - Settings persistence between sessions
 - Works entirely in the browser - no server processing needed
+- Helpful tips panel with optimization suggestions
+- Visual feedback for settings changes
 
 ## Usage
 
@@ -54,6 +83,14 @@ A modern, browser-based tool for converting video clips to GIF animations with a
 - Uses HTML5 Canvas for video processing
 - Implements gif.js library for GIF encoding
 - Client-side processing only
+- Multi-threaded processing using Web Workers
+- Adaptive worker count based on CPU cores
+
+### Performance Optimizations
+- Dynamic worker allocation
+- Efficient frame capture
+- Memory management during conversion
+- Cancelable conversion process
 
 ### Browser Compatibility
 - Chrome (recommended)
@@ -73,15 +110,13 @@ Processing time depends on:
 - Lower frame rates (10-15 fps) for most cases
 - Reduce output size if original is large
 - Experiment with dithering options
+- Adjust playback speed for longer videos
 
 ## Development
 
 1. Clone the repository
 2. Open `giftovideo.html` in a modern web browser
 3. No build process or dependencies required
-
-## Live Demo
-Visit [GIF TO VIDEO](https://dylansallred.github.io/Video-To-Gif/giftovideo.html)
 
 ## License
 MIT License - feel free to use and modify as needed.

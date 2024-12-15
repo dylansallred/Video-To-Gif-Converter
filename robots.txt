@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://dylansallred.github.io/Video-To-Gif/sitemap.xml 
