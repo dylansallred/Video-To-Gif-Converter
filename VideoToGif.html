@@ -7,50 +7,6 @@
     <meta name="description" content="Free online Video to GIF converter. Convert videos to high-quality GIFs with customizable frame rate, size, speed, and dithering options. No upload required - works directly in your browser.">
     <meta name="keywords" content="video to gif, gif converter, gif maker, online gif tool, video converter, free gif maker, browser gif converter">
     <meta name="author" content="Video to GIF Converter">
-    
-    <!-- Open Graph meta tags for social sharing -->
-    <meta property="og:title" content="Video to GIF Converter - Free Online Tool">
-    <meta property="og:description" content="Convert videos to high-quality GIFs with customizable settings. Free, fast, and works in your browser.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://dylansallred.github.io/Video-To-Gif-Converter/VideoToGif.html">
-    <meta property="og:image" content="https://dylansallred.github.io/Video-To-Gif-Converter/preview.png">
-    
-    <!-- Twitter Card meta tags -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Video to GIF Converter - Free Online Tool">
-    <meta name="twitter:description" content="Convert videos to high-quality GIFs with customizable settings. Free, fast, and works in your browser.">
-    <meta name="twitter:image" content="https://dylansallred.github.io/Video-To-Gif-Converter/preview.png">
-    
-    <!-- Additional SEO meta tags -->
-    <meta name="robots" content="index, follow">
-    <meta name="googlebot" content="index, follow">
-    <meta name="theme-color" content="#0f172a">
-    <link rel="canonical" href="https://dylansallred.github.io/Video-To-Gif-Converter/VideoToGif.html">
-    
-    <!-- Structured data for rich results -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebApplication",
-      "name": "Video to GIF Converter",
-      "applicationCategory": "MultimediaApplication",
-      "operatingSystem": "Any",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD"
-      },
-      "featureList": [
-        "Convert video to GIF",
-        "Adjustable frame rate",
-        "Customizable size",
-        "Speed control",
-        "Multiple dithering options"
-      ],
-      "browserRequirements": "Requires a modern web browser",
-      "permissions": "Requires access to local files for video upload"
-    }
-    </script>
 
     <title>Video to GIF Converter - Free Online Tool | Convert Videos to GIF</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -66,6 +22,26 @@
             --disabled-color: #475569;
             --success-color: #22c55e;
             --error-color: #ef4444;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.2);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 6px 8px -1px rgba(239, 68, 68, 0.3);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.2);
+            }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         html {
@@ -86,24 +62,22 @@
             box-sizing: border-box;
         }
 
-        .container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            align-items: start;
-            max-width: 1100px;
-            gap: 10px;
-            padding: 5px 10px 10px 10px;
+        button svg {
+            vertical-align: middle;
+        }
+        
+        button:hover svg {
+            transform: scale(1.1);
         }
 
-        .left-column {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+        button:focus,
+        input[type="file"]:focus {
+            outline: none;
         }
 
-        .right-column {
-            position: sticky;
-            top: 20px;
+        footer {
+            padding-left: 15px;
+            margin-top: -5px;
         }
 
         h1 {
@@ -118,111 +92,11 @@
             text-align: center;
         }
 
-        .preview-container {
-            background: var(--panel-bg);
-            position: relative;
-            max-width: 100%;
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 24px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 
-                        0 2px 4px -1px rgba(0, 0, 0, 0.06);
-
-        }
-
-        #videoPreview, #previewGif {
-            width: 100%;
+        h3 {
             margin: 0;
-            border-radius: 8px;
-        }
-
-        .settings-panel {
-            margin: 0;
-            background: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 24px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 
-                        0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        }
-
-        .setting-group {
-            margin: 10px 0;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .setting-group label {
-            min-width: 100px;
-            flex-shrink: 0;
-        }
-
-        .button-group {
-            margin-top: 15px;
-        }
-
-        .button-group button {
-            width: 100%;
-        }
-
-        #videoInput {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            border: 2px dashed var(--border-color);
-            padding: 10px;
-            border-radius: 12px;
-            width: -webkit-fill-available;
-            width: -moz-available;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin: 0 auto 10px;
-            display: block;
-            outline: none;
-        }
-
-        #videoInput:hover {
-            border-color: var(--primary-color);
-            background-color: rgba(59, 130, 246, 0.1);
-        }
-
-        .time-control {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin: 5px 0;
+            border-bottom: 1px solid;
+            border-image: linear-gradient(to right, var(--primary-color) 30%, transparent) 1;
             flex-grow: 1;
-        }
-        .time-control label {
-            min-width: 0px;
-        }
-
-        .time-input {
-            width: 80px;
-            min-width: 100px; /* Add this to prevent shrinking */
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            border: 2px solid var(--border-color);
-            border-radius: 8px;
-            padding: 5px;
-            font-size: 0.95em;
-            transition: all 0.2s ease;
-            box-sizing: border-box; /* Add this to include padding in width calculation */
-        }
-
-        @media (max-width: 768px) {
-            .time-input {
-                width: 100px;
-                min-width: 100px; /* Add this for mobile */
-                padding: 8px;
-                font-size: 16px;
-            }
-        }
-
-        .time-input:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
-            outline: none;
         }
 
         select {
@@ -260,235 +134,50 @@
             outline: none;
         }
 
-        @media not all and (min-resolution:.001dpcm) { 
-            @supports (-webkit-appearance:none) {
-                select {
-                    text-indent: 1px;
-                    text-overflow: '';
-                    line-height: 1.2;
-                    background-color: var(--bg-color);
-                }
-            }
+        .button-group {
+            margin-top: 15px;
         }
 
-        #convertButton, #downloadButton {
-            padding: 10px 10px;
-            font-weight: 600;
-            border-radius: 8px;
-            transition: all 0.2s ease;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            border: none;
-            color: white;
-            outline: none;
-        }
-
-        #convertButton {
-            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
-            box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.2);
-        }
-
-        #downloadButton {
-            background: var(--success-color);
-            box-shadow: 0 4px 6px -1px rgba(34, 197, 94, 0.2);
+        .button-group button {
             width: 100%;
         }
 
-        #downloadButton:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 8px -1px rgba(0, 0, 0, 0.2);
-        }
-
-        #convertButton:hover, #downloadButton:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 8px -1px rgba(0, 0, 0, 0.2);
-        }
-
-        #convertButton:disabled {
-            background: var(--disabled-color);
-            cursor: not-allowed;
-            opacity: 0.6;
-            box-shadow: none;
-            transform: none;
-        }
-
-        #convertButton:disabled:hover {
-            transform: none;
-            box-shadow: none;
-        }
-        .play-pause-btn:disabled {
-            background: var(--disabled-color);
-            cursor: not-allowed;
-            opacity: 0.6;
-            box-shadow: none;
-            transform: none;
-        }
-
-        .size-indicator {
-            position: relative;
-            background: #3341556b;
-            color: var(--text-color);
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 0.75em;
-            font-weight: 500;
-            display: none;
-            margin: 10px 0;
-            text-align: center;
-        }
-
-        #previewGif {
-            width: auto;
-            max-width: 100%;
-            max-height: 600px;
-            display: block;
-            transition: opacity 0.3s ease;
-        }
-
-        .progress-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(15, 23, 42, 0.8);
-            backdrop-filter: blur(8px);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .progress-content {
-            background: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 32px 48px;
-            text-align: center;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        .progress-content p {
-            margin: 10px 0;
-            font-size: 16px;
-        }
-
-        .spinner {
-            width: 48px;
-            height: 48px;
-            border: 4px solid rgba(59, 130, 246, 0.2);
-            border-top: 4px solid var(--primary-color);
-            border-radius: 50%;
-            margin: 10px auto;
-            animation: spin 1s cubic-bezier(0.45, 0, 0.55, 1) infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        h3 {
-            margin: -10px 0 10px 0;
-            border-bottom: 1px solid;
-            border-image: linear-gradient(to right, var(--primary-color) 30%, transparent) 1;
-        }
-
-        @media (max-width: 768px) {
-
-            .right-column {
-                position: static;
-            }
-
-            h1 {
-                font-size: 2em;
-                margin-top: 5px;
-                margin-bottom: -5px;
-            }
-
-            #convertButton, #downloadButton {
-                width: 100%;
-                margin: 8px 0;
-            }
-        }
-
-        .file-size-indicator {
-            margin-top: 5px;
-            margin-bottom: 5px;
-            font-size: 0.875em;
-            color: var(--text-color);
-            text-align: center;
-        }
-
-        .video-controls {
+        .cancel-btn {
             margin-top: 15px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .timeline-container {
-            position: relative;
-            height: 20px;
-            padding: 4px 0;
+            padding: 8px 16px;
+            background: var(--panel-bg);
+            border: 1px solid var(--error-color);
+            color: var(--error-color);
+            border-radius: 8px;
             cursor: pointer;
-            overflow: visible;
-            user-select: none;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
+            font-weight: 500;
+            transition: all 0.2s ease;
         }
 
-        .timeline {
-            position: relative;
-            height: 10px;
-            background: var(--border-color);
-            border-radius: 2px;
-            cursor: pointer;
-            transition: height 0.4s;
+        .cancel-btn:hover {
+            background: var(--error-color);
+            color: white;
         }
 
-        .timeline:hover {
-            height: 12px;
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: start;
+            max-width: 1100px;
+            gap: 10px;
+            padding: 5px 10px 10px 10px;
         }
-        
 
-        .timeline-marker {
-            position: absolute;
-            width: 8px;
-            height: 16px;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            cursor: grab;
-            z-index: 2;
-            font-family: monospace;
+        .container-header {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
-            color: var(--bg-color);
-            font-weight: bold;
-            border: none;
-            border-radius: 0;
-            transition: transform 0.2s;
+            margin-bottom: 10px;
         }
 
-        .timeline-marker:active {
-            cursor: grabbing;
-        }
-
-        .timeline-marker:hover {
-            transform: translate(-50%, -50%) scale(1.2);
-        }
-
-        .start-marker {
-            background: none;
-        }
-
-        .start-marker::before {
-            content: '[';
-            position: absolute;
-            left: -2px;
-            color: var(--success-color);
-            font-size: 20px;
+        .duration-time {
+            color: var(--primary-color);
+            font-weight: 500;
         }
 
         .end-marker {
@@ -503,6 +192,84 @@
             font-size: 20px;
         }
 
+        .expand-button {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            cursor: pointer;
+            padding: 4px;
+            opacity: 0.7;
+            transition: opacity 0.2s ease;
+            margin-right: -15px;
+            margin-top: -30px;
+        }
+
+        .expand-button:hover {
+            opacity: 1;
+        }
+
+        .file-size-indicator {
+            margin-top: 5px;
+            margin-bottom: 5px;
+            font-size: 0.875em;
+            color: var(--text-color);
+            text-align: center;
+            display: none;
+        }
+
+        .fullscreen-container {
+            grid-column: 1 / -1 !important;
+            width: 100% !important;
+            max-width: none !important;
+            position: relative !important;
+        }
+
+        .fullscreen-container.preview-container,
+        .fullscreen-container.settings-panel,
+        .fullscreen-container.tips-container {
+            width: calc(200% - 40px) !important;
+            position: relative !important;
+            margin: 0 !important;
+        }
+
+        .hidden-container {
+            display: none !important;
+        }
+
+        .indicator-separator {
+            margin: 0 5px;
+            color: var(--primary-color);
+        }
+
+        .keyboard-key {
+            display: inline-block;
+            padding: 2px 6px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background: var(--panel-bg);
+            font-family: monospace;
+            font-size: 1.1em;
+            font-weight: bolder;
+            color: var(--text-color);
+            min-width: 12px;
+            text-align: center;
+            box-shadow: 0 1px 1px rgba(0,0,0,0.2);
+            margin-right: 5px;
+        }
+
+        .left-column {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .left-column .fullscreen-container.preview-container,
+        .left-column .fullscreen-container.settings-panel,
+        .left-column .fullscreen-container.tips-container {
+            transform: translateX(0%) !important; 
+            margin-right: 0 !important;
+        }
+
         .marker-times {
             display: flex;
             justify-content: space-between;
@@ -511,9 +278,20 @@
             color: var(--text-color);
         }
 
-        .duration-time {
-            color: var(--primary-color);
+        .mute-btn {
+            flex: 0.1;  
+            background: var(--panel-bg);
+            border: .5px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-color);
+            cursor: pointer;
             font-weight: 500;
+            transition: background-color 0.2s ease;
+            outline: none;
+        }
+
+        .mute-btn:hover {
+            background: var(--border-color);
         }
 
         .play-pause-btn {
@@ -527,10 +305,26 @@
             font-weight: 500;
             transition: background-color 0.2s ease;
             outline: none;
+            flex: 0.9;
+            margin-top: 0;
         }
 
         .play-pause-btn:hover {
             background: var(--hover-color);
+        }
+
+        .play-pause-btn:disabled {
+            background: var(--disabled-color);
+            cursor: not-allowed;
+            opacity: 0.6;
+            box-shadow: none;
+            transform: none;
+        }
+
+        .playback-controls {
+            display: flex;
+            gap: 8px;
+            margin-top: 15px;
         }
 
         .playhead {
@@ -562,68 +356,15 @@
             transform: translateY(-50%);
         }
 
-        .playback-controls {
-            display: flex;
-            gap: 8px;
-            margin-top: 15px;
-        }
-
-        .play-pause-btn {
-            flex: 0.9; 
-            margin-top: 0; 
-        }
-
-        .mute-btn {
-            flex: 0.1;  
+        .preview-container {
             background: var(--panel-bg);
-            border: .5px solid var(--border-color);
-            border-radius: 6px;
-            color: var(--text-color);
-            cursor: pointer;
-            font-weight: 500;
-            transition: background-color 0.2s ease;
-            outline: none;
-        }
-
-        footer {
-            padding-left: 15px;
-            margin-top: -5px;
-        }
-
-        .mute-btn:hover {
-            background: var(--border-color);
-        }
-        
-        button svg {
-            vertical-align: middle;
-        }
-        
-        button:hover svg {
-            transform: scale(1.1);
-        }
-
-        #convertButton.attention-needed {
-            animation: pulse 2s infinite;
-            background: linear-gradient(to right, var(--primary-color), var(--error-color));
-        }
-
-        @keyframes pulse {
-            0% {
-                transform: scale(1);
-                box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.2);
-            }
-            50% {
-                transform: scale(1.05);
-                box-shadow: 0 6px 8px -1px rgba(239, 68, 68, 0.3);
-            }
-            100% {
-                transform: scale(1);
-                box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.2);
-            }
-        }
-
-        #previewGif {
-            transition: opacity 0.3s ease;
+            position: relative;
+            max-width: 100%;
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 
+                        0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
 
         .preview-overlay {
@@ -650,31 +391,6 @@
             align-items: center;
         }
 
-        #overlayGif {
-            max-width: 100%;
-            max-height: 95vh;
-            object-fit: contain;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-        }
-
-
-        #previewGif {
-            cursor: pointer;
-            transition: transform 0.2s ease;
-        }
-
-        #previewGif:hover {
-            transform: scale(1.01);
-        }
-
-        @media (max-width: 768px) {
-            .preview-overlay {
-                padding: 20px;
-            }
-     
-        }
-
         .progress-bar {
             width: 100%;
             height: 6px;
@@ -684,11 +400,20 @@
             overflow: hidden;
         }
 
-        .progress-fill {
-            width: 0%;
-            height: 100%;
-            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
-            transition: width 0.3s ease;
+        .progress-content {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 32px 48px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            min-width: 250px;
+            position: relative;
+        }
+
+        .progress-content p {
+            margin: 10px 0;
+            font-size: 16px;
         }
 
         .progress-details {
@@ -698,248 +423,37 @@
             margin: 10px 0 0 0;
         }
 
+        .progress-fill {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            transition: width 0.3s ease;
+        }
+
+        .progress-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(8px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
         .progress-status {
             margin: 10px 0;
             font-size: 16px;
         }
 
-        .tips-container {
-            margin-top: 10px;
-            background: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 24px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        .right-column {
+            position: sticky;
+            top: 20px;
         }
 
-
-
-        .tips-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .tips-list li {
-            margin-bottom: 3px;
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            color: var(--text-color);
-            font-size: 0.9em;
-
-        }
-
-        .tips-list li:last-child {
-            margin-bottom: 0;
-        }
-
-        .tip-icon {
-            font-size: 1.2em;
-            flex-shrink: 0;
-            margin-left: 5px;
-        }
-
-        .tips-list strong {
-            color: var(--primary-color);
-            margin-right: 4px;
-        }
-
-
-        @media (max-width: 768px) {
-            .tips-container {
-                margin-top: 15px;
-                padding: 15px;
-            }
-
-            
-        }
-
-            button:focus,
-            input[type="file"]:focus {
-                outline: none;
-            }
-
-            @media (max-width: 768px) {
-                .timeline-marker {
-                    touch-action: none;
-                }
-
-                .start-marker::before {
-                    font-size: 28px;
-                    left: -4px;
-                }
-
-                .end-marker::before {
-                    font-size: 28px;
-                    right: -4px;
-                }
-
-                .setting-group {
-                    flex-direction: column;
-                    align-items: flex-start;
-                    gap: 8px;
-                    margin: 16px 0;
-                }
-
-                .setting-group label {
-                    min-width: auto;
-                }
-
-                select, .time-input {
-                    width: 100%;
-                    padding: 12px;
-                    font-size: 16px;
-                }
-
-                .time-control {
-                    flex-direction: column;
-                    width: 100%;
-                    gap: 0px;
-                    align-items: baseline;
-                    margin: 0;
-                }
-
-                .time-control label {
-                    width: auto;
-                    margin-bottom: -10px;
-                }
-
-                .time-input {
-                    width: 100%;
-                    box-sizing: border-box;
-                }
-
-                .container {
-                    grid-template-columns: 1fr;
-                    padding: 10px 10px 0px 10px;
-                }
-
-                .preview-container, .settings-panel {
-                    padding: 16px;
-                }
-
-                .setting-group {
-                    margin: 10px 0;
-                }
-
-                .timeline-container {
-                    height: 40px;
-                    padding: 8px 0;
-                }
-
-                .play-pause-btn, .mute-btn, #convertButton, #downloadButton {
-                    padding: 12px 16px;
-                    font-size: 16px;
-                }
-
-                .playback-controls {
-                    gap: 12px;
-                }
-
-                input[type="number"] {
-                    font-size: 16px;
-                    min-width: 100px;
-                }
-            }
-
-            .cancel-btn {
-                margin-top: 15px;
-                padding: 8px 16px;
-                background: var(--panel-bg);
-                border: 1px solid var(--error-color);
-                color: var(--error-color);
-                border-radius: 8px;
-                cursor: pointer;
-                font-weight: 500;
-                transition: all 0.2s ease;
-            }
-
-            .cancel-btn:hover {
-                background: var(--error-color);
-                color: white;
-            }
-
-            .progress-content {
-                min-width: 250px;
-                position: relative;
-            }
-
-            .file-size-indicator {
-                display: none;
-            }
-
-        .indicator-separator {
-            margin: 0 5px;
-            color: var(--primary-color);
-        }
-
-        .keyboard-key {
-            display: inline-block;
-            padding: 2px 6px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            background: var(--panel-bg);
-            font-family: monospace;
-            font-size: 1.1em;
-            font-weight: bolder;
-            color: var(--text-color);
-            min-width: 12px;
-            text-align: center;
-            box-shadow: 0 1px 1px rgba(0,0,0,0.2);
-            margin-right: 5px;
-        }
-
-
-        .container-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .expand-button {
-            background: none;
-            border: none;
-            color: var(--text-color);
-            cursor: pointer;
-            padding: 4px;
-            opacity: 0.7;
-            transition: opacity 0.2s ease;
-            margin-right: -15px;
-            margin-top: -30px;
-        }
-
-        .expand-button:hover {
-            opacity: 1;
-        }
-
-        /* Base fullscreen container style */
-        .fullscreen-container {
-            grid-column: 1 / -1 !important;
-            width: 100% !important;
-            max-width: none !important;
-            position: relative !important;
-        }
-
-        /* Fullscreen state for both columns */
-        .fullscreen-container.preview-container,
-        .fullscreen-container.settings-panel,
-        .fullscreen-container.tips-container {
-            width: calc(200% - 40px) !important;
-            position: relative !important;
-            margin: 0 !important;
-        }
-
-        /* Left column specific adjustment */
-        .left-column .fullscreen-container.preview-container,
-        .left-column .fullscreen-container.settings-panel,
-        .left-column .fullscreen-container.tips-container {
-            transform: translateX(0%) !important; 
-            margin-right: 0 !important;
-        }
-
-        /* Right column specific adjustment */
         .right-column .fullscreen-container.preview-container,
         .right-column .fullscreen-container.settings-panel,
         .right-column .fullscreen-container.tips-container {
@@ -947,46 +461,94 @@
             margin-left: 0 !important;
         }
 
-        @media (max-width: 768px) {
-            .fullscreen-container.preview-container,
-            .fullscreen-container.settings-panel,
-            .fullscreen-container.tips-container {
-                width: 100% !important;
-                transform: none !important;
-                margin: 0 !important;
-            }
-            .expand-button{
-                display: none;
-            }
-            footer {
-                text-align: center;
-                padding: 0px 10px 10px 10px;
-                
-            }
-            .tips-list li {
-                font-size: .7em;
-            }
-            .size-indicator {
-                padding: 6px 6px;
-            }
-            #videoInput {
-               align-content: center;
-               height: 50px;
-            }
+        .setting-group {
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        .hidden-container {
-            display: none !important;
+        .setting-group label {
+            min-width: 100px;
+            flex-shrink: 0;
         }
 
-        h3 {
+        .settings-panel {
             margin: 0;
-            border-bottom: 1px solid;
-            border-image: linear-gradient(to right, var(--primary-color) 30%, transparent) 1;
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 
+                        0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .size-indicator {
+            position: relative;
+            background: #3341556b;
+            color: var(--text-color);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.75em;
+            font-weight: 500;
+            display: none;
+            margin: 10px 0;
+            text-align: center;
+        }
+
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid rgba(59, 130, 246, 0.2);
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            margin: 10px auto;
+            animation: spin 1s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+        }
+
+        .start-marker {
+            background: none;
+        }
+
+        .start-marker::before {
+            content: '[';
+            position: absolute;
+            left: -2px;
+            color: var(--success-color);
+            font-size: 20px;
+        }
+
+        .time-control {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 5px 0;
             flex-grow: 1;
         }
 
-        /* Add these styles for the time input controls */
+        .time-control label {
+            min-width: 0px;
+        }
+
+        .time-input {
+            width: 80px;
+            min-width: 100px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 5px;
+            font-size: 0.95em;
+            transition: all 0.2s ease;
+            box-sizing: border-box;
+        }
+
+        .time-input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+            outline: none;
+        }
+
         .time-input-group {
             display: flex;
             align-items: center;
@@ -1010,7 +572,6 @@
             font-size: 14px;
             line-height: 1;
             transition: all 0.2s ease;
-            /* Add these properties to prevent zoom */
             touch-action: manipulation;
             -webkit-touch-callout: none;
             -webkit-user-select: none;
@@ -1019,25 +580,8 @@
             opacity: 1;
         }
 
-        /* Update mobile styles */
-        @media (max-width: 768px) {
-            .time-stepper-btn {
-                padding: 8px 12px;
-                font-size: 16px;
-                min-height: 36px; /* Add minimum touch target size */
-                min-width: 36px;  /* Add minimum touch target size */
-            }
-        }
-
         .time-stepper-btn:hover {
             background: var(--border-color);
-        }
-
-        @media (max-width: 768px) {
-            .time-stepper-btn {
-                padding: 8px 12px;
-                font-size: 16px;
-            }
         }
 
         .time-stepper-btn:disabled {
@@ -1047,11 +591,409 @@
             border-color: var(--border-color);
         }
 
+        .timeline {
+            position: relative;
+            height: 10px;
+            background: var(--border-color);
+            border-radius: 2px;
+            cursor: pointer;
+            transition: height 0.4s;
+        }
+
+        .timeline:hover {
+            height: 12px;
+        }
+
+        .timeline-container {
+            position: relative;
+            height: 20px;
+            padding: 4px 0;
+            cursor: pointer;
+            overflow: visible;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+        .timeline-marker {
+            position: absolute;
+            width: 8px;
+            height: 16px;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            cursor: grab;
+            z-index: 2;
+            font-family: monospace;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--bg-color);
+            font-weight: bold;
+            border: none;
+            border-radius: 0;
+            transition: transform 0.2s;
+        }
+
+        .timeline-marker:active {
+            cursor: grabbing;
+        }
+
+        .timeline-marker:hover {
+            transform: translate(-50%, -50%) scale(1.2);
+        }
+
+        .tip-icon {
+            font-size: 1.2em;
+            flex-shrink: 0;
+            margin-left: 5px;
+        }
+
+        .tips-container {
+            margin-top: 10px;
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .tips-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .tips-list li {
+            margin-bottom: 3px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            color: var(--text-color);
+            font-size: 0.9em;
+        }
+
+        .tips-list li:last-child {
+            margin-bottom: 0;
+        }
+
+        .tips-list strong {
+            color: var(--primary-color);
+            margin-right: 4px;
+        }
+
+        .video-controls {
+            margin-top: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #convertButton {
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.2);
+        }
+
+        #convertButton.attention-needed {
+            animation: pulse 2s infinite;
+            background: linear-gradient(to right, var(--primary-color), var(--error-color));
+        }
+
+        #convertButton:disabled {
+            background: var(--disabled-color);
+            cursor: not-allowed;
+            opacity: 0.6;
+            box-shadow: none;
+            transform: none;
+        }
+
+        #convertButton:disabled:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        #convertButton, #downloadButton {
+            padding: 10px 10px;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border: none;
+            color: white;
+            outline: none;
+        }
+
+        #convertButton:hover, #downloadButton:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px -1px rgba(0, 0, 0, 0.2);
+        }
+
+        #downloadButton {
+            background: var(--success-color);
+            box-shadow: 0 4px 6px -1px rgba(34, 197, 94, 0.2);
+            width: 100%;
+        }
+
+        #downloadButton:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px -1px rgba(0, 0, 0, 0.2);
+        }
+
+        #overlayGif {
+            max-width: 100%;
+            max-height: 95vh;
+            object-fit: contain;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        #previewGif {
+            width: auto;
+            max-width: 100%;
+            max-height: 600px;
+            display: block;
+            transition: opacity 0.3s ease;
+            cursor: pointer;
+            align-content: center;
+        }
+
+        #previewGif:hover {
+            transform: scale(1.01);
+        }
+
+        #videoInput {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            border: 2px dashed var(--border-color);
+            padding: 10px;
+            border-radius: 12px;
+            width: -webkit-fill-available;
+            width: -moz-available;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0 auto 10px;
+            display: block;
+            outline: none;
+        }
+
+        #videoInput:hover {
+            border-color: var(--primary-color);
+            background-color: rgba(59, 130, 246, 0.1);
+        }
+
+        #videoPreview, #previewGif {
+            width: 100%;
+            margin: 0;
+            border-radius: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .time-stepper-btn {
+                padding: 8px 12px;
+                font-size: 16px;
+                min-height: 36px;
+                min-width: 36px;
+            }
+
+            .fullscreen-container.preview-container,
+            .fullscreen-container.settings-panel,
+            .fullscreen-container.tips-container {
+                width: 100% !important;
+                transform: none !important;
+                margin: 0 !important;
+            }
+
+            .expand-button {
+                display: none;
+            }
+
+            footer {
+                text-align: center;
+                padding: 0px 10px 10px 10px;
+            }
+
+            .tips-list li {
+                font-size: .7em;
+            }
+
+            .size-indicator {
+                padding: 6px 6px;
+            }
+
+            #videoInput {
+                align-content: center;
+                height: 50px;
+            }
+
+            .tips-container {
+                margin-top: 15px;
+                padding: 15px;
+            }
+
+            .timeline-marker {
+                touch-action: none;
+            }
+        }
+
+
+        @media (max-width: 768px) {
+            .time-stepper-btn {
+                padding: 8px 12px;
+                font-size: 16px;
+                min-height: 36px;
+                min-width: 36px;
+            }
+
+            .fullscreen-container.preview-container,
+            .fullscreen-container.settings-panel,
+            .fullscreen-container.tips-container {
+                width: 100% !important;
+                transform: none !important;
+                margin: 0 !important;
+            }
+
+            .expand-button {
+                display: none;
+            }
+
+            footer {
+                text-align: center;
+                padding: 0px 10px 10px 10px;
+            }
+
+            .tips-list li {
+                font-size: .7em;
+            }
+
+            .size-indicator {
+                padding: 6px 6px;
+            }
+
+            #videoInput {
+                align-content: center;
+                height: 50px;
+            }
+
+            .tips-container {
+                margin-top: 15px;
+                padding: 15px;
+            }
+
+            .timeline-marker {
+                touch-action: none;
+            }
+
+            .start-marker::before {
+                font-size: 28px;
+                left: -4px;
+            }
+
+            .end-marker::before {
+                font-size: 28px;
+                right: -4px;
+            }
+
+            .setting-group {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+                margin: 10px 0;
+            }
+
+            .setting-group label {
+                min-width: auto;
+            }
+
+            select, .time-input {
+                width: 100%;
+                padding: 12px;
+                font-size: 16px;
+            }
+
+            .time-input {
+                width: 100%;
+                min-width: 100px;
+                padding: 8px;
+                box-sizing: border-box;
+            }
+
+            .time-control {
+                flex-direction: column;
+                width: 100%;
+                gap: 0px;
+                align-items: baseline;
+                margin: 0;
+            }
+
+            .time-control label {
+                width: auto;
+                margin-bottom: -10px;
+            }
+
+            .container {
+                grid-template-columns: 1fr;
+                padding: 10px 10px 0px 10px;
+            }
+
+            .preview-container, .settings-panel {
+                padding: 16px;
+            }
+
+            .timeline-container {
+                height: 40px;
+                padding: 8px 0;
+            }
+
+            .play-pause-btn, .mute-btn, #convertButton, #downloadButton {
+                padding: 12px 16px;
+                font-size: 16px;
+            }
+
+            #convertButton, #downloadButton {
+                width: 100%;
+                margin: 8px 0;
+            }
+
+            .playback-controls {
+                gap: 12px;
+            }
+
+            input[type="number"] {
+                font-size: 16px;
+                min-width: 100px;
+            }
+
+            .right-column {
+                position: static;
+            }
+
+            h1 {
+                font-size: 2em;
+                margin-top: 5px;
+                margin-bottom: -5px;
+            }
+
+            .preview-overlay {
+                padding: 20px;
+            }
+        }
+
+        @media not all and (min-resolution:.001dpcm) { 
+            @supports (-webkit-appearance:none) {
+                select {
+                    text-indent: 1px;
+                    text-overflow: '';
+                    line-height: 1.2;
+                    background-color: var(--bg-color);
+                }
+            }
+        }
+
+
   
     </style>
 </head>
 <body>
-    <!-- Add semantic HTML elements -->
     <header>
         <h1>Video to GIF Converter</h1>
     </header>
@@ -1111,16 +1053,16 @@
                          <div class="time-input-group">
                              <input type="number" id="startTime" class="time-input" value="0.00" min="0" step="0.01" pattern="\d*\.?\d{0,2}">
                              <div class="time-stepper">
-                                 <button class="time-stepper-btn" onclick="adjustTime('startTime', 0.1)" disabled>+</button>
-                                 <button class="time-stepper-btn" onclick="adjustTime('startTime', -0.1)" disabled>−</button>
+                                 <button class="time-stepper-btn" onclick="" disabled>+</button>
+                                 <button class="time-stepper-btn" onclick="" disabled>−</button>
                              </div>
                          </div>
                          <label style="color: var(--error-color)">End:</label>
                          <div class="time-input-group">
                              <input type="number" id="endTime" class="time-input" value="0.00" min="0" step="0.01" pattern="\d*\.?\d{0,2}">
                              <div class="time-stepper">
-                                 <button class="time-stepper-btn" onclick="adjustTime('endTime', 0.1)" disabled>+</button>
-                                 <button class="time-stepper-btn" onclick="adjustTime('endTime', -0.1)" disabled>−</button>
+                                 <button class="time-stepper-btn" onclick="" disabled>+</button>
+                                 <button class="time-stepper-btn" onclick="" disabled>−</button>
                              </div>
                          </div>
                      </div>
@@ -1909,6 +1851,7 @@
             this.elements.timeline._timelineController = this;
             
             this.initializeEventListeners();
+            this.initializeStepperButtons(); // Add this line
             this.isDragging = false;
             this.currentMarker = null;
             this.isPlaying = false;
@@ -2530,6 +2473,86 @@
             this.updateTimeDisplay(true, validStart);
             this.updateTimeDisplay(false, validEnd);
             this.updateDurationDisplay();
+        }
+
+        initializeStepperButtons() {
+            console.log('Initializing stepper buttons');
+            const stepperButtons = document.querySelectorAll('.time-stepper-btn');
+            console.log(`Found ${stepperButtons.length} stepper buttons`);
+            
+            stepperButtons.forEach(button => {
+                let intervalId = null;
+                let timeoutId = null;
+
+                const startRepeating = (delta) => {
+                    console.log(`Starting repeat with delta: ${delta}`);
+                    // Initial delay before rapid stepping begins
+                    timeoutId = setTimeout(() => {
+                        console.log('Starting rapid stepping');
+                        intervalId = setInterval(() => {
+                            const inputId = button.closest('.time-input-group').querySelector('.time-input').id;
+                            console.log(`Adjusting time for input ${inputId} by ${delta}`);
+                            adjustTime(inputId, delta);
+                        }, 50); // Repeat every 50ms
+                    }, 400); // Start repeating after 400ms
+                };
+
+                const stopRepeating = () => {
+                    console.log('Stopping repeat');
+                    if (intervalId) {
+                        console.log('Clearing interval');
+                        clearInterval(intervalId);
+                    }
+                    if (timeoutId) {
+                        console.log('Clearing timeout');
+                        clearTimeout(timeoutId);
+                    }
+                    intervalId = null;
+                    timeoutId = null;
+                };
+
+                // Handle mouse events
+                button.addEventListener('mousedown', (e) => {
+                    console.log('Mouse down on stepper button');
+                    e.preventDefault(); // Prevent text selection
+                    const delta = button.textContent === '+' ? 0.1 : -0.1;
+                    const inputId = button.closest('.time-input-group').querySelector('.time-input').id;
+                    console.log(`Initial click - adjusting ${inputId} by ${delta}`);
+                    adjustTime(inputId, delta); // Immediate first click
+                    startRepeating(delta);
+                });
+
+                button.addEventListener('mouseup', () => {
+                    console.log('Mouse up on stepper button');
+                    stopRepeating();
+                });
+                
+                button.addEventListener('mouseleave', () => {
+                    console.log('Mouse left stepper button');
+                    stopRepeating();
+                });
+
+                // Handle touch events
+                button.addEventListener('touchstart', (e) => {
+                    console.log('Touch start on stepper button');
+                    e.preventDefault();
+                    const delta = button.textContent === '+' ? 0.1 : -0.1;
+                    const inputId = button.closest('.time-input-group').querySelector('.time-input').id;
+                    console.log(`Initial touch - adjusting ${inputId} by ${delta}`);
+                    adjustTime(inputId, delta);
+                    startRepeating(delta);
+                });
+
+                button.addEventListener('touchend', () => {
+                    console.log('Touch end on stepper button');
+                    stopRepeating();
+                });
+                
+                button.addEventListener('touchcancel', () => {
+                    console.log('Touch cancelled on stepper button');
+                    stopRepeating();
+                });
+            });
         }
     }
 
