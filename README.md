@@ -8,18 +8,17 @@ A modern, browser-based tool for converting video clips to GIF animations with a
 ## Live Demo
 Visit [Video To GIF Converter](https://dylansallred.github.io/Video-To-Gif-Converter/VideoToGif.html)
 
-
-
 ## Features
 
 ### Video Preview
 - Upload and preview video files directly in the browser
 - Interactive timeline with draggable markers for precise time selection
 - Play/Pause functionality
-- Audio mute toggle
+- Audio mute toggle with persistent settings
 - Loop playback within the selected range
 - Frame-by-frame navigation using arrow keys
 - Playhead scrubbing for precise frame selection
+- Expandable panels for better workspace organization
 
 ### Customization Options
 - **Frame Rate Selection:** Choose between 5-30 fps
@@ -30,17 +29,22 @@ Visit [Video To GIF Converter](https://dylansallred.github.io/Video-To-Gif-Conve
   - Floyd-Steinberg
   - Light Dithering
   - Stucki
+- **Video Cropping:**
+  - Interactive crop region with resize handles
+  - Real-time crop dimensions display
 - Real-time GIF preview
 - File size estimation
 - Double-click GIF preview for fullscreen view
 
 ### User Interface
-- Expandable panels for better workspace organization
+- Expandable/collapsible panels for better workspace organization
 - Detailed conversion progress with status updates
 - Conversion time and file statistics display
 - Keyboard shortcuts for efficient timeline control
 - Cancel conversion option
 - Mobile-optimized touch controls
+- Persistent settings between sessions
+- Fullscreen preview mode for converted GIFs
 
 ### Keyboard Shortcuts
 - **Space:** Play/Pause video
@@ -53,6 +57,8 @@ Visit [Video To GIF Converter](https://dylansallred.github.io/Video-To-Gif-Conve
 - Detailed frame processing information
 - Estimated file size and dimensions display
 - Conversion time tracking
+- Cancelable conversion process
+- Step-by-step status updates
 
 ### User Experience
 - Responsive design for desktop and mobile
@@ -60,6 +66,8 @@ Visit [Video To GIF Converter](https://dylansallred.github.io/Video-To-Gif-Conve
 - Works entirely in the browser - no server processing needed
 - Helpful tips panel with optimization suggestions
 - Visual feedback for settings changes
+- Automatic file size optimization suggestions
+- Touch-friendly controls for mobile devices
 
 ## Usage
 
