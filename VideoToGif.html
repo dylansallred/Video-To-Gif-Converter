@@ -2653,23 +2653,23 @@
             const startTime = parseFloat(this.elements.startTimeInput.value);
 
             // Add validation for currentTime
-            if (!isFinite(currentTime)) return;
+            if (!isFinite(currentTime)) {
+                console.warn('Invalid currentTime in handleTimeUpdate');
+                return;
+            }
 
             if (this.isPlaying && ((currentTime >= endTime || this.videoPreview.ended) && this.isPlaying)) {
                 this.videoPreview.currentTime = startTime;
                 
                 this.videoPreview.play().catch(err => {
+                    console.error('Error playing video:', err);
                     this.isPlaying = false;
                     this.updatePlayButton(false);
                 });
             }
 
-            // Add this check to ensure playhead stays within bounds
-            if (currentTime > endTime) {
-                this.elements.playhead.style.display = 'none';
-            } else {
-                this.updatePlayhead();
-            }
+            // Remove the check that hides the playhead
+            this.updatePlayhead();
         }
 
         setTimelineEnabled(enabled) {
@@ -2688,7 +2688,9 @@
             if (!this.videoPreview.src) return;
             
             // Don't update if we're dragging the playhead
-            if (this.isScrubbingPlayhead) return;
+            if (this.isScrubbingPlayhead) {
+                return;
+            }
             
             const duration = this.videoDuration || this.videoPreview.duration;
             const currentTime = this.videoPreview.currentTime;
@@ -2697,23 +2699,15 @@
             
             // Add validation checks
             if (!isFinite(currentTime) || !isFinite(duration) || duration <= 0) {
+                console.warn('Invalid time values:', { currentTime, duration });
                 return;
             }
             
             // Calculate position with higher precision
             const position = (currentTime / duration) * 100;
-            
-            // Only hide playhead if it's significantly outside the valid range
-            const buffer = 0.01; // 10ms buffer to prevent flickering
-            if (currentTime < startTime - buffer || currentTime > endTime + buffer) {
-                this.elements.playhead.style.display = 'none';
-            } else {
-                this.elements.playhead.style.display = 'block';
-                this.elements.playhead.style.left = `${position}%`;
-                
-                // Add transform for smoother movement
-               // this.elements.playhead.style.transform = 'translateX(-50%)';
-            }
+            // Always show playhead and update its position
+            this.elements.playhead.style.display = 'block';
+            this.elements.playhead.style.left = `${position}%`;
         }
 
         toggleMute() {
@@ -2810,11 +2804,15 @@
             if (isFinite(time) && time >= 0 && time <= duration) {
                 // Constrain time between start and end markers unless shift is held
                 if (!e.shiftKey) {
+                    const oldTime = time;
                     time = Math.max(startTime, Math.min(endTime, time));
+                    if (oldTime !== time) {
+                    }
                 }
                 
                 this.videoPreview.currentTime = time;
-                this.elements.playhead.style.left = `${position * 100}%`;
+                const finalPosition = (time / duration) * 100;
+                this.elements.playhead.style.left = `${finalPosition}%`;
                 
                 // Update markers if shift is held
                 if (e.shiftKey) {
@@ -3136,6 +3134,17 @@
                     });
                 }
             };
+        }
+
+        // Add this method inside the TimelineController class, after initializeElements()
+        updateTimeDisplay(isStartTime, time) {
+            const display = isStartTime ? this.elements.startTimeDisplay : this.elements.endTimeDisplay;
+            display.textContent = this.formatTime(time);
+            
+            // Dispatch a change event on the corresponding input
+            const input = isStartTime ? this.elements.startTimeInput : this.elements.endTimeInput;
+            const event = new Event('change', { bubbles: true });
+            input.dispatchEvent(event);
         }
     }
 
