@@ -2484,7 +2484,17 @@
             const time = position * duration;
             
             if (isFinite(time) && isFinite(duration) && duration > 0) {
+                // Update marker position first
                 this.updateTimeFromDrag(time);
+                
+                // Update playhead position to follow the marker being dragged
+                if (this.currentMarker === this.elements.startMarker || 
+                    this.currentMarker === this.elements.endMarker) {
+                    this.videoPreview.currentTime = time;
+                    this.elements.playhead.style.display = 'block';
+                    this.elements.playhead.style.left = `${position * 100}%`;
+                    //this.elements.playhead.style.transform = 'translateX(-50%)';
+                }
             }
         }
 
@@ -2508,8 +2518,10 @@
             // Clamp time between 0 and duration
             time = Math.max(0, Math.min(time, duration));
 
-            // Update marker position
-            this.updateMarkerPosition(this.currentMarker, time, duration);
+            // Update marker position with transform for smoother movement
+            const position = (time / duration) * 100;
+            this.currentMarker.style.left = `${position}%`;
+            //this.currentMarker.style.transform = 'translateX(-50%)';
             
             // Update time display and input
             const timeStr = time.toFixed(2);
@@ -2521,7 +2533,7 @@
                 this.elements.endTimeDisplay.textContent = this.formatTime(time);
             }
 
-            // Only set video currentTime if it's a valid value
+            // Update video position
             if (isFinite(time) && time >= 0 && time <= duration) {
                 this.videoPreview.currentTime = time;
             }
@@ -2640,13 +2652,23 @@
             const endTime = parseFloat(this.elements.endTimeInput.value);
             const startTime = parseFloat(this.elements.startTimeInput.value);
 
-            if (isFinite(currentTime) && ((currentTime >= endTime || this.videoPreview.ended) && this.isPlaying)) {
+            // Add validation for currentTime
+            if (!isFinite(currentTime)) return;
+
+            if (this.isPlaying && ((currentTime >= endTime || this.videoPreview.ended) && this.isPlaying)) {
                 this.videoPreview.currentTime = startTime;
                 
                 this.videoPreview.play().catch(err => {
                     this.isPlaying = false;
                     this.updatePlayButton(false);
                 });
+            }
+
+            // Add this check to ensure playhead stays within bounds
+            if (currentTime > endTime) {
+                this.elements.playhead.style.display = 'none';
+            } else {
+                this.updatePlayhead();
             }
         }
 
@@ -2665,6 +2687,7 @@
         updatePlayhead() {
             if (!this.videoPreview.src) return;
             
+            // Don't update if we're dragging the playhead
             if (this.isScrubbingPlayhead) return;
             
             const duration = this.videoDuration || this.videoPreview.duration;
@@ -2672,15 +2695,24 @@
             const startTime = parseFloat(this.elements.startTimeInput.value);
             const endTime = parseFloat(this.elements.endTimeInput.value);
             
-            if (this.isPlaying && (currentTime > endTime || currentTime < startTime)) {
-                this.elements.playhead.style.display = 'none';
+            // Add validation checks
+            if (!isFinite(currentTime) || !isFinite(duration) || duration <= 0) {
                 return;
             }
             
-            if (isFinite(duration) && duration > 0 && isFinite(currentTime)) {
-                const position = (currentTime / duration) * 100;
-                this.elements.playhead.style.left = `${position}%`;
+            // Calculate position with higher precision
+            const position = (currentTime / duration) * 100;
+            
+            // Only hide playhead if it's significantly outside the valid range
+            const buffer = 0.01; // 10ms buffer to prevent flickering
+            if (currentTime < startTime - buffer || currentTime > endTime + buffer) {
+                this.elements.playhead.style.display = 'none';
+            } else {
                 this.elements.playhead.style.display = 'block';
+                this.elements.playhead.style.left = `${position}%`;
+                
+                // Add transform for smoother movement
+               // this.elements.playhead.style.transform = 'translateX(-50%)';
             }
         }
 
