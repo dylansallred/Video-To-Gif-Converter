@@ -2,7 +2,7 @@
 
 A modern, browser-based tool for converting video clips to GIF animations with advanced customization options. Built with vanilla JavaScript and HTML5, this tool runs entirely in your browser - no server uploads required. The entire application is contained in a single HTML file, making it fast, secure, and privacy-friendly since all processing happens locally on your device.
 
-![Main Application Interface](./images/videotogif.gif)
+![Main Application Interface](/images/videotogif.gif)
 <p align="center"><em>The GIF above was created using this tool.</em></p>
 
 ## Live Demo
