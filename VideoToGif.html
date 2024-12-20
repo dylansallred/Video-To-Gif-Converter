@@ -367,6 +367,84 @@
                         0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
 
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .crop-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .crop-region {
+            position: absolute;
+            border: 2px solid var(--primary-color);
+            background: rgba(59, 130, 246, 0.1);
+            cursor: move;
+            touch-action: none;
+            pointer-events: auto;
+            z-index: 2;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+        .crop-handle {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: var(--primary-color);
+            border: 2px solid white;
+            border-radius: 50%;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+        .crop-handle.nw { top: -6px; left: -6px; cursor: nw-resize; }
+        .crop-handle.ne { top: -6px; right: -6px; cursor: ne-resize; }
+        .crop-handle.sw { bottom: -6px; left: -6px; cursor: sw-resize; }
+        .crop-handle.se { bottom: -6px; right: -6px; cursor: se-resize; }
+
+        .crop-button {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .crop-button:hover {
+            background: var(--border-color);
+        }
+
+        .crop-button.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        #cropDimensions {
+            margin-top: 8px;
+            font-size: 0.9em;
+            color: var(--text-color);
+        }
+
         .preview-overlay {
             display: none;
             position: fixed;
@@ -747,14 +825,24 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
 
+        .gif-wrapper {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            max-height: 500px;
+            overflow: hidden; 
+        }
+
         #previewGif {
-            width: auto;
-            max-width: 100%;
-            max-height: 600px;
+            width: auto !important;
+            height: auto !important;
+            max-width: 100% !important;
+            max-height: 500px !important;
             display: block;
             transition: opacity 0.3s ease;
             cursor: pointer;
-            align-content: center;
+            margin: 0 auto;
+            object-fit: contain;
         }
 
         #previewGif:hover {
@@ -833,148 +921,13 @@
             .timeline-marker {
                 touch-action: none;
             }
-        }
 
-
-        @media (max-width: 768px) {
-            .time-stepper-btn {
-                padding: 8px 12px;
-                font-size: 16px;
-                min-height: 36px;
-                min-width: 36px;
+            .gif-wrapper {
+                max-height: 300px;
             }
 
-            .fullscreen-container.preview-container,
-            .fullscreen-container.settings-panel,
-            .fullscreen-container.tips-container {
-                width: 100% !important;
-                transform: none !important;
-                margin: 0 !important;
-            }
-
-            .expand-button {
-                display: none;
-            }
-
-            footer {
-                text-align: center;
-                padding: 0px 10px 10px 10px;
-            }
-
-            .tips-list li {
-                font-size: .7em;
-            }
-
-            .size-indicator {
-                padding: 6px 6px;
-            }
-
-            #videoInput {
-                align-content: center;
-                height: 50px;
-            }
-
-            .tips-container {
-                margin-top: 15px;
-                padding: 15px;
-            }
-
-            .timeline-marker {
-                touch-action: none;
-            }
-
-            .start-marker::before {
-                font-size: 28px;
-                left: -4px;
-            }
-
-            .end-marker::before {
-                font-size: 28px;
-                right: -4px;
-            }
-
-            .setting-group {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 8px;
-                margin: 10px 0;
-            }
-
-            .setting-group label {
-                min-width: auto;
-            }
-
-            select, .time-input {
-                width: 100%;
-                padding: 12px;
-                font-size: 16px;
-            }
-
-            .time-input {
-                width: 100%;
-                min-width: 100px;
-                padding: 8px;
-                box-sizing: border-box;
-            }
-
-            .time-control {
-                flex-direction: column;
-                width: 100%;
-                gap: 0px;
-                align-items: baseline;
-                margin: 0;
-            }
-
-            .time-control label {
-                width: auto;
-                margin-bottom: -10px;
-            }
-
-            .container {
-                grid-template-columns: 1fr;
-                padding: 10px 10px 0px 10px;
-            }
-
-            .preview-container, .settings-panel {
-                padding: 16px;
-            }
-
-            .timeline-container {
-                height: 40px;
-                padding: 8px 0;
-            }
-
-            .play-pause-btn, .mute-btn, #convertButton, #downloadButton {
-                padding: 12px 16px;
-                font-size: 16px;
-            }
-
-            #convertButton, #downloadButton {
-                width: 100%;
-                margin: 8px 0;
-            }
-
-            .playback-controls {
-                gap: 12px;
-            }
-
-            input[type="number"] {
-                font-size: 16px;
-                min-width: 100px;
-            }
-
-            .right-column {
-                position: static;
-            }
-
-            h1 {
-                font-size: 2em;
-                margin-top: 5px;
-                margin-bottom: -5px;
-            }
-
-            .preview-overlay {
-                padding: 20px;
+            #previewGif {
+                max-height: 300px !important;
             }
         }
 
@@ -989,8 +942,31 @@
             }
         }
 
+        /* Add these CSS rules in the <style> section */
+        .dragging-active {
+            user-select: none !important;
+            -webkit-user-select: none !important;
+            -moz-user-select: none !important;
+            -ms-user-select: none !important;
+            cursor: grabbing !important;
+        }
 
-  
+        /* Add these CSS rules in the style section */
+        .time-input::-webkit-inner-spin-button,
+        .time-input::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .time-input {
+            -moz-appearance: textfield;
+            appearance: textfield;
+        }
+
+        .time-input:focus {
+            -moz-appearance: textfield;
+            appearance: textfield;
+        }
     </style>
 </head>
 <body>
@@ -1010,7 +986,9 @@
                     </button>
                 </div>
                 <input type="file" id="videoInput" accept="video/mp4,video/webm,video/ogg,video/quicktime">
-                <video id="videoPreview" style="display: none;" playsinline webkit-playsinline></video>
+                <div class="video-wrapper">
+                    <video id="videoPreview" style="display: none;" playsinline webkit-playsinline></video>
+                </div>
                 <div class="video-controls">
                     <div class="timeline-container">
                         <div class="timeline">
@@ -1051,7 +1029,7 @@
                      <div class="time-control">
                          <label style="color: var(--success-color)">Start:</label>
                          <div class="time-input-group">
-                             <input type="number" id="startTime" class="time-input" value="0.00" min="0" step="0.01" pattern="\d*\.?\d{0,2}">
+                             <input type="number" id="startTime" class="time-input" value="0.00" min="0" step="0.01" pattern="\d*\.?\d{0,2}" style="-webkit-appearance: none; -moz-appearance: textfield;">
                              <div class="time-stepper">
                                  <button class="time-stepper-btn" onclick="" disabled>+</button>
                                  <button class="time-stepper-btn" onclick="" disabled>−</button>
@@ -1059,7 +1037,7 @@
                          </div>
                          <label style="color: var(--error-color)">End:</label>
                          <div class="time-input-group">
-                             <input type="number" id="endTime" class="time-input" value="0.00" min="0" step="0.01" pattern="\d*\.?\d{0,2}">
+                             <input type="number" id="endTime" class="time-input" value="0.00" min="0" step="0.01" pattern="\d*\.?\d{0,2}" style="-webkit-appearance: none; -moz-appearance: textfield;">
                              <div class="time-stepper">
                                  <button class="time-stepper-btn" onclick="" disabled>+</button>
                                  <button class="time-stepper-btn" onclick="" disabled>−</button>
@@ -1124,6 +1102,19 @@
 
                 
 
+                <div class="setting-group" id="cropControls">
+                    <label>Crop Video</label>
+                    <div class="crop-controls">
+                        <button id="toggleCrop" class="crop-button">
+                            Enable Crop
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-crop"><path d="M6.13 1L6 16a2 2 0 0 0 2 2h15"></path><path d="M1 6.13L16 6a2 2 0 0 1 2 2v15"></path></svg>
+                        </button>
+                        <div id="cropDimensions" style="display: none;">
+                            <span id="cropSize"></span>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="button-group">
                     <button id="convertButton" disabled>Convert to GIF</button>
                 </div>
@@ -1151,7 +1142,9 @@
                         </svg>
                     </button>
                 </div>
-                <img id="previewGif" alt="">
+                <div class="gif-wrapper">
+                    <img id="previewGif" alt="">
+                </div>
                 <div class="size-indicator" id="sizeIndicator"></div>
                 <button id="downloadButton" style="display: none;">Download GIF</button>
             </div>
@@ -1242,68 +1235,58 @@
     </div>
 
     <script>
-    // Update the adjustTime function
     function adjustTime(inputId, delta) {
         const input = document.getElementById(inputId);
         const timeline = document.querySelector('.timeline');
         const timelineController = timeline._timelineController;
+        const videoPreview = document.getElementById('videoPreview');
         
-        if (!input || !timelineController) return;
+        if (!input || !timelineController || !videoPreview.src) {
+            return;
+        }
         
         const currentValue = parseFloat(input.value);
         const isStartTime = inputId === 'startTime';
-        const duration = timelineController.videoPreview.duration;
+        const duration = timelineController.videoDuration || timelineController.videoPreview.duration;
         
-        // Get the other time value
         const otherInput = document.getElementById(isStartTime ? 'endTime' : 'startTime');
         const otherValue = parseFloat(otherInput.value);
         
-        // Calculate new value with constraints
         let newValue;
         if (isStartTime) {
-            // Start time can't exceed end time - 0.01
             newValue = Math.min(
                 Math.max(0, Math.round((currentValue + delta) * 100) / 100),
                 otherValue - 0.01
             );
         } else {
-            // End time can't be less than start time + 0.01 or exceed duration
             newValue = Math.min(
                 Math.max(otherValue + 0.01, Math.round((currentValue + delta) * 100) / 100),
                 duration
             );
         }
         
-        // Only proceed if the value actually changed
         if (newValue === currentValue) return;
         
-        // Update the input value
         input.value = newValue.toFixed(2);
         
-        // Update timeline display and markers
         const display = document.querySelector(isStartTime ? '.start-time' : '.end-time');
         const marker = document.querySelector(isStartTime ? '.start-marker' : '.end-marker');
         
-        // Update the time display
         display.textContent = timelineController.formatTime(newValue);
         
-        // Update marker position
         const position = (newValue / duration) * 100;
         marker.style.left = `${position}%`;
         
-        // Update duration display
         const durationDisplay = document.querySelector('.duration-time');
         const startTime = parseFloat(document.getElementById('startTime').value);
         const endTime = parseFloat(document.getElementById('endTime').value);
         const clipDuration = endTime - startTime;
         durationDisplay.textContent = `Duration: ${clipDuration.toFixed(1)}s`;
         
-        // Create and dispatch a change event
         const event = new Event('change', { bubbles: true });
         input.dispatchEvent(event);
     }
 
-    // Main application class
     class GifConverter {
         constructor() {
             this.initializeElements();
@@ -1313,18 +1296,14 @@
             this.originalFileName = '';
             this.settingsChanged = false;
             
-         
-
             this.initializePreviewOverlay();
 
-           
             this.lastConversionSettings = null; 
             this.conversionStartTime = null;
-            this.workerCount = Math.max(1, navigator.hardwareConcurrency ? 
-                Math.min(navigator.hardwareConcurrency - 1, 8) : 2);
-            console.log(this.workerCount);
+            this.workerCount = Math.max(1, navigator.hardwareConcurrency ? Math.min(navigator.hardwareConcurrency - 1, 8) : 2);
             this.currentConversion = null;
             this.initializeCancelButton();
+            this.initializeCropping();
         }
 
         initializeElements() {
@@ -1357,6 +1336,11 @@
 
             this.elements.sizeSelect.addEventListener('change', (e) => {
                 this.saveSetting('gifOutputSize', e.target.value);
+                if (this.cropEnabled) {
+                    this.updateCropDimensions();
+                } else {
+                    this.updateOutputDimensions();
+                }
             });
 
             this.elements.fpsSelect.addEventListener('change', (e) => {
@@ -1374,14 +1358,12 @@
                 this.elements.speedSelect,
             ];
 
-            // Handle regular settings inputs
             settingsInputs.forEach(input => {
                 ['change', 'input'].forEach(eventType => {
                     input.addEventListener(eventType, () => this.markSettingsChanged());
                 });
             });
 
-            // Handle time inputs separately
             [this.elements.startTime, this.elements.endTime].forEach(input => {
                 input.addEventListener('timechange', () => this.markSettingsChanged());
             });
@@ -1391,7 +1373,6 @@
                 this.markSettingsChanged();
             });
 
-            // Prevent space from triggering buttons
             document.querySelectorAll('button').forEach(button => {
                 button.addEventListener('keydown', (e) => {
                     if (e.code === 'Space') {
@@ -1399,28 +1380,34 @@
                     }
                 });
             });
+
+            this.elements.videoInput.addEventListener('change', () => {
+                setTimeout(() => {
+                    if (this.cropEnabled) {
+                        this.updateCropDimensions();
+                    } else {
+                        this.updateOutputDimensions();
+                    }
+                }, 100);
+            });
         }
 
         loadSavedSettings() {
-            // Load Output Size
             const savedSize = localStorage.getItem('gifOutputSize');
             if (savedSize) {
                 this.elements.sizeSelect.value = savedSize;
             }
 
-            // Load Frame Rate
             const savedFps = localStorage.getItem('gifFrameRate');
             if (savedFps) {
                 this.elements.fpsSelect.value = savedFps;
             }
 
-            // Load Dithering
             const savedDither = localStorage.getItem('gifDither');
             if (savedDither) {
                 this.elements.ditherSelect.value = savedDither;
             }
 
-            // Load Speed
             const savedSpeed = localStorage.getItem('gifSpeed');
             if (savedSpeed) {
                 this.elements.speedSelect.value = savedSpeed;
@@ -1435,7 +1422,6 @@
             const file = e.target.files[0];
             if (!file) return;
 
-            // List of supported MIME types
             const supportedTypes = [
                 'video/mp4',
                 'video/webm',
@@ -1443,12 +1429,15 @@
                 'video/quicktime'
             ];
 
-            // Check if file type is supported
             if (!supportedTypes.includes(file.type)) {
                 alert('Unsupported video format. Please use MP4, WebM, OGG, or MOV files.');
-                this.elements.videoInput.value = ''; // Clear the input
+                this.elements.videoInput.value = '';
                 return;
             }
+
+            // Add this new code to extract duration from filename
+            const durationMatch = file.name.match(/_(\d+)s\.[^.]+$/);
+            const hasFileDuration = durationMatch && !isNaN(durationMatch[1]);
 
             this.originalFileName = file.name.replace(/\.[^/.]+$/, '');
             const videoUrl = URL.createObjectURL(file);
@@ -1458,17 +1447,33 @@
             this.elements.convertButton.disabled = false;
             this.elements.previewGif.style.display = 'none';
             this.elements.downloadButton.style.display = 'none';
-            this.lastConversionSettings = null; // Reset last settings
+            this.lastConversionSettings = null;
 
             this.elements.videoPreview.onloadedmetadata = () => {
-                this.elements.endTime.value = this.elements.videoPreview.duration.toFixed(2);
-                this.elements.endTime.max = Math.ceil(this.elements.videoPreview.duration * 100) / 100;
-                this.elements.startTime.max = Math.ceil(this.elements.videoPreview.duration * 100) / 100;
-                
-            
+                // If we have duration in filename and it's a webm file, use that instead
+                if (file.type === 'video/webm' && hasFileDuration) {
+                    const fileDuration = parseFloat(durationMatch[1]);
+                    this.elements.endTime.value = fileDuration.toFixed(2);
+                    this.elements.endTime.max = fileDuration;
+                    this.elements.startTime.max = fileDuration;
+                    
+                    // Update the timeline display
+                    const endTimeDisplay = document.querySelector('.end-time');
+                    if (endTimeDisplay) {
+                        endTimeDisplay.textContent = this.timeline.formatTime(fileDuration);
+                    }
+                    
+                    // Update timeline markers
+                    this.timeline.updateMarkerPositions();
+                    this.timeline.updateDurationDisplay();
+                } else {
+                    // Use metadata duration for non-webm files or when filename doesn't contain duration
+                    this.elements.endTime.value = this.elements.videoPreview.duration.toFixed(2);
+                    this.elements.endTime.max = Math.ceil(this.elements.videoPreview.duration * 100) / 100;
+                    this.elements.startTime.max = Math.ceil(this.elements.videoPreview.duration * 100) / 100;
+                }
             };
 
-            // Add error handling for video loading
             this.elements.videoPreview.onerror = () => {
                 alert('Error loading video. Please try another file.');
                 this.elements.videoInput.value = '';
@@ -1487,22 +1492,14 @@
         }
 
         handleConvert() {
-            const settings = {
-                fps: parseInt(this.elements.fpsSelect.value),
-                sizePercent: parseFloat(this.elements.sizeSelect.value),
-                startTime: parseFloat(this.elements.startTime.value),
-                endTime: parseFloat(this.elements.endTime.value),
-                dither: this.elements.ditherSelect.value,
-                speed: parseFloat(this.elements.speedSelect.value)
-            };
-            
-            this.conversionStartTime = performance.now(); 
-            this.lastConversionSettings = {...settings};
-            this.settingsChanged = false;
-            this.elements.convertButton.classList.remove('attention-needed');
-            this.elements.previewGif.style.opacity = '1';
-            this.elements.convertButton.disabled = true; // Disable after conversion
-            this.convertToGif(settings);
+            if (this.currentConversion) {
+                this.cancelConversion();
+                setTimeout(() => {
+                    this.startNewConversion();
+                }, 100);
+            } else {
+                this.startNewConversion();
+            }
         }
 
         handleDownload() {
@@ -1514,9 +1511,29 @@
             }
         }
 
+        startNewConversion() {
+            const settings = {
+                fps: parseInt(this.elements.fpsSelect.value),
+                sizePercent: parseFloat(this.elements.sizeSelect.value),
+                startTime: parseFloat(this.elements.startTime.value),
+                endTime: parseFloat(this.elements.endTime.value),
+                dither: this.elements.ditherSelect.value,
+                speed: parseFloat(this.elements.speedSelect.value),
+                crop: this.cropEnabled ? { ...this.cropRegion } : null
+            };
+            
+            this.conversionStartTime = performance.now(); 
+            this.lastConversionSettings = {...settings};
+            this.settingsChanged = false;
+            this.elements.convertButton.classList.remove('attention-needed');
+            this.elements.previewGif.style.opacity = '1';
+            this.elements.convertButton.disabled = true;
+            this.convertToGif(settings);
+        }
+
         async convertToGif(settings) {
             if (this.currentConversion) {
-                this.cancelConversion();
+                await this.cancelConversion();
             }
 
             const video = this.elements.videoPreview;
@@ -1533,7 +1550,6 @@
             });
 
             this.currentConversion = gif;
-
             this.updateUIForConversion(true);
 
             try {
@@ -1567,23 +1583,50 @@
                 progressFill.style.width = '0%';
                 progressDetails.textContent = 'Processing frame: 0/0';
                 progressStatus.textContent = 'Converting... Please wait.';
-                progressStatus.style.color = ''; // Reset color
+                progressStatus.style.color = '';
             }
         }
 
         async processFrames(gif, settings, newWidth, newHeight) {
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d', { willReadFrequently: true });
-            canvas.width = newWidth;
-            canvas.height = newHeight;
+            
+
+            let finalWidth, finalHeight;
+            let sourceX, sourceY, sourceWidth, sourceHeight;
+            
+            if (this.cropEnabled && this.cropRegion) {
+                const videoWidth = this.elements.videoPreview.videoWidth;
+                const videoHeight = this.elements.videoPreview.videoHeight;
+                
+                sourceX = Math.round(this.cropRegion.x * videoWidth);
+                sourceY = Math.round(this.cropRegion.y * videoHeight);
+                sourceWidth = Math.round(this.cropRegion.width * videoWidth);
+                sourceHeight = Math.round(this.cropRegion.height * videoHeight);
+                
+                finalWidth = Math.round(sourceWidth * settings.sizePercent);
+                finalHeight = Math.round(sourceHeight * settings.sizePercent);
+            } else {
+                sourceX = 0;
+                sourceY = 0;
+                sourceWidth = this.elements.videoPreview.videoWidth;
+                sourceHeight = this.elements.videoPreview.videoHeight;
+                finalWidth = newWidth;
+                finalHeight = newHeight;
+            }
+            
+            canvas.width = finalWidth;
+            canvas.height = finalHeight;
+            
+            gif.setOption('width', finalWidth);
+            gif.setOption('height', finalHeight);
 
             const speedMultiplier = parseFloat(this.elements.speedSelect.value);
-            const frameInterval = 1000 / settings.fps; // Remove speed from interval calculation
+            const frameInterval = 1000 / settings.fps;
             let currentTime = settings.startTime * 1000;
             const endTime = settings.endTime * 1000;
 
             const duration = endTime - currentTime;
-            // Adjust total frames based on speed
             const totalFrames = Math.ceil((duration / frameInterval) / speedMultiplier);
             let processedFrames = 0;
 
@@ -1592,9 +1635,14 @@
             const progressStatus = document.querySelector('.progress-status');
 
             return new Promise((resolve, reject) => {
-                this.currentCaptureFrame = () => {
+                const captureFrame = () => {
                     if (currentTime <= endTime) {
-                        ctx.drawImage(this.elements.videoPreview, 0, 0, newWidth, newHeight);
+                        ctx.drawImage(
+                            this.elements.videoPreview,
+                            sourceX, sourceY, sourceWidth, sourceHeight,
+                            0, 0, finalWidth, finalHeight
+                        );
+                        
                         gif.addFrame(ctx, { copy: true, delay: frameInterval });
                         
                         processedFrames++;
@@ -1603,7 +1651,6 @@
                         progressDetails.textContent = `Processing frame: ${processedFrames}/${totalFrames}`;
                         progressStatus.textContent = `Converting... ${Math.round(progress)}%`;
                         
-                        // Skip frames based on speed multiplier
                         currentTime += frameInterval * speedMultiplier;
                         this.elements.videoPreview.currentTime = currentTime / 1000;
                     } else {
@@ -1614,7 +1661,9 @@
                     }
                 };
 
-                this.elements.videoPreview.addEventListener('seeked', this.currentCaptureFrame);
+                // Store the capture frame function so we can remove it later
+                this.currentCaptureFrame = captureFrame;
+                this.elements.videoPreview.addEventListener('seeked', captureFrame);
                 this.elements.videoPreview.currentTime = settings.startTime;
             });
         }
@@ -1627,22 +1676,41 @@
         }
 
         finalizeGif(gif) {
+            if (!gif || !this.currentConversion || gif !== this.currentConversion) {
+                return;
+            }
+
+            try {
+                this.completeFinalizeGif(gif);
+            } catch (error) {
+                console.error('Error in finalization:', error);
+                this.updateUIForConversion(false);
+                this.currentConversion = null;
+            }
+        }
+
+        completeFinalizeGif(gif) {
+            if (!gif || !this.currentConversion || gif !== this.currentConversion) {
+                return;
+            }
+
+            gif.removeAllListeners();
+
             gif.on('progress', (p) => {
-                if (!this.currentConversion) return;
+                if (!this.currentConversion || gif !== this.currentConversion) return;
                 
                 const progressStatus = document.querySelector('.progress-status');
                 const progressDetails = document.querySelector('.progress-details');
                 const progressFill = document.querySelector('.progress-fill');
                 
                 const percent = Math.round(p * 100);
-                
                 progressStatus.textContent = 'Finalizing GIF... ' + percent + '%';
                 progressDetails.textContent = this.getFinalizingStepText(percent);
                 progressFill.style.width = percent + '%';
             });
 
             gif.on('finished', (blob) => {
-                if (!this.currentConversion) return;
+                if (!this.currentConversion || gif !== this.currentConversion) return;
                 
                 const conversionEndTime = performance.now();
                 const conversionTime = ((conversionEndTime - this.conversionStartTime) / 1000).toFixed(2);
@@ -1651,27 +1719,35 @@
                 this.updatePreview(blob, conversionTime);
                 this.updateUIForConversion(false);
                 this.elements.downloadButton.style.display = 'block';
-                this.elements.convertButton.disabled = true; // Ensure button is disabled
-                this.elements.previewGif.style.opacity = '1'; // Ensure preview is fully visible
+                this.elements.convertButton.disabled = true;
+                this.elements.previewGif.style.opacity = '1';
                 this.currentConversion = null;
             });
 
             gif.on('error', (error) => {
-                console.error('GIF encoding error:', error);
                 const progressStatus = document.querySelector('.progress-status');
                 progressStatus.textContent = 'Error: GIF conversion failed';
                 progressStatus.style.color = 'var(--error-color)';
                 this.currentConversion = null;
-                this.elements.convertButton.disabled = false; // Enable button on error
+                this.elements.convertButton.disabled = false;
             });
 
-            gif.render();
+            try {
+                gif.render();
+            } catch (error) {
+                this.currentConversion = null;
+                this.elements.convertButton.disabled = false;
+                const progressStatus = document.querySelector('.progress-status');
+                progressStatus.textContent = 'Error: Could not start conversion';
+                progressStatus.style.color = 'var(--error-color)';
+                this.updateUIForConversion(false);
+            }
         }
 
         updatePreview(blob, conversionTime) {
             const gifUrl = URL.createObjectURL(blob);
             this.setupPreviewImage(gifUrl, blob, conversionTime);
-            this.elements.convertButton.disabled = true; // Disable when showing preview
+            this.elements.convertButton.disabled = true;
         }
 
         updateFileSize(blob, conversionTime) {
@@ -1682,10 +1758,9 @@
                 ? `${fileSizeInMB.toFixed(2)} MB`
                 : `${fileSizeInKB.toFixed(2)} KB`;
             
-            // Calculate GIF duration using the timeline's elements
             const startTime = parseFloat(this.timeline.elements.startTimeInput.value);
             const endTime = parseFloat(this.timeline.elements.endTimeInput.value);
-            const speedSelect = document.getElementById('speedSelect'); // Get speed directly
+            const speedSelect = document.getElementById('speedSelect');
             const duration = ((endTime - startTime) / parseFloat(speedSelect.value)).toFixed(1);
             
             this.elements.sizeIndicator.innerHTML = `
@@ -1709,8 +1784,6 @@
             this.elements.previewGif.src = gifUrl;
         }
 
-   
-
         markSettingsChanged() {
             if (!this.lastConversionSettings || !this.elements.previewGif.src) {
                 return;
@@ -1722,23 +1795,46 @@
                 startTime: parseFloat(this.elements.startTime.value),
                 endTime: parseFloat(this.elements.endTime.value),
                 dither: this.elements.ditherSelect.value,
-                speed: parseFloat(this.elements.speedSelect.value)
+                speed: parseFloat(this.elements.speedSelect.value),
+                crop: this.cropEnabled ? { ...this.cropRegion } : null
             };
 
-            const settingsChanged = Object.keys(currentSettings).some(key => 
-                currentSettings[key] !== this.lastConversionSettings[key]
-            );
+            if (this.cropEnabled) {
+                
+                if (currentSettings.crop && this.lastConversionSettings.crop) {
+                    ['x', 'y', 'width', 'height'].forEach(prop => {
+                        const current = Math.round(currentSettings.crop[prop] * 1000) / 1000;
+                        const last = Math.round(this.lastConversionSettings.crop[prop] * 1000) / 1000;
+                    });
+                }
+            }
+
+            const settingsChanged = Object.keys(currentSettings).some(key => {
+                if (key === 'crop') {
+                    if (!currentSettings.crop && !this.lastConversionSettings.crop) {
+                        return false;
+                    }
+                    if (!currentSettings.crop || !this.lastConversionSettings.crop) {
+                        return true;
+                    }
+                    const cropChanged = ['x', 'y', 'width', 'height'].some(prop => {
+                        const current = Math.round(currentSettings.crop[prop] * 1000) / 1000;
+                        const last = Math.round(this.lastConversionSettings.crop[prop] * 1000) / 1000;
+                        return current !== last;
+                    });
+                    return cropChanged;
+                }
+                return currentSettings[key] !== this.lastConversionSettings[key];
+            });
 
             if (settingsChanged) {
                 this.settingsChanged = true;
                 this.elements.convertButton.classList.add('attention-needed');
                 this.elements.convertButton.disabled = false;
-                
             } else {
                 this.settingsChanged = false;
                 this.elements.convertButton.classList.remove('attention-needed');
                 this.elements.convertButton.disabled = true;
-               
             }
         }
 
@@ -1776,12 +1872,14 @@
         }
 
         getFinalizingStepText(percent) {
+            const isDitheringEnabled = this.elements.ditherSelect.value !== 'false';
+            
             if (percent < 25) {
                 return 'Generating color palette...';
             } else if (percent < 50) {
                 return 'Optimizing colors...';
             } else if (percent < 75) {
-                return 'Applying dithering...';
+                return isDitheringEnabled ? 'Applying dithering...' : 'Processing frames...';
             } else {
                 return 'Encoding final GIF...';
             }
@@ -1793,52 +1891,378 @@
         }
 
         cancelConversion() {
-            if (this.currentConversion) {
-                this.cleanupVideoEvents();
-                
-                const startTime = parseFloat(this.elements.startTime.value);
-                this.elements.videoPreview.currentTime = startTime;
-                this.elements.videoPreview.pause();
-                
-                this.currentConversion.abort();
-                
-                if (this.currentConversion.freeWorkers) {
-                    this.currentConversion.freeWorkers.forEach(worker => worker.terminate());
+            return new Promise((resolve) => {
+                if (this.currentConversion) {
+                    this.cleanupVideoEvents();
+                    this.elements.videoPreview.pause();
+                    
+                    if (this.currentConversion.abort) {
+                        this.currentConversion.abort();
+                    }
+                    
+                    if (this.currentConversion.freeWorkers) {
+                        this.currentConversion.freeWorkers.forEach(worker => worker.terminate());
+                    }
+                    if (this.currentConversion.activeWorkers) {
+                        this.currentConversion.activeWorkers.forEach(worker => worker.terminate());
+                    }
+                    
+                    if (this.currentConversion.removeAllListeners) {
+                        this.currentConversion.removeAllListeners();
+                    }
+                    
+                    this.currentConversion = null;
+                    
+                    this.elements.convertButton.disabled = false;
+                    this.elements.previewGif.style.display = 'none';
+                    this.elements.downloadButton.style.display = 'none';
+                    
+                    const progressStatus = document.querySelector('.progress-status');
+                    const progressFill = document.querySelector('.progress-fill');
+                    const progressDetails = document.querySelector('.progress-details');
+                    
+                    progressStatus.textContent = 'Conversion cancelled';
+                    progressStatus.style.color = 'var(--error-color)';
+                    progressFill.style.width = '0%';
+                    progressDetails.textContent = '';
+                    
+                    setTimeout(() => {
+                        this.elements.progressOverlay.style.display = 'none';
+                        progressStatus.style.color = '';
+                        progressStatus.textContent = 'Converting... Please wait.';
+                        progressDetails.textContent = 'Processing frame: 0/0';
+                        resolve();
+                    }, 100);
+                    
+                    this.currentBlob = null;
+                    this.settingsChanged = false;
+                    this.elements.convertButton.classList.remove('attention-needed');
+                } else {
+                    resolve();
                 }
-                if (this.currentConversion.activeWorkers) {
-                    this.currentConversion.activeWorkers.forEach(worker => worker.terminate());
-                }
-                
-                this.currentConversion = null;
-                
-                this.elements.convertButton.disabled = false;
-                this.elements.previewGif.style.display = 'none';
-                this.elements.downloadButton.style.display = 'none';
-                
-                const progressStatus = document.querySelector('.progress-status');
-                const progressFill = document.querySelector('.progress-fill');
-                const progressDetails = document.querySelector('.progress-details');
-                
-                progressStatus.textContent = 'Conversion cancelled';
-                progressStatus.style.color = 'var(--error-color)';
-                progressFill.style.width = '0%';
-                progressDetails.textContent = '';
-                
-                setTimeout(() => {
-                    this.elements.progressOverlay.style.display = 'none';
-                    progressStatus.style.color = '';
-                    progressStatus.textContent = 'Converting... Please wait.';
-                    progressDetails.textContent = 'Processing frame: 0/0';
-                }, 1500);
-                
-                this.currentBlob = null;
-                this.settingsChanged = false;
-                this.elements.convertButton.classList.remove('attention-needed');
-            }
+            });
         }
 
         setTimeline(timeline) {
             this.timeline = timeline;
+        }
+
+        initializeCropping() {
+            this.cropEnabled = false;
+            this.cropRegion = null;
+            
+            this.cropOverlay = document.createElement('div');
+            this.cropOverlay.className = 'crop-overlay';
+            
+            this.cropRegionElement = document.createElement('div');
+            this.cropRegionElement.className = 'crop-region';
+            
+            ['nw', 'ne', 'sw', 'se'].forEach(pos => {
+                const handle = document.createElement('div');
+                handle.className = `crop-handle ${pos}`;
+                this.cropRegionElement.appendChild(handle);
+            });
+            
+            this.cropOverlay.appendChild(this.cropRegionElement);
+            
+            const toggleButton = document.getElementById('toggleCrop');
+            toggleButton.addEventListener('click', () => this.toggleCrop());
+            
+            this.initializeCropDrag();
+        }
+
+        toggleCrop() {
+            // Add this check at the start of the function
+            if (!this.elements.videoPreview.src) {
+                return;
+            }
+
+            const videoContainer = this.elements.videoPreview.parentElement;
+            const toggleButton = document.getElementById('toggleCrop');
+            
+            if (!this.cropEnabled) {
+                videoContainer.appendChild(this.cropOverlay);
+                this.cropOverlay.style.display = 'block';
+                toggleButton.classList.add('active');
+                
+                // Only initialize crop region if it doesn't exist
+                if (!this.cropRegion) {
+                    this.initializeCropRegion();
+                } else {
+                    // Just update the existing crop region
+                    this.updateCropRegionElement();
+                }
+                
+                if (!this.resizeObserver) {
+                    this.resizeObserver = new ResizeObserver(() => {
+                        if (this.cropEnabled) {
+                            this.updateCropRegionOnResize();
+                        }
+                    });
+                    this.resizeObserver.observe(videoContainer);
+                }
+                
+                this.cropEnabled = true;
+                this.updateCropDimensions();
+            } else {
+                this.cropOverlay.style.display = 'none';
+                toggleButton.classList.remove('active');
+                
+                if (this.resizeObserver) {
+                    this.resizeObserver.disconnect();
+                    this.resizeObserver = null;
+                }
+                
+                this.cropEnabled = false;
+                this.updateOutputDimensions();
+            }
+            
+            this.markSettingsChanged();
+        }
+
+        initializeCropDrag() {
+            let isDragging = false;
+            let currentHandle = null;
+            let startX, startY;
+            let startCrop;
+
+            const startDrag = (e, handle) => {
+                isDragging = true;
+                currentHandle = handle;
+                startX = e.clientX || e.touches[0].clientX;
+                startY = e.clientY || e.touches[0].clientY;
+                startCrop = { ...this.cropRegion };
+                this.cropRegionElement.style.transition = 'none';
+                
+                // Add dragging class to body
+                document.body.classList.add('dragging-active');
+                
+                // Prevent default behavior and text selection
+                e.preventDefault();
+                e.stopPropagation();
+            };
+
+            const doDrag = (e) => {
+                if (!isDragging) return;
+                
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                const deltaX = clientX - startX;
+                const deltaY = clientY - startY;
+                
+                const videoRect = this.elements.videoPreview.getBoundingClientRect();
+                
+                const oldCrop = { ...this.cropRegion };
+                
+                if (currentHandle === 'move') {
+                    const deltaXPercent = deltaX / videoRect.width;
+                    const deltaYPercent = deltaY / videoRect.height;
+                    
+                    this.cropRegion.x = Math.max(0, Math.min(
+                        1 - this.cropRegion.width,
+                        startCrop.x + deltaXPercent
+                    ));
+                    this.cropRegion.y = Math.max(0, Math.min(
+                        1 - this.cropRegion.height,
+                        startCrop.y + deltaYPercent
+                    ));
+                } else {
+                    const isLeft = currentHandle.includes('w');
+                    const isTop = currentHandle.includes('n');
+                    
+                    const deltaXPercent = deltaX / videoRect.width;
+                    const deltaYPercent = deltaY / videoRect.height;
+                    
+                    const minSize = 0.05; // 5% minimum size
+                    
+                    if (isLeft) {
+                        const newX = Math.max(0, startCrop.x + deltaXPercent);
+                        const newWidth = startCrop.width - deltaXPercent;
+                        if (newWidth >= minSize && newX >= 0) {
+                            this.cropRegion.x = newX;
+                            this.cropRegion.width = Math.min(1 - newX, newWidth);
+                        }
+                    } else {
+                        const newWidth = startCrop.width + deltaXPercent;
+                        if (newWidth >= minSize) {
+                            this.cropRegion.width = Math.min(1 - this.cropRegion.x, newWidth);
+                        }
+                    }
+                    
+                    if (isTop) {
+                        const newY = Math.max(0, startCrop.y + deltaYPercent);
+                        const newHeight = startCrop.height - deltaYPercent;
+                        if (newHeight >= minSize && newY >= 0) {
+                            this.cropRegion.y = newY;
+                            this.cropRegion.height = Math.min(1 - newY, newHeight);
+                        }
+                    } else {
+                        const newHeight = startCrop.height + deltaYPercent;
+                        if (newHeight >= minSize) {
+                            this.cropRegion.height = Math.min(1 - this.cropRegion.y, newHeight);
+                        }
+                    }
+                }
+            
+                // Round values to 6 decimal places for more precision
+                this.cropRegion.x = Math.round(this.cropRegion.x * 1000000) / 1000000;
+                this.cropRegion.y = Math.round(this.cropRegion.y * 1000000) / 1000000;
+                this.cropRegion.width = Math.round(this.cropRegion.width * 1000000) / 1000000;
+                this.cropRegion.height = Math.round(this.cropRegion.height * 1000000) / 1000000;
+
+                // Ensure the region doesn't exceed boundaries
+                if (this.cropRegion.x + this.cropRegion.width > 1) {
+                    this.cropRegion.width = 1 - this.cropRegion.x;
+                }
+                if (this.cropRegion.y + this.cropRegion.height > 1) {
+                    this.cropRegion.height = 1 - this.cropRegion.y;
+                }
+
+                this.updateCropRegionElement();
+                this.updateCropDimensions();
+                this.markSettingsChanged();
+            };
+
+            const endDrag = () => {
+                if (!isDragging) return;
+                
+                isDragging = false;
+                currentHandle = null;
+                this.cropRegionElement.style.transition = '';
+                
+                // Remove dragging class from body
+                document.body.classList.remove('dragging-active');
+            };
+
+            this.cropRegionElement.addEventListener('mousedown', (e) => {
+                if (e.target === this.cropRegionElement) {
+                    startDrag(e, 'move');
+                }
+            });
+
+            this.cropRegionElement.querySelectorAll('.crop-handle').forEach(handle => {
+                handle.addEventListener('mousedown', (e) => {
+                    startDrag(e, handle.className.split(' ')[1]);
+                    e.stopPropagation();
+                });
+            });
+
+            document.addEventListener('mousemove', doDrag);
+            document.addEventListener('mouseup', endDrag);
+
+            this.cropRegionElement.addEventListener('touchstart', (e) => {
+                if (e.target === this.cropRegionElement) {
+                    startDrag(e.touches[0], 'move');
+                }
+            }, { passive: false });
+
+            this.cropRegionElement.querySelectorAll('.crop-handle').forEach(handle => {
+                handle.addEventListener('touchstart', (e) => {
+                    startDrag(e.touches[0], handle.className.split(' ')[1]);
+                    e.stopPropagation();
+                }, { passive: false });
+            });
+
+            document.addEventListener('touchmove', doDrag, { passive: false });
+            document.addEventListener('touchend', endDrag);
+        }
+
+        updateCropRegionElement() {
+            const videoRect = this.elements.videoPreview.getBoundingClientRect();
+            
+            Object.assign(this.cropRegionElement.style, {
+                left: `${this.cropRegion.x * videoRect.width}px`,
+                top: `${this.cropRegion.y * videoRect.height}px`,
+                width: `${this.cropRegion.width * videoRect.width}px`,
+                height: `${this.cropRegion.height * videoRect.height}px`
+            });
+            
+            this.updateCropDimensions();
+            this.markSettingsChanged();
+        }
+
+        updateCropDimensions() {
+            const dimensions = document.getElementById('cropDimensions');
+            const sizeText = document.getElementById('cropSize');
+            const videoRect = this.elements.videoPreview.getBoundingClientRect();
+            const videoWidth = this.elements.videoPreview.videoWidth;
+            const videoHeight = this.elements.videoPreview.videoHeight;
+            
+            const scaleX = videoWidth / videoRect.width;
+            const scaleY = videoHeight / videoRect.height;
+            
+            const pixelWidth = Math.round(this.cropRegion.width * videoWidth);
+            const pixelHeight = Math.round(this.cropRegion.height * videoHeight);
+            
+            const sizePercent = parseFloat(this.elements.sizeSelect.value);
+            const finalWidth = Math.round(pixelWidth * sizePercent);
+            const finalHeight = Math.round(pixelHeight * sizePercent);
+            
+            dimensions.style.display = 'block';
+            sizeText.innerHTML = `
+                Crop: <span style="color: var(--primary-color)">${pixelWidth} × ${pixelHeight}px</span>
+                <br>
+                Output: <span style="color: var(--success-color)">${finalWidth} × ${finalHeight}px</span>
+            `;
+        }
+
+        initializeCropRegion() {
+            const video = this.elements.videoPreview;
+            const videoRect = video.getBoundingClientRect();
+            
+            // Start with full video size
+            this.cropRegion = {
+                x: 0,
+                y: 0,
+                width: 1,
+                height: 1
+            };
+            
+            this.updateCropRegionElement();
+            this.updateOutputDimensions();
+        }
+
+        updateCropRegionOnResize() {
+            const videoRect = this.elements.videoPreview.getBoundingClientRect();
+            
+            const pixelRegion = {
+                x: this.cropRegion.x * videoRect.width,
+                y: this.cropRegion.y * videoRect.height,
+                width: this.cropRegion.width * videoRect.width,
+                height: this.cropRegion.height * videoRect.height
+            };
+            
+            Object.assign(this.cropRegionElement.style, {
+                left: `${pixelRegion.x}px`,
+                top: `${pixelRegion.y}px`,
+                width: `${pixelRegion.width}px`,
+                height: `${pixelRegion.height}px`
+            });
+            
+            this.updateCropDimensions();
+        }
+
+        updateOutputDimensions() {
+            const dimensions = document.getElementById('cropDimensions');
+            const sizeText = document.getElementById('cropSize');
+            const sizePercent = parseFloat(this.elements.sizeSelect.value);
+            
+            const originalWidth = this.elements.videoPreview.videoWidth;
+            const originalHeight = this.elements.videoPreview.videoHeight;
+            const finalWidth = Math.round(originalWidth * sizePercent);
+            const finalHeight = Math.round(originalHeight * sizePercent);
+            
+            dimensions.style.display = 'block';
+            if (this.cropEnabled) {
+                this.updateCropDimensions();
+            } else {
+                sizeText.innerHTML = `
+                    <span style="color: var(--success-color)">${finalWidth} × ${finalHeight}px</span>
+                `;
+            }
         }
     }
 
@@ -1847,11 +2271,10 @@
             this.videoPreview = videoPreview;
             this.initializeElements();
             
-            // Add this line to store a reference
             this.elements.timeline._timelineController = this;
             
             this.initializeEventListeners();
-            this.initializeStepperButtons(); // Add this line
+            this.initializeStepperButtons();
             this.isDragging = false;
             this.currentMarker = null;
             this.isPlaying = false;
@@ -1861,6 +2284,12 @@
             this.updateMuteButtonUI(this.videoPreview.muted);
             this.isKeyHeld = false;
             this.frameStepInterval = null;
+            
+            this.initializeTimelineDrag();
+            
+            // Bind the handlers to preserve context
+            this.handleTimelineDrag = this.handleTimelineDrag.bind(this);
+            this.handleTimelineDragEnd = this.handleTimelineDragEnd.bind(this);
         }
 
         initializeElements() {
@@ -1933,7 +2362,6 @@
             document.addEventListener('touchmove', this.handleMarkerTouchMove.bind(this), { passive: false });
             document.addEventListener('touchend', this.handleMarkerTouchEnd.bind(this));
 
-            // Prevent space from triggering buttons
             document.querySelectorAll('button').forEach(button => {
                 button.addEventListener('keydown', (e) => {
                     if (e.code === 'Space') {
@@ -1944,8 +2372,20 @@
         }
 
         handleVideoLoad() {
-            const duration = this.videoPreview.duration;
-            const maxTime = Math.round(duration * 100) / 100;
+            // Store the duration globally so other methods can access it
+            this.videoDuration = this.videoPreview.duration;
+            
+            // Check if it's a WebM file and has duration in filename
+            const videoInput = document.getElementById('videoInput');
+            if (videoInput.files[0]) {
+                const file = videoInput.files[0];
+                const durationMatch = file.name.match(/_(\d+)s\.[^.]+$/);
+                if (file.type === 'video/webm' && durationMatch && !isNaN(durationMatch[1])) {
+                    this.videoDuration = parseFloat(durationMatch[1]);
+                }
+            }
+            
+            const maxTime = Math.round(this.videoDuration * 100) / 100;
             
             this.elements.endTimeInput.max = maxTime;
             this.elements.startTimeInput.max = maxTime;
@@ -1959,7 +2399,6 @@
             this.elements.startTimeInput.step = '0.01';
             this.elements.endTimeInput.step = '0.01';
             
-            // Enable the stepper buttons
             document.querySelectorAll('.time-stepper-btn').forEach(btn => {
                 btn.disabled = false;
             });
@@ -1976,7 +2415,7 @@
         }
 
         updateMarkerPositions() {
-            const duration = this.videoPreview.duration;
+            const duration = this.videoDuration || this.videoPreview.duration;
             const startTime = parseFloat(this.elements.startTimeInput.value);
             const endTime = parseFloat(this.elements.endTimeInput.value);
             
@@ -1985,8 +2424,10 @@
         }
 
         updateMarkerPosition(marker, time, duration) {
-            const position = (time / duration) * 100;
-            marker.style.left = `${position}%`;
+            if (isFinite(duration) && duration > 0) {
+                const position = (time / duration) * 100;
+                marker.style.left = `${position}%`;
+            }
         }
 
         updateDurationDisplay() {
@@ -2000,14 +2441,22 @@
             if (!this.videoPreview.src) {
                 return;
             }
+            
+            // If we're already dragging the playhead, don't handle the click
+            if (this.isScrubbingPlayhead) {
+                return;
+            }
+            
             const rect = this.elements.timeline.getBoundingClientRect();
             const position = (e.clientX - rect.left) / rect.width;
-            const clickTime = position * this.videoPreview.duration;
+            const clickTime = position * this.videoDuration;
             
-            // Always update video time and show playhead where clicked
-            this.videoPreview.currentTime = clickTime;
-            this.elements.playhead.style.display = 'block';
-            this.elements.playhead.style.left = `${position * 100}%`;
+            // Ensure clickTime is within valid bounds
+            if (isFinite(clickTime) && clickTime >= 0 && clickTime <= this.videoDuration) {
+                this.videoPreview.currentTime = clickTime;
+                this.elements.playhead.style.display = 'block';
+                this.elements.playhead.style.left = `${position * 100}%`;
+            }
         }
 
         handleMarkerDragStart(e) {
@@ -2031,29 +2480,55 @@
             let position = (e.clientX - rect.left) / rect.width;
             position = Math.max(0, Math.min(1, position));
             
-            const time = position * this.videoPreview.duration;
-            this.updateTimeFromDrag(time);
+            const duration = this.videoDuration || this.videoPreview.duration;
+            const time = position * duration;
             
-            this.elements.playhead.style.display = 'block';
-            this.elements.playhead.style.left = `${position * 100}%`;
+            if (isFinite(time) && isFinite(duration) && duration > 0) {
+                this.updateTimeFromDrag(time);
+            }
         }
 
         updateTimeFromDrag(time) {
             const isStartMarker = this.currentMarker === this.elements.startMarker;
+            const duration = this.videoDuration || this.videoPreview.duration;
+            
+            if (!isFinite(time) || !isFinite(duration) || duration <= 0) {
+                return;
+            }
+            
             const otherTime = isStartMarker 
                 ? parseFloat(this.elements.endTimeInput.value)
                 : parseFloat(this.elements.startTimeInput.value);
 
+            // Validate times
             if ((isStartMarker && time >= otherTime) || (!isStartMarker && time <= otherTime)) {
                 return;
             }
 
-            this.updateMarkerPosition(this.currentMarker, time, this.videoPreview.duration);
-            this.updateTimeDisplay(isStartMarker, time);
-            this.videoPreview.currentTime = time;
+            // Clamp time between 0 and duration
+            time = Math.max(0, Math.min(time, duration));
+
+            // Update marker position
+            this.updateMarkerPosition(this.currentMarker, time, duration);
+            
+            // Update time display and input
+            const timeStr = time.toFixed(2);
+            if (isStartMarker) {
+                this.elements.startTimeInput.value = timeStr;
+                this.elements.startTimeDisplay.textContent = this.formatTime(time);
+            } else {
+                this.elements.endTimeInput.value = timeStr;
+                this.elements.endTimeDisplay.textContent = this.formatTime(time);
+            }
+
+            // Only set video currentTime if it's a valid value
+            if (isFinite(time) && time >= 0 && time <= duration) {
+                this.videoPreview.currentTime = time;
+            }
+
             this.updateDurationDisplay();
 
-            // Dispatch the custom timechange event instead of regular change event
+            // Dispatch timechange event
             const input = isStartMarker ? this.elements.startTimeInput : this.elements.endTimeInput;
             const customEvent = new CustomEvent('timechange', { 
                 bubbles: true,
@@ -2062,21 +2537,22 @@
             input.dispatchEvent(customEvent);
         }
 
-        updateTimeDisplay(isStartMarker, time) {
-            const input = isStartMarker ? this.elements.startTimeInput : this.elements.endTimeInput;
-            const display = isStartMarker ? this.elements.startTimeDisplay : this.elements.endTimeDisplay;
-            
-            input.value = time.toFixed(2);
-            display.textContent = this.formatTime(time);
-        }
-
         handleMarkerDragEnd() {
             this.isDragging = false;
             this.currentMarker = null;
         }
 
         handleTimeInputChange(e) {
-            // If this is a programmatic event (from our own dispatchEvent call), ignore it
+            if (!this.videoPreview.src) {
+                // Reset inputs to 0 if no video is loaded
+                this.elements.startTimeInput.value = '0.00';
+                this.elements.endTimeInput.value = '0.00';
+                this.elements.startTimeDisplay.textContent = '0:00';
+                this.elements.endTimeDisplay.textContent = '0:00';
+                this.elements.durationDisplay.textContent = 'Duration: 0.0s';
+                return;
+            }
+
             if (e.isTrusted === false) return;
             
             const input = e.target;
@@ -2097,7 +2573,6 @@
             this.updateTimeDisplay(isStartInput, time);
             this.updateDurationDisplay();
 
-            // Create a custom event that won't trigger the handler again
             const customEvent = new CustomEvent('timechange', { 
                 bubbles: true,
                 detail: { time: time }
@@ -2134,7 +2609,6 @@
             try {
                 if (!this.isPlaying) {
                     this.elements.playPauseBtn.disabled = true;
-                    // Only reset to start time if current time is outside the range
                     if (currentTime < startTime || currentTime > endTime) {
                         this.videoPreview.currentTime = startTime;
                     }
@@ -2166,7 +2640,7 @@
             const endTime = parseFloat(this.elements.endTimeInput.value);
             const startTime = parseFloat(this.elements.startTimeInput.value);
 
-            if ((currentTime >= endTime || this.videoPreview.ended) && this.isPlaying) {
+            if (isFinite(currentTime) && ((currentTime >= endTime || this.videoPreview.ended) && this.isPlaying)) {
                 this.videoPreview.currentTime = startTime;
                 
                 this.videoPreview.play().catch(err => {
@@ -2193,7 +2667,7 @@
             
             if (this.isScrubbingPlayhead) return;
             
-            const duration = this.videoPreview.duration;
+            const duration = this.videoDuration || this.videoPreview.duration;
             const currentTime = this.videoPreview.currentTime;
             const startTime = parseFloat(this.elements.startTimeInput.value);
             const endTime = parseFloat(this.elements.endTimeInput.value);
@@ -2203,10 +2677,11 @@
                 return;
             }
             
-            const position = (currentTime / duration) * 100;
-            
-            this.elements.playhead.style.left = `${position}%`;
-            this.elements.playhead.style.display = 'block';
+            if (isFinite(duration) && duration > 0 && isFinite(currentTime)) {
+                const position = (currentTime / duration) * 100;
+                this.elements.playhead.style.left = `${position}%`;
+                this.elements.playhead.style.display = 'block';
+            }
         }
 
         toggleMute() {
@@ -2270,6 +2745,19 @@
             
             e.stopPropagation();
             e.preventDefault();
+            
+            // Handle initial playhead position
+            const rect = this.elements.timeline.getBoundingClientRect();
+            let position = (e.clientX - rect.left) / rect.width;
+            position = Math.max(0, Math.min(1, position));
+            
+            const duration = this.videoDuration || this.videoPreview.duration;
+            const time = position * duration;
+            
+            if (isFinite(time) && time >= 0 && time <= duration) {
+                this.videoPreview.currentTime = time;
+                this.elements.playhead.style.left = `${position * 100}%`;
+            }
         }
 
         handlePlayheadDrag(e) {
@@ -2281,34 +2769,36 @@
             let position = (e.clientX - rect.left) / rect.width;
             position = Math.max(0, Math.min(1, position));
             
+            const duration = this.videoDuration || this.videoPreview.duration;
             const startTime = parseFloat(this.elements.startTimeInput.value);
             const endTime = parseFloat(this.elements.endTimeInput.value);
-            const duration = this.videoPreview.duration;
             
             let time = position * duration;
             
-            if (e.shiftKey) {
-                if (time > endTime) {
-                    const newEndTime = Math.min(time, duration);
-                    this.elements.endTimeInput.value = newEndTime.toFixed(2);
-                    this.updateTimeDisplay(false, newEndTime);
-                    this.updateMarkerPosition(this.elements.endMarker, newEndTime, duration);
-                    this.updateDurationDisplay();
-                } else if (time < startTime) {
-                    const newStartTime = Math.max(time, 0);
-                    this.elements.startTimeInput.value = newStartTime.toFixed(2);
-                    this.updateTimeDisplay(true, newStartTime);
-                    this.updateMarkerPosition(this.elements.startMarker, newStartTime, duration);
-                    this.updateDurationDisplay();
+            if (isFinite(time) && time >= 0 && time <= duration) {
+                // Constrain time between start and end markers unless shift is held
+                if (!e.shiftKey) {
+                    time = Math.max(startTime, Math.min(endTime, time));
                 }
-            } else {
-                time = Math.max(startTime, Math.min(endTime, time));
+                
+                this.videoPreview.currentTime = time;
+                this.elements.playhead.style.left = `${position * 100}%`;
+                
+                // Update markers if shift is held
+                if (e.shiftKey) {
+                    if (time > endTime) {
+                        this.elements.endTimeInput.value = time.toFixed(2);
+                        this.updateTimeDisplay(false, time);
+                        this.updateMarkerPosition(this.elements.endMarker, time, duration);
+                        this.updateDurationDisplay();
+                    } else if (time < startTime) {
+                        this.elements.startTimeInput.value = time.toFixed(2);
+                        this.updateTimeDisplay(true, time);
+                        this.updateMarkerPosition(this.elements.startMarker, time, duration);
+                        this.updateDurationDisplay();
+                    }
+                }
             }
-            
-            this.videoPreview.currentTime = time;
-            
-            const playheadPosition = (time / duration) * 100;
-            this.elements.playhead.style.left = `${playheadPosition}%`;
         }
 
         handlePlayheadDragEnd() {
@@ -2368,7 +2858,6 @@
                 
                 this.isKeyHeld = true;
                 
-                // If current time is outside the range, start from nearest range boundary
                 const startTime = parseFloat(this.elements.startTimeInput.value);
                 const endTime = parseFloat(this.elements.endTimeInput.value);
                 const currentTime = this.videoPreview.currentTime;
@@ -2449,8 +2938,12 @@
             let position = (touch.clientX - rect.left) / rect.width;
             position = Math.max(0, Math.min(1, position));
             
-            const time = position * this.videoPreview.duration;
-            this.updateTimeFromDrag(time);
+            const duration = this.videoDuration || this.videoPreview.duration;
+            const time = position * duration;
+            
+            if (isFinite(time) && isFinite(duration) && duration > 0) {
+                this.updateTimeFromDrag(time);
+            }
         }
 
         handleMarkerTouchEnd() {
@@ -2459,108 +2952,164 @@
         }
 
         validateTimeInputs() {
-            const start = parseFloat(this.elements.startTimeInput.value);
-            const end = parseFloat(this.elements.endTimeInput.value);
+            const start = parseFloat(this.elements.startTime.value);
+            const end = parseFloat(this.elements.endTime.value);
             const duration = this.videoPreview.duration;
             
-            const validStart = Math.max(0, Math.min(start, duration - 0.1));
-            const validEnd = Math.max(validStart + 0.1, Math.min(end, duration));
+            // Add validation for Infinity or invalid duration
+            if (!isFinite(duration) || duration <= 0) {
+                // If we have a duration from filename, use that
+                const durationMatch = this.originalFileName.match(/_(\d+)s$/);
+                if (durationMatch && !isNaN(durationMatch[1])) {
+                    const fileDuration = parseFloat(durationMatch[1]);
+                    this.elements.endTime.value = fileDuration.toFixed(2);
+                    this.elements.startTime.value = '0.00';
+                    return;
+                }
+                // Otherwise set some reasonable defaults
+                this.elements.endTime.value = '0.00';
+                this.elements.startTime.value = '0.00';
+                return;
+            }
             
-            this.elements.startTimeInput.value = validStart.toFixed(2);
-            this.elements.endTimeInput.value = validEnd.toFixed(2);
-            
-            this.updateMarkerPositions();
-            this.updateTimeDisplay(true, validStart);
-            this.updateTimeDisplay(false, validEnd);
-            this.updateDurationDisplay();
+            if (start >= end) {
+                this.elements.startTime.value = (end - 0.1).toFixed(2);
+            }
         }
 
         initializeStepperButtons() {
-            console.log('Initializing stepper buttons');
             const stepperButtons = document.querySelectorAll('.time-stepper-btn');
-            console.log(`Found ${stepperButtons.length} stepper buttons`);
             
             stepperButtons.forEach(button => {
                 let intervalId = null;
                 let timeoutId = null;
 
                 const startRepeating = (delta) => {
-                    console.log(`Starting repeat with delta: ${delta}`);
-                    // Initial delay before rapid stepping begins
                     timeoutId = setTimeout(() => {
-                        console.log('Starting rapid stepping');
                         intervalId = setInterval(() => {
                             const inputId = button.closest('.time-input-group').querySelector('.time-input').id;
-                            console.log(`Adjusting time for input ${inputId} by ${delta}`);
                             adjustTime(inputId, delta);
-                        }, 50); // Repeat every 50ms
-                    }, 400); // Start repeating after 400ms
+                        }, 50);
+                    }, 400);
                 };
 
                 const stopRepeating = () => {
-                    console.log('Stopping repeat');
                     if (intervalId) {
-                        console.log('Clearing interval');
                         clearInterval(intervalId);
                     }
                     if (timeoutId) {
-                        console.log('Clearing timeout');
                         clearTimeout(timeoutId);
                     }
                     intervalId = null;
                     timeoutId = null;
                 };
 
-                // Handle mouse events
                 button.addEventListener('mousedown', (e) => {
-                    console.log('Mouse down on stepper button');
-                    e.preventDefault(); // Prevent text selection
+                    e.preventDefault();
                     const delta = button.textContent === '+' ? 0.1 : -0.1;
                     const inputId = button.closest('.time-input-group').querySelector('.time-input').id;
-                    console.log(`Initial click - adjusting ${inputId} by ${delta}`);
-                    adjustTime(inputId, delta); // Immediate first click
+                    adjustTime(inputId, delta);
                     startRepeating(delta);
                 });
 
                 button.addEventListener('mouseup', () => {
-                    console.log('Mouse up on stepper button');
                     stopRepeating();
                 });
                 
                 button.addEventListener('mouseleave', () => {
-                    console.log('Mouse left stepper button');
                     stopRepeating();
                 });
 
-                // Handle touch events
                 button.addEventListener('touchstart', (e) => {
-                    console.log('Touch start on stepper button');
                     e.preventDefault();
                     const delta = button.textContent === '+' ? 0.1 : -0.1;
                     const inputId = button.closest('.time-input-group').querySelector('.time-input').id;
-                    console.log(`Initial touch - adjusting ${inputId} by ${delta}`);
                     adjustTime(inputId, delta);
                     startRepeating(delta);
                 });
 
                 button.addEventListener('touchend', () => {
-                    console.log('Touch end on stepper button');
                     stopRepeating();
                 });
                 
                 button.addEventListener('touchcancel', () => {
-                    console.log('Touch cancelled on stepper button');
                     stopRepeating();
                 });
             });
         }
+
+        initializeTimelineDrag() {
+            this.elements.timeline.addEventListener('mousedown', (e) => {
+                if (!this.videoPreview.src) return;
+                
+                this.isScrubbingPlayhead = true;
+                this.wasPlaying = this.isPlaying;
+                if (this.isPlaying) {
+                    this.videoPreview.pause();
+                }
+                
+                // Handle the initial click position
+                const rect = this.elements.timeline.getBoundingClientRect();
+                let position = (e.clientX - rect.left) / rect.width;
+                position = Math.max(0, Math.min(1, position));
+                
+                const duration = this.videoDuration || this.videoPreview.duration;
+                const time = position * duration;
+                
+                // Only set currentTime if the value is valid
+                if (isFinite(time) && time >= 0 && time <= duration) {
+                    this.videoPreview.currentTime = time;
+                    this.elements.playhead.style.display = 'block';
+                    this.elements.playhead.style.left = `${position * 100}%`;
+                }
+                
+                // Add temporary event listeners for drag and release
+                document.addEventListener('mousemove', this.handleTimelineDrag);
+                document.addEventListener('mouseup', this.handleTimelineDragEnd);
+            });
+
+            // Define bound event handlers
+            this.handleTimelineDrag = (e) => {
+                if (!this.isScrubbingPlayhead) return;
+                
+                e.preventDefault();
+                
+                const rect = this.elements.timeline.getBoundingClientRect();
+                let position = (e.clientX - rect.left) / rect.width;
+                position = Math.max(0, Math.min(1, position));
+                
+                const duration = this.videoDuration || this.videoPreview.duration;
+                const time = position * duration;
+                
+                // Only set currentTime if the value is valid
+                if (isFinite(time) && time >= 0 && time <= duration) {
+                    this.videoPreview.currentTime = time;
+                    this.elements.playhead.style.left = `${position * 100}%`;
+                }
+            };
+
+            this.handleTimelineDragEnd = () => {
+                if (!this.isScrubbingPlayhead) return;
+                
+                this.isScrubbingPlayhead = false;
+                
+                // Remove temporary event listeners
+                document.removeEventListener('mousemove', this.handleTimelineDrag);
+                document.removeEventListener('mouseup', this.handleTimelineDragEnd);
+                
+                if (this.wasPlaying) {
+                    this.videoPreview.play().catch(() => {
+                        this.isPlaying = false;
+                        this.updatePlayButton(false);
+                    });
+                }
+            };
+        }
     }
 
-    // Initialize the application
     document.addEventListener('DOMContentLoaded', () => {
         const converter = new GifConverter();
         const timeline = new TimelineController(document.getElementById('videoPreview'));
-        // Share the timeline instance with the converter
         converter.setTimeline(timeline);
     });
     
@@ -2571,24 +3120,20 @@
         //# sourceMappingURL=gif.js.map</script>
 
     <script>
-        // Initialize fullscreen functionality
         document.querySelectorAll('.expand-button').forEach(button => {
             button.addEventListener('click', function() {
                 const container = this.closest('.preview-container, .settings-panel, .tips-container');
                 const expandIcon = this.querySelector('svg');
                 const isFullscreen = container.classList.contains('fullscreen-container');
 
-                // Toggle fullscreen class
                 container.classList.toggle('fullscreen-container');
 
-                // Update the expand/collapse icon
                 if (isFullscreen) {
                     expandIcon.innerHTML = '<path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>';
                 } else {
                     expandIcon.innerHTML = '<polyline points="4 14 10 14 10 20"></polyline><polyline points="20 10 14 10 14 4"></polyline><line x1="14" y1="10" x2="21" y2="3"></line><line x1="3" y1="21" x2="10" y2="14"></line>';
                 }
 
-                // Toggle visibility of other containers
                 const allContainers = document.querySelectorAll('.preview-container, .settings-panel, .tips-container');
                 allContainers.forEach(otherContainer => {
                     if (otherContainer !== container) {
@@ -2596,7 +3141,6 @@
                     }
                 });
 
-                // Trigger window resize event to update any responsive elements
                 window.dispatchEvent(new Event('resize'));
             });
         });
