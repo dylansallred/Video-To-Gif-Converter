@@ -6,7 +6,7 @@ A modern, browser-based tool for converting video clips to GIF animations with a
 <p align="center"><em>The GIF above was created using this tool.</em></p>
 
 ## Live Demo
-Visit [Video To GIF Converter](https://dylansallred.github.io/Video-To-Gif-Converter/VideoToGif.html)
+Visit [Video To GIF Converter](https://dylansallred.github.io/Video-To-Gif-Converter/Video-To-Gif-Converter.html)
 
 ## Features
 
