@@ -1371,6 +1371,10 @@
             this.elements.speedSelect.addEventListener('change', (e) => {
                 this.saveSetting('gifSpeed', e.target.value);
                 this.markSettingsChanged();
+                
+                // Add this new code to sync video speed
+                const speed = parseFloat(e.target.value);
+                this.elements.videoPreview.playbackRate = speed;
             });
 
             document.querySelectorAll('button').forEach(button => {
