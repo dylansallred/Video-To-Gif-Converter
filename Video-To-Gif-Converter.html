@@ -845,10 +845,6 @@
             object-fit: contain;
         }
 
-        #previewGif:hover {
-            transform: scale(1.01);
-        }
-
         #videoInput {
             background-color: var(--bg-color);
             color: var(--text-color);
@@ -967,6 +963,59 @@
             -moz-appearance: textfield;
             appearance: textfield;
         }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 46px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-label {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--border-color);
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .toggle-label:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: var(--text-color);
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-label {
+            background-color: var(--primary-color);
+        }
+
+        input:checked + .toggle-label:before {
+            transform: translateX(22px);
+        }
+
+        #timecodePreviewer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 2;
+        }
     </style>
 </head>
 <body>
@@ -988,6 +1037,7 @@
                 <input type="file" id="videoInput" accept="video/mp4,video/webm,video/ogg,video/quicktime">
                 <div class="video-wrapper">
                     <video id="videoPreview" style="display: none;" playsinline webkit-playsinline></video>
+                    <canvas id="timecodePreviewer" style="display: none; position: absolute; top: 0; left: 0; pointer-events: none;"></canvas>
                 </div>
                 <div class="video-controls">
                     <div class="timeline-container">
@@ -1102,15 +1152,24 @@
 
                 
 
-                <div class="setting-group" id="cropControls">
-                    <label>Crop Video</label>
-                    <div class="crop-controls">
-                        <button id="toggleCrop" class="crop-button">
-                            Enable Crop
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-crop"><path d="M6.13 1L6 16a2 2 0 0 0 2 2h15"></path><path d="M1 6.13L16 6a2 2 0 0 1 2 2v15"></path></svg>
-                        </button>
-                        <div id="cropDimensions" style="display: none;">
-                            <span id="cropSize"></span>
+                <div class="setting-group" id="cropControls"">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <label>Crop Video</label>
+                        <div class="crop-controls">
+                            <button id="toggleCrop" class="crop-button">
+                                Enable Crop
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-crop"><path d="M6.13 1L6 16a2 2 0 0 0 2 2h15"></path><path d="M1 6.13L16 6a2 2 0 0 1 2 2v15"></path></svg>
+                            </button>
+                            <div id="cropDimensions" style="display: none;">
+                                <span id="cropSize"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <label for="showTimecode">Show Timecode</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="showTimecode">
+                            <label for="showTimecode" class="toggle-label"></label>
                         </div>
                     </div>
                 </div>
@@ -1304,6 +1363,9 @@
             this.currentConversion = null;
             this.initializeCancelButton();
             this.initializeCropping();
+            this.initializeTimecodePreview();
+            
+           
         }
 
         initializeElements() {
@@ -1324,6 +1386,8 @@
                 previewOverlay: document.getElementById('previewOverlay'),
                 overlayGif: document.getElementById('overlayGif'),
                 speedSelect: document.getElementById('speedSelect'),
+                showTimecode: document.getElementById('showTimecode'),
+                timecodePreviewer: document.getElementById('timecodePreviewer'),
             };
         }
 
@@ -1372,7 +1436,6 @@
                 this.saveSetting('gifSpeed', e.target.value);
                 this.markSettingsChanged();
                 
-                // Add this new code to sync video speed
                 const speed = parseFloat(e.target.value);
                 this.elements.videoPreview.playbackRate = speed;
             });
@@ -1393,6 +1456,11 @@
                         this.updateOutputDimensions();
                     }
                 }, 100);
+            });
+
+            this.elements.showTimecode.addEventListener('change', (e) => {
+                this.saveSetting('showTimecode', e.target.checked);
+                this.markSettingsChanged();
             });
         }
 
@@ -1415,6 +1483,14 @@
             const savedSpeed = localStorage.getItem('gifSpeed');
             if (savedSpeed) {
                 this.elements.speedSelect.value = savedSpeed;
+                if (this.elements.videoPreview.src) {  // Only set if video is loaded
+                    this.elements.videoPreview.playbackRate = parseFloat(savedSpeed);
+                }
+            }
+
+            const savedTimecode = localStorage.getItem('showTimecode');
+            if (savedTimecode !== null) {
+                this.elements.showTimecode.checked = savedTimecode === 'true';
             }
         }
 
@@ -1424,7 +1500,11 @@
 
         handleVideoInput(e) {
             const file = e.target.files[0];
-            if (!file) return;
+            if (!file) {
+                // If no file, hide the timecode previewer
+                this.elements.timecodePreviewer.style.display = 'none';
+                return;
+            }
 
             const supportedTypes = [
                 'video/mp4',
@@ -1439,7 +1519,6 @@
                 return;
             }
 
-            // Add this new code to extract duration from filename
             const durationMatch = file.name.match(/_(\d+)s\.[^.]+$/);
             const hasFileDuration = durationMatch && !isNaN(durationMatch[1]);
 
@@ -1476,6 +1555,12 @@
                     this.elements.endTime.max = Math.ceil(this.elements.videoPreview.duration * 100) / 100;
                     this.elements.startTime.max = Math.ceil(this.elements.videoPreview.duration * 100) / 100;
                 }
+                
+                // Set initial playback speed based on saved setting
+                const savedSpeed = parseFloat(this.elements.speedSelect.value);
+                if (!isNaN(savedSpeed)) {
+                    this.elements.videoPreview.playbackRate = savedSpeed;
+                }
             };
 
             this.elements.videoPreview.onerror = () => {
@@ -1484,6 +1569,10 @@
                 this.elements.videoPreview.style.display = 'none';
                 this.elements.convertButton.disabled = true;
             };
+
+            // Only show timecode previewer if checkbox is checked and we have a video
+            this.elements.timecodePreviewer.style.display = 
+                this.elements.showTimecode.checked ? 'block' : 'none';
         }
 
         validateTimeInputs() {
@@ -1523,7 +1612,8 @@
                 endTime: parseFloat(this.elements.endTime.value),
                 dither: this.elements.ditherSelect.value,
                 speed: parseFloat(this.elements.speedSelect.value),
-                crop: this.cropEnabled ? { ...this.cropRegion } : null
+                crop: this.cropEnabled ? { ...this.cropRegion } : null,
+                showTimecode: this.elements.showTimecode.checked
             };
             
             this.conversionStartTime = performance.now(); 
@@ -1594,6 +1684,7 @@
         async processFrames(gif, settings, newWidth, newHeight) {
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d', { willReadFrequently: true });
+            const showTimecode = document.getElementById('showTimecode').checked;
             
 
             let finalWidth, finalHeight;
@@ -1646,6 +1737,11 @@
                             sourceX, sourceY, sourceWidth, sourceHeight,
                             0, 0, finalWidth, finalHeight
                         );
+                        
+                        // Draw timecode if enabled
+                        if (showTimecode) {
+                            this.drawTimecode(ctx, currentTime / 1000, speedMultiplier);
+                        }
                         
                         gif.addFrame(ctx, { copy: true, delay: frameInterval });
                         
@@ -1764,8 +1860,9 @@
             
             const startTime = parseFloat(this.timeline.elements.startTimeInput.value);
             const endTime = parseFloat(this.timeline.elements.endTimeInput.value);
-            const speedSelect = document.getElementById('speedSelect');
-            const duration = ((endTime - startTime) / parseFloat(speedSelect.value)).toFixed(1);
+            const speedMultiplier = parseFloat(this.elements.speedSelect.value);
+            // Calculate actual duration accounting for speed
+            const duration = ((endTime - startTime) / speedMultiplier).toFixed(1);
             
             this.elements.sizeIndicator.innerHTML = `
                 <span style="color: var(--success-color)">${this.elements.previewGif.naturalWidth}×${this.elements.previewGif.naturalHeight}px</span>
@@ -1800,17 +1897,16 @@
                 endTime: parseFloat(this.elements.endTime.value),
                 dither: this.elements.ditherSelect.value,
                 speed: parseFloat(this.elements.speedSelect.value),
-                crop: this.cropEnabled ? { ...this.cropRegion } : null
+                crop: this.cropEnabled ? { ...this.cropRegion } : null,
+                showTimecode: this.elements.showTimecode.checked
             };
 
-            if (this.cropEnabled) {
-                
-                if (currentSettings.crop && this.lastConversionSettings.crop) {
-                    ['x', 'y', 'width', 'height'].forEach(prop => {
-                        const current = Math.round(currentSettings.crop[prop] * 1000) / 1000;
-                        const last = Math.round(this.lastConversionSettings.crop[prop] * 1000) / 1000;
-                    });
-                }
+            // Force enable convert button when timecode setting changes
+            if (currentSettings.showTimecode !== this.lastConversionSettings.showTimecode) {
+                this.settingsChanged = true;
+                this.elements.convertButton.classList.add('attention-needed');
+                this.elements.convertButton.disabled = false;
+                return;
             }
 
             const settingsChanged = Object.keys(currentSettings).some(key => {
@@ -1976,7 +2072,6 @@
         }
 
         toggleCrop() {
-            // Add this check at the start of the function
             if (!this.elements.videoPreview.src) {
                 return;
             }
@@ -2038,7 +2133,6 @@
                 startCrop = { ...this.cropRegion };
                 this.cropRegionElement.style.transition = 'none';
                 
-                // Add dragging class to body
                 document.body.classList.add('dragging-active');
                 
                 // Prevent default behavior and text selection
@@ -2268,6 +2362,166 @@
                 `;
             }
         }
+
+        drawTimecode(ctx, currentTime, speedMultiplier) {
+            const startTime = parseFloat(this.timeline.elements.startTimeInput.value);
+            const adjustedTime = (currentTime - startTime);
+            
+            // Format time as MM:SS.ss
+            const minutes = Math.floor(adjustedTime / 60);
+            const seconds = adjustedTime % 60;
+            const timeString = `${minutes.toString().padStart(2, '0')}:${seconds.toFixed(2).padStart(5, '0')}`;
+            
+            // Calculate font size based on video dimensions
+            const fontSize = Math.max(16, Math.round(ctx.canvas.height * 0.07));
+            
+            // Style for timecode
+            ctx.font = `bold ${fontSize}px monospace`;
+            
+            // Calculate text metrics for background
+            const metrics = ctx.measureText(timeString);
+            const padding = Math.max(10, fontSize / 2);
+            const x = ctx.canvas.width - metrics.width - padding;
+            const y = ctx.canvas.height - padding;
+            
+            // Calculate text height more accurately
+            const textHeight = fontSize;
+            
+            // Calculate background dimensions
+            const rectX = x - padding/2;
+            const rectWidth = metrics.width + padding;
+            const rectHeight = textHeight + padding;
+            
+            // Position rectangle to center text vertically
+            const rectY = y - rectHeight;
+            
+            // Calculate the vertical center of the rectangle
+            const rectCenterY = rectY + rectHeight/2;
+            
+            // Calculate text Y position to center it in the rectangle
+            const textY = rectCenterY + textHeight/3;
+            
+            const radius = Math.min(10, rectHeight/2);
+            
+            // Draw the actual background
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.75)';
+            ctx.beginPath();
+            ctx.moveTo(rectX + radius, rectY);
+            ctx.lineTo(rectX + rectWidth - radius, rectY);
+            ctx.quadraticCurveTo(rectX + rectWidth, rectY, rectX + rectWidth, rectY + radius);
+            ctx.lineTo(rectX + rectWidth, rectY + rectHeight - radius);
+            ctx.quadraticCurveTo(rectX + rectWidth, rectY + rectHeight, rectX + rectWidth - radius, rectY + rectHeight);
+            ctx.lineTo(rectX + radius, rectY + rectHeight);
+            ctx.quadraticCurveTo(rectX, rectY + rectHeight, rectX, rectY + rectHeight - radius);
+            ctx.lineTo(rectX, rectY + radius);
+            ctx.quadraticCurveTo(rectX, rectY, rectX + radius, rectY);
+            ctx.closePath();
+            ctx.fill();
+            
+            // Draw text
+            ctx.fillStyle = 'white';
+            ctx.fillText(timeString, x, textY);
+        }
+
+        initializeTimecodePreview() {
+            const video = this.elements.videoPreview;
+            const canvas = this.elements.timecodePreviewer;
+            const videoWrapper = video.parentElement;
+            
+            this.timecodeAnimationFrame = null;
+            
+            video.addEventListener('loadedmetadata', () => {
+                this.updateTimecodeCanvasSize();
+            });
+
+            const resizeObserver = new ResizeObserver(() => {
+                if (video.src) {
+                    this.updateTimecodeCanvasSize();
+                }
+            });
+
+            resizeObserver.observe(videoWrapper);
+            resizeObserver.observe(video);
+
+            // Use requestAnimationFrame for smoother updates
+            const updateTimecode = () => {
+                if (this.elements.showTimecode.checked && video.src) {
+                    this.updateTimecodePreview();
+                }
+                this.timecodeAnimationFrame = requestAnimationFrame(updateTimecode);
+            };
+
+            // Start the animation loop
+            updateTimecode();
+
+            // Clean up animation when video is removed
+            video.addEventListener('emptied', () => {
+                if (this.timecodeAnimationFrame) {
+                    cancelAnimationFrame(this.timecodeAnimationFrame);
+                }
+            });
+
+            this.elements.showTimecode.addEventListener('change', (e) => {
+                canvas.style.display = e.target.checked ? 'block' : 'none';
+                if (!e.target.checked && this.timecodeAnimationFrame) {
+                    cancelAnimationFrame(this.timecodeAnimationFrame);
+                    this.timecodeAnimationFrame = null;
+                } else if (e.target.checked && !this.timecodeAnimationFrame) {
+                    updateTimecode();
+                }
+            });
+        }
+
+        updateTimecodeCanvasSize() {
+            const video = this.elements.videoPreview;
+            const canvas = this.elements.timecodePreviewer;
+            
+            // Set canvas dimensions to match video's intrinsic size
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            
+            // Set canvas display size to match video's display size
+            canvas.style.width = `${video.offsetWidth}px`;
+            canvas.style.height = `${video.offsetHeight}px`;
+            
+            // Position canvas absolutely over the video
+            canvas.style.position = 'absolute';
+            canvas.style.top = '0';
+            canvas.style.left = '0';
+            
+            // Make sure video wrapper is positioned relatively
+            video.parentElement.style.position = 'relative';
+            
+            // Force a redraw of the timecode
+            this.updateTimecodePreview();
+        }
+
+        updateTimecodePreview() {
+            if (!this.elements.showTimecode.checked || !this.elements.videoPreview.src) return;
+
+            const video = this.elements.videoPreview;
+            const canvas = this.elements.timecodePreviewer;
+            const ctx = canvas.getContext('2d');
+            
+            // Get current time range
+            const startTime = parseFloat(this.timeline.elements.startTimeInput.value);
+            const endTime = parseFloat(this.timeline.elements.endTimeInput.value);
+            
+            // Clear previous frame
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            const currentTime = video.currentTime;
+            
+            if (currentTime >= 0 && isFinite(currentTime) && isFinite(startTime) && isFinite(endTime)) {
+                const displayTime = Math.max(
+                    startTime, 
+                    Math.min(currentTime, video.duration)
+                );
+                
+                const speedMultiplier = parseFloat(this.elements.speedSelect.value);
+                this.drawTimecode(ctx, displayTime, speedMultiplier);
+            }
+        }
     }
 
     class TimelineController {
@@ -2373,6 +2627,12 @@
                     }
                 });
             });
+
+            document.getElementById('speedSelect').addEventListener('change', () => {
+                this.updateDurationDisplay();
+            });
+
+    
         }
 
         handleVideoLoad() {
@@ -2437,8 +2697,27 @@
         updateDurationDisplay() {
             const startTime = parseFloat(this.elements.startTimeInput.value);
             const endTime = parseFloat(this.elements.endTimeInput.value);
-            const duration = endTime - startTime;
-            this.elements.durationDisplay.textContent = `Duration: ${duration.toFixed(1)}s`;
+            const speedSelect = document.getElementById('speedSelect');
+            const speedMultiplier = parseFloat(speedSelect.value);
+            
+            // Calculate actual duration
+            const actualDuration = endTime - startTime;
+            
+            // Only show speed info if speed is not 1x
+            if (speedMultiplier !== 1) {
+                // Calculate sped-up duration
+                const speedDuration = actualDuration / speedMultiplier;
+                this.elements.durationDisplay.innerHTML = `
+                    Duration: <span style="color: var(--text-color)">${actualDuration.toFixed(1)}s</span>
+                    <span style="opacity: 0.7"> → </span>
+                    <span style="color: var(--primary-color)">${speedDuration.toFixed(1)}s</span>
+                    <span style="color: var(--secondary-color); font-size: 0.9em">(${speedMultiplier}x)</span>
+                `;
+            } else {
+                this.elements.durationDisplay.innerHTML = `
+                    Duration: <span style="color: var(--text-color)">${actualDuration.toFixed(1)}s</span>
+                `;
+            }
         }
 
         handleTimelineClick(e) {
@@ -2497,7 +2776,11 @@
                     this.videoPreview.currentTime = time;
                     this.elements.playhead.style.display = 'block';
                     this.elements.playhead.style.left = `${position * 100}%`;
-                    //this.elements.playhead.style.transform = 'translateX(-50%)';
+                    
+                    // Force update the timecode preview
+                    if (this.converter) {
+                        this.converter.updateTimecodePreview();
+                    }
                 }
             }
         }
@@ -2656,7 +2939,6 @@
             const endTime = parseFloat(this.elements.endTimeInput.value);
             const startTime = parseFloat(this.elements.startTimeInput.value);
 
-            // Add validation for currentTime
             if (!isFinite(currentTime)) {
                 console.warn('Invalid currentTime in handleTimeUpdate');
                 return;
@@ -2701,7 +2983,6 @@
             const startTime = parseFloat(this.elements.startTimeInput.value);
             const endTime = parseFloat(this.elements.endTimeInput.value);
             
-            // Add validation checks
             if (!isFinite(currentTime) || !isFinite(duration) || duration <= 0) {
                 console.warn('Invalid time values:', { currentTime, duration });
                 return;
@@ -2990,7 +3271,6 @@
             const end = parseFloat(this.elements.endTime.value);
             const duration = this.videoPreview.duration;
             
-            // Add validation for Infinity or invalid duration
             if (!isFinite(duration) || duration <= 0) {
                 // If we have a duration from filename, use that
                 const durationMatch = this.originalFileName.match(/_(\d+)s$/);
@@ -3097,7 +3377,6 @@
                     this.elements.playhead.style.left = `${position * 100}%`;
                 }
                 
-                // Add temporary event listeners for drag and release
                 document.addEventListener('mousemove', this.handleTimelineDrag);
                 document.addEventListener('mouseup', this.handleTimelineDragEnd);
             });
@@ -3140,7 +3419,6 @@
             };
         }
 
-        // Add this method inside the TimelineController class, after initializeElements()
         updateTimeDisplay(isStartTime, time) {
             const display = isStartTime ? this.elements.startTimeDisplay : this.elements.endTimeDisplay;
             display.textContent = this.formatTime(time);
@@ -3155,7 +3433,10 @@
     document.addEventListener('DOMContentLoaded', () => {
         const converter = new GifConverter();
         const timeline = new TimelineController(document.getElementById('videoPreview'));
+        
+        // Set up the bi-directional references
         converter.setTimeline(timeline);
+        timeline.converter = converter;
     });
     
     </script>
