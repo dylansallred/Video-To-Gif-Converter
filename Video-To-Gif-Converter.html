@@ -370,7 +370,10 @@
         .video-wrapper {
             position: relative;
             width: 100%;
-            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
         }
 
         .crop-overlay {
@@ -865,10 +868,14 @@
             background-color: rgba(59, 130, 246, 0.1);
         }
 
-        #videoPreview, #previewGif {
+        #videoPreview {
             width: 100%;
+            height: auto;
+            max-height: 70vh;
             margin: 0;
             border-radius: 8px;
+            object-fit: contain;
+            object-position: center;
         }
 
         @media (max-width: 768px) {
@@ -1484,6 +1491,15 @@
             this.lastConversionSettings = null;
 
             this.elements.videoPreview.onloadedmetadata = () => {
+                // Reset any transform styles that might have been applied
+                this.elements.videoPreview.style.transform = 'none';
+                this.elements.videoPreview.style.width = '100%';
+                this.elements.videoPreview.style.height = 'auto';
+                
+                // Force correct aspect ratio
+                const aspectRatio = this.elements.videoPreview.videoWidth / this.elements.videoPreview.videoHeight;
+                this.elements.videoPreview.style.aspectRatio = `${aspectRatio}`;
+
                 // If we have duration in filename and it's a webm file, use that instead
                 if (file.type === 'video/webm' && hasFileDuration) {
                     const fileDuration = parseFloat(durationMatch[1]);
@@ -1524,6 +1540,14 @@
             // Only show timecode previewer if checkbox is checked and we have a video
             this.elements.timecodePreviewer.style.display = 
                 this.elements.showTimecode.checked ? 'block' : 'none';
+
+            // Add resize handler to maintain aspect ratio
+            window.addEventListener('resize', () => {
+                if (this.elements.videoPreview.videoWidth && this.elements.videoPreview.videoHeight) {
+                    const aspectRatio = this.elements.videoPreview.videoWidth / this.elements.videoPreview.videoHeight;
+                    this.elements.videoPreview.style.aspectRatio = `${aspectRatio}`;
+                }
+            });
         }
 
         validateTimeInputs() {
@@ -1537,10 +1561,9 @@
 
         handleConvert() {
             if (this.currentConversion) {
-                this.cancelConversion();
-                setTimeout(() => {
+                this.cancelConversion().then(() => {
                     this.startNewConversion();
-                }, 100);
+                });
             } else {
                 this.startNewConversion();
             }
@@ -1737,6 +1760,9 @@
                 console.error('Error in finalization:', error);
                 this.updateUIForConversion(false);
                 this.currentConversion = null;
+            } finally {
+                // Clean up the GIF resources
+                URL.revokeObjectURL(gif.workerScript);
             }
         }
 
@@ -1981,7 +2007,7 @@
                         this.elements.progressOverlay.style.display = 'none';
                         progressStatus.style.color = '';
                         progressStatus.textContent = 'Converting... Please wait.';
-                        progressDetails.textContent = 'Processing frame: 0/0';
+                        progressDetails.textContent = '';
                         resolve();
                     }, 100);
                     
