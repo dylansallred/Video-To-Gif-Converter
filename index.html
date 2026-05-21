@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!--
+      ═══════════════════════════════════════════════════════════════════
+      GIF Forge — SEO additions
+      ═══════════════════════════════════════════════════════════════════
+    -->
+
+    <!-- ── Primary meta ──────────────────────────────────────────────── -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="description"
+        content="GIF Forge — free, browser-based video to GIF converter. Trim, crop, adjust speed and frame rate. Runs 100% offline. No uploads, no accounts, no limits.">
+    <meta name="keywords"
+        content="video to gif, gif converter, gif maker, browser gif, offline gif tool, offline gif maker, mp4 to gif, webm to gif, crop gif, free gif maker">
+    <meta name="author" content="Thièrry Ntoh">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://gitforge.vercel.app/">
+
+    <!-- ── Open Graph (Facebook, Discord, Slack, LinkedIn previews) ─── -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://gitforge.vercel.app/">
+    <meta property="og:title" content="GIF Forge — Free Browser-Based Video to GIF Converter">
+    <meta property="og:description"
+        content="Trim, crop, adjust speed and frame rate. Runs 100% in your browser — no uploads, no server, no account required.">
+    <meta property="og:image" content="https://gitforge.vercel.app/public/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="GIF Forge interface showing video-to-GIF conversion">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:site_name" content="GIF Forge">
+
+    <!-- ── Twitter / X Card ──────────────────────────────────────────── -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://gitforge.vercel.app/">
+    <meta name="twitter:title" content="GIF Forge — Free Browser Video to GIF Converter">
+    <meta name="twitter:description"
+        content="Trim, crop, speed up. Convert any video to GIF locally — nothing ever leaves your device.">
+    <meta name="twitter:image" content="https://gitforge.vercel.app/public/og-image.png">
+    <meta name="twitter:image:alt" content="GIF Forge interface">
+
+    <!-- ── Favicon set ───────────────────────────────────────────────── -->
+    <!-- Generated these at https://favicon.io or https://realfavicongenerator.net -->
+    <link rel="apple-touch-icon" sizes="180x180" href="public/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="public/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="public/favicon-16x16.png">
+    <link rel="manifest" href="public/site.webmanifest">
+    <meta name="theme-color" content="#7c6af7">
+
+    <!-- ── Structured data (JSON-LD) ─────────────────────────────────── -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "GIF Forge",
+      "url": "https://gitforge.vercel.app/",
+      "description": "Free, browser-based video to GIF converter. Trim, crop, adjust speed and frame rate. Runs 100% offline — no uploads, no accounts.",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "featureList": [
+        "Video to GIF conversion",
+        "In-browser processing — no uploads",
+        "Trim start/end with timeline scrubber",
+        "Visual and manual pixel crop",
+        "Adjustable frame rate (5–30 fps)",
+        "Speed multiplier (1×–5×)",
+        "Dithering options",
+        "Timecode overlay",
+        "Live file-size estimate before conversion"
+      ]
+    }
+    </script>
+
+    <!-- ── Preconnect for Google Fonts ─────── -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <title>GIF Forge — Video to GIF</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Syne:wght@400;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <!-- ══ Header ══════════════════════════════════════════════════════ -->
+    <header>
+        <div class="logo-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor"
+                stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
+                <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect>
+                <line x1="7" y1="2" x2="7" y2="22"></line>
+                <line x1="17" y1="2" x2="17" y2="22"></line>
+                <line x1="2" y1="12" x2="22" y2="12"></line>
+                <line x1="2" y1="7" x2="7" y2="7"></line>
+                <line x1="2" y1="17" x2="7" y2="17"></line>
+                <line x1="17" y1="17" x2="22" y2="17"></line>
+                <line x1="17" y1="7" x2="22" y2="7"></line>
+            </svg></div>
+        <div class="header-text">
+            <h1>GIF Forge</h1>
+            <p class="tagline">Video → GIF &nbsp;·&nbsp; 100% offline &nbsp;·&nbsp; No uploads</p>
+        </div>
+    </header>
+
+    <!-- ══ Main layout ═════════════════════════════════════════════════ -->
+    <main class="layout">
+
+        <!-- ─── LEFT COLUMN ─────────────────────────────────────────── -->
+        <div class="left-col">
+
+            <!-- Video panel -->
+            <section class="panel" id="videoPanel" aria-label="Source video">
+                <div class="panel-header">
+                    <span class="panel-title">Source Video</span>
+                    <button class="expand-btn" aria-label="Toggle expanded panel">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
+                        </svg>
+                    </button>
+                </div>
+
+                <input type="file" id="videoInput" accept="video/mp4,video/webm,video/ogg,video/quicktime"
+                    aria-label="Choose video file">
+
+                <div class="video-wrapper">
+                    <video id="videoPreview" playsinline webkit-playsinline muted></video>
+                    <canvas id="timecodePreviewer" aria-hidden="true"></canvas>
+                </div>
+
+                <!-- Timeline -->
+                <div class="video-controls">
+                    <div class="timeline-container" role="slider" aria-label="Video timeline">
+                        <div class="timeline" id="timeline">
+                            <div class="timeline-progress"></div>
+                            <div class="timeline-marker start-marker" title="Start marker" aria-label="Start marker">
+                            </div>
+                            <div class="timeline-marker end-marker" title="End marker" aria-label="End marker"></div>
+                            <div class="playhead" aria-hidden="true"></div>
+                        </div>
+                        <div class="marker-times">
+                            <span class="start-time mono">0:00.00</span>
+                            <span class="duration-time"></span>
+                            <span class="end-time mono">0:00.00</span>
+                        </div>
+                    </div>
+
+                    <div class="playback-controls">
+                        <button class="btn-play" id="playPauseBtn" disabled aria-label="Play video">Play</button>
+                        <button class="btn-mute" id="muteBtn" aria-label="Toggle mute">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                                <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </section><!-- /video panel -->
+
+            <!-- Settings panel -->
+            <section class="panel" id="settingsPanel" aria-label="GIF settings">
+                <div class="panel-header">
+                    <span class="panel-title">GIF Settings</span>
+                </div>
+
+                <!-- Time range -->
+                <div class="setting-group">
+                    <span class="setting-label">Time Range</span>
+                    <div class="time-range-row">
+                        <span class="range-tag range-tag--start">Start</span>
+                        <div class="time-input-group">
+                            <input type="number" id="startTime" class="time-input" value="0.00" min="0" step="0.01"
+                                aria-label="Start time in seconds">
+                            <div class="time-stepper">
+                                <button class="time-stepper-btn" data-target="startTime" data-delta="0.1" disabled
+                                    aria-label="Increase start time">+</button>
+                                <button class="time-stepper-btn" data-target="startTime" data-delta="-0.1" disabled
+                                    aria-label="Decrease start time">−</button>
+                            </div>
+                        </div>
+                        <span class="range-tag range-tag--end">End</span>
+                        <div class="time-input-group">
+                            <input type="number" id="endTime" class="time-input" value="0.00" min="0" step="0.01"
+                                aria-label="End time in seconds">
+                            <div class="time-stepper">
+                                <button class="time-stepper-btn" data-target="endTime" data-delta="0.1" disabled
+                                    aria-label="Increase end time">+</button>
+                                <button class="time-stepper-btn" data-target="endTime" data-delta="-0.1" disabled
+                                    aria-label="Decrease end time">−</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Frame rate -->
+                <div class="setting-group">
+                    <label class="setting-label" for="fpsSelect">Frame Rate</label>
+                    <select id="fpsSelect" aria-label="Output frame rate">
+                        <option value="30">30 fps — Smooth</option>
+                        <option value="24">24 fps — Cinematic</option>
+                        <option value="15">15 fps — Balanced</option>
+                        <option value="10" selected>10 fps — Compact</option>
+                        <option value="5">5 fps — Tiny</option>
+                    </select>
+                </div>
+
+                <!-- Output size -->
+                <div class="setting-group">
+                    <label class="setting-label" for="sizeSelect">Output Size</label>
+                    <select id="sizeSelect" aria-label="Output resolution scale">
+                        <option value="1">100% — Original</option>
+                        <option value="0.9">90%</option>
+                        <option value="0.8">80%</option>
+                        <option value="0.75">75%</option>
+                        <option value="0.7">70%</option>
+                        <option value="0.6">60%</option>
+                        <option value="0.5">50%</option>
+                        <option value="0.4">40%</option>
+                        <option value="0.3">30%</option>
+                        <option value="0.25">25%</option>
+                        <option value="0.2">20%</option>
+                    </select>
+                </div>
+
+                <!-- Dithering -->
+                <div class="setting-group">
+                    <label class="setting-label" for="ditherSelect">Dithering</label>
+                    <select id="ditherSelect" aria-label="Dithering algorithm">
+                        <option value="false" selected>None</option>
+                        <option value="FloydSteinberg">Floyd-Steinberg</option>
+                        <option value="FalseFloydSteinberg">Light</option>
+                        <option value="Stucki">Stucki</option>
+                    </select>
+                </div>
+
+                <!-- Speed -->
+                <div class="setting-group">
+                    <label class="setting-label" for="speedSelect">Speed</label>
+                    <select id="speedSelect" aria-label="Playback speed multiplier">
+                        <option value="1" selected>1× Normal</option>
+                        <option value="1.5">1.5×</option>
+                        <option value="2">2×</option>
+                        <option value="3">3×</option>
+                        <option value="4">4×</option>
+                        <option value="5">5×</option>
+                    </select>
+                </div>
+
+                <!-- Crop toggle + timecode toggle -->
+                <div class="setting-group setting-group--toggles">
+                    <div class="toggle-row">
+                        <span class="setting-label">Crop</span>
+                        <button id="toggleCrop" class="btn-ghost" disabled aria-label="Toggle crop mode">
+                            Enable Crop
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" aria-hidden="true">
+                                <path d="M6.13 1L6 16a2 2 0 0 0 2 2h15"></path>
+                                <path d="M1 6.13L16 6a2 2 0 0 1 2 2v15"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="toggle-row">
+                        <label class="setting-label toggles-label" for="showTimecode">Timecode</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="showTimecode" aria-label="Overlay timecode on output">
+                            <label for="showTimecode" class="toggle-label"></label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Crop dimensions display + manual inputs -->
+                <div id="cropPanel" class="crop-panel" hidden>
+                    <!-- Visual read-out -->
+                    <div class="crop-readout" id="cropReadout"></div>
+
+                    <!-- Manual pixel inputs -->
+                    <div class="crop-manual" id="cropManual">
+                        <p class="crop-manual-title">Manual Crop (pixels)</p>
+                        <div class="crop-manual-grid">
+                            <div class="crop-field">
+                                <label for="cropInputX" class="crop-field-label">Left (X)</label>
+                                <input type="number" id="cropInputX" class="crop-num-input" min="0" value="0"
+                                    aria-label="Crop left offset in pixels">
+                            </div>
+                            <div class="crop-field">
+                                <label for="cropInputY" class="crop-field-label">Top (Y)</label>
+                                <input type="number" id="cropInputY" class="crop-num-input" min="0" value="0"
+                                    aria-label="Crop top offset in pixels">
+                            </div>
+                            <div class="crop-field">
+                                <label for="cropInputW" class="crop-field-label">Width (W)</label>
+                                <input type="number" id="cropInputW" class="crop-num-input" min="1" value="0"
+                                    aria-label="Crop width in pixels">
+                            </div>
+                            <div class="crop-field">
+                                <label for="cropInputH" class="crop-field-label">Height (H)</label>
+                                <input type="number" id="cropInputH" class="crop-num-input" min="1" value="0"
+                                    aria-label="Crop height in pixels">
+                            </div>
+                        </div>
+                        <button id="applyCropInputs" class="btn-ghost btn-apply-crop"
+                            aria-label="Apply manual crop values">
+                            Apply
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <polyline points="20 6 9 17 4 12" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Size estimate -->
+                <div class="size-estimate" id="sizeEstimate" hidden aria-live="polite">
+                    <span class="size-estimate-label">Est. size</span>
+                    <span class="size-estimate-value" id="sizeEstimateValue">—</span>
+                </div>
+
+                <!-- Convert button -->
+                <div class="convert-wrap">
+                    <button id="convertButton" class="btn-convert" disabled aria-label="Convert video to GIF">
+                        Convert to GIF
+                    </button>
+                </div>
+            </section><!-- /settings panel -->
+        </div><!-- /left-col -->
+
+        <!-- ─── RIGHT COLUMN ─────────────────────────────────────────── -->
+        <div class="right-col">
+
+            <!-- GIF preview panel -->
+            <section class="panel" id="gifPanel" aria-label="GIF output preview">
+                <div class="panel-header">
+                    <span class="panel-title">Output GIF</span>
+                    <button class="expand-btn" aria-label="Toggle fullscreen panel">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="gif-wrapper">
+                    <img id="previewGif" alt="Converted GIF preview — double-click to enlarge">
+                </div>
+                <div class="size-indicator" id="sizeIndicator" hidden aria-live="polite"></div>
+                <button id="downloadButton" class="btn-download" hidden aria-label="Download GIF file">
+                    ⬇&nbsp; Download GIF
+                </button>
+            </section>
+
+            <!-- Tips panel -->
+            <section class="panel" id="tipsPanel" aria-label="Tips and keyboard shortcuts">
+                <div class="panel-header">
+                    <span class="panel-title">Tips &amp; Shortcuts</span>
+                </div>
+                <ul class="tips-list">
+                    <li><span class="tip-icon" aria-hidden="true">📐</span><span><strong>Output Size</strong> is the
+                            biggest file-size lever. 50% cuts size ~4× with barely visible quality loss.</span></li>
+                    <li><span class="tip-icon" aria-hidden="true">🎞</span><span><strong>10–15 fps</strong> is the sweet
+                            spot for most looping GIFs.</span></li>
+                    <li><span class="tip-icon" aria-hidden="true">⏱</span><span><strong>Trim tightly.</strong> Every
+                            second you cut saves proportional file size.</span></li>
+                    <li><span class="tip-icon" aria-hidden="true">✂️</span><span><strong>Crop</strong> lets you drag
+                            visually <em>or</em> type exact pixel values for precise control.</span></li>
+                    <li><span class="tip-icon" aria-hidden="true">🚫</span><span><strong>Skip dithering</strong> unless
+                            you need smooth gradients — it notably increases file size.</span></li>
+                    <li><span class="tip-icon" aria-hidden="true">📊</span><span><strong>Estimate</strong> updates live
+                            as you change settings so you know the ballpark before converting.</span></li>
+                </ul>
+                <div class="shortcuts-block">
+                    <p class="shortcuts-title">Keyboard</p>
+                    <ul class="tips-list">
+                        <li><kbd class="kbd">[</kbd> Set start marker at playhead</li>
+                        <li><kbd class="kbd">]</kbd> Set end marker at playhead</li>
+                        <li><kbd class="kbd">←</kbd> <kbd class="kbd">→</kbd> Step frame by frame</li>
+                        <li><kbd class="kbd">Space</kbd> Play / Pause</li>
+                    </ul>
+                </div>
+            </section>
+
+        </div><!-- /right-col -->
+    </main>
+
+    <footer>
+        <p>© 2026 <a href="https://github.com/thierryntoh24/gif-forge" target="_blank" rel="noopener">GIF Forge</a>
+            &nbsp;·&nbsp; 100% client-side &nbsp;·&nbsp; No data leaves your device &nbsp;·&nbsp; Built
+            on <a href="https://github.com/jnordberg/gif.js" target="_blank" rel="noopener">gif.js</a></p>
+    </footer>
+
+    <!-- ══ Progress overlay ════════════════════════════════════════════ -->
+    <div class="progress-overlay" id="progressOverlay" role="dialog" aria-modal="true" aria-label="Conversion progress"
+        hidden>
+        <div class="progress-card">
+            <div class="progress-title" aria-hidden="true">Processing</div>
+            <div class="spinner" aria-hidden="true"></div>
+            <p class="progress-status" id="progressStatus">Starting…</p>
+            <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <p class="progress-details" id="progressDetails" aria-live="polite">Initializing</p>
+            <button class="btn-cancel" id="cancelBtn">Cancel</button>
+        </div>
+    </div>
+
+    <!-- ══ Fullscreen GIF overlay ══════════════════════════════════════ -->
+    <div class="preview-overlay" id="previewOverlay" role="dialog" aria-modal="true" aria-label="Fullscreen GIF preview"
+        hidden>
+        <img id="overlayGif" alt="Fullscreen GIF preview — click anywhere to close">
+    </div>
+
+    <!-- ══ Scripts ════════════════════════════════════════════════════ -->
+    <script src="gif.lib.js"></script>
+    <script src="main.js"></script>
+</body>
+
+</html>

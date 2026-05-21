@@ -1,140 +1,169 @@
-# [Video To GIF Converter](https://dylansallred.github.io/Video-To-Gif-Converter)
+# [🎞️ GIF Forge](https://gifforge.vercel.app)
 
-A modern, browser-based tool for converting video clips to GIF animations with advanced customization options. Built with vanilla JavaScript and HTML5, this tool runs entirely in your browser - no server uploads required. The entire application is contained in a single HTML file, making it fast, secure, and privacy-friendly since all processing happens locally on your device.
+**Free, browser-based video → GIF converter.**  
+Trim, crop, adjust frame rate and speed.  
+Runs 100% client-side — nothing ever leaves your device.
 
-![Main Application Interface](/images/videotogif.gif)
-<p align="center"><em>The GIF above was created using this tool.</em></p>
+[![License: MIT](https://img.shields.io/badge/License-MIT-7c6af7.svg)](LICENSE)
+[![No server required](https://img.shields.io/badge/server-none-34d399.svg)](#)
+[![Works offline](https://img.shields.io/badge/offline-yes-34d399.svg)](#)
+
+---
+
+![Main Application Interface](/public/screenshot.jpeg)
+
+---
 
 ## Live Demo
-Visit [Video To GIF Converter](https://dylansallred.github.io/Video-To-Gif-Converter/Video-To-Gif-Converter.html)
+
+Visit [Video To GIF Converter](https://gifforge.vercel.app)
+
+---
 
 ## Features
 
-### Video Preview
-- Upload and preview video files directly in the browser
-- Interactive timeline with draggable markers for precise time selection
-- Play/Pause functionality
-- Audio mute toggle with persistent settings
-- Loop playback within the selected range
-- Frame-by-frame navigation using arrow keys
-- Playhead scrubbing for precise frame selection
-- Expandable panels for better workspace organization
+| Feature                | Details                                                                                                          |
+| ---------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| **Seek-based capture** | Every frame is captured by seeking the video directly — no dropped or duplicate frames regardless of clip length |
+| **Timeline scrubber**  | Drag start/end markers, click to scrub, or use keyboard shortcuts                                                |
+| **Visual crop**        | Drag-resize overlay with corner handles; or type exact pixel values                                              |
+| **Frame rate**         | 5, 10, 15, 24, or 30 fps                                                                                         |
+| **Output size**        | 20% – 100% of source resolution                                                                                  |
+| **Speed**              | 1× – 5× playback speed                                                                                           |
+| **Dithering**          | None, Floyd-Steinberg, Light, or Stucki                                                                          |
+| **Timecode overlay**   | Optional burnt-in timestamp on every frame                                                                       |
+| **Live size estimate** | Encodes a single sample frame to extrapolate real file size before the full conversion runs                      |
+| **100% offline**       | All processing happens in Web Workers inside the browser — no uploads, no accounts                               |
 
-### Customization Options
-- **Frame Rate Selection:** Choose between 5-30 fps
-- **Output Size Control:** Adjust from 25% to 100% of the original size
-- **Speed Control:** Adjust playback speed from 1x to 5x
-- **Dithering Options:**
-  - No Dithering (default)
-  - Floyd-Steinberg
-  - Light Dithering
-  - Stucki
-- **Video Cropping:**
-  - Interactive crop region with resize handles
-  - Real-time crop dimensions display
-- Real-time GIF preview
-- File size estimation
-- Double-click GIF preview for fullscreen view
-
-### User Interface
-- Expandable/collapsible panels for better workspace organization
-- Detailed conversion progress with status updates
-- Conversion time and file statistics display
-- Keyboard shortcuts for efficient timeline control
-- Cancel conversion option
-- Mobile-optimized touch controls
-- Persistent settings between sessions
-- Fullscreen preview mode for converted GIFs
-
-### Keyboard Shortcuts
-- **Space:** Play/Pause video
-- **[:** Set start marker at current position
-- **]:** Set end marker at current position
-- **←/→:** Step frame by frame (hold for continuous stepping)
-
-### Progress Tracking
-- Real-time conversion progress bar
-- Detailed frame processing information
-- Estimated file size and dimensions display
-- Conversion time tracking
-- Cancelable conversion process
-- Step-by-step status updates
-
-### User Experience
-- Responsive design for desktop and mobile
-- Settings persistence between sessions
-- Works entirely in the browser - no server processing needed
-- Helpful tips panel with optimization suggestions
-- Visual feedback for settings changes
-- Automatic file size optimization suggestions
-- Touch-friendly controls for mobile devices
+---
 
 ## Usage
 
-1. **Upload Video**
-   - Click the file input area or drag and drop a video file
-   - Video will appear in the preview panel
+### Option A — Open directly
 
-2. **Adjust Time Range**
-   - Use timeline markers to select start and end points
-   - Fine-tune using time input fields
-   - Preview selection using play button
+Because GIF Forge is pure HTML/CSS/JS with no build step, you can just open `index.html` in any modern browser.
 
-3. **Configure Settings**
-   - Adjust frame rate for smoothness vs. file size
-   - Select output size
-   - Choose dithering method for color optimization
+> **Note:** the Web Workers used by gif.js require the page to be served over HTTP(S), not `file://`.  
+> Use Option B below for local development.
 
-4. **Convert and Download**
-   - Click "Convert to GIF" to process
-   - Preview the result
-   - Click "Download GIF" to save
+### Option B — Local dev server
 
-## Technical Details
+Any static file server works. Examples:
 
-- Built with vanilla JavaScript
-- Uses HTML5 Canvas for video processing
-- Implements gif.js library for GIF encoding
-- Client-side processing only
-- Multi-threaded processing using Web Workers
-- Adaptive worker count based on CPU cores
+```bash
+# Python (built-in)
+python -m http.server 8080
 
-### Performance Optimizations
-- Dynamic worker allocation
-- Efficient frame capture
-- Memory management during conversion
-- Cancelable conversion process
+# Node.js (npx, no install needed)
+npx serve .
 
-### Browser Compatibility
-- Chrome (recommended)
-- Firefox
-- Safari
-- Edge
+# VS Code — install the "Live Server" extension and click "Go Live"
+```
 
-### Performance Notes
-Processing time depends on:
-- Video size
-- Selected duration
-- Frame rate
-- Output dimensions
+Then open `http://localhost:8080` in your browser.
 
-### Tips for Optimal File Size
-- Use shorter durations
-- Lower frame rates (10-15 fps) for most cases
-- Reduce output size if original is large
-- Experiment with dithering options
-- Adjust playback speed for longer videos
+### Option C — Deploy to GitHub Pages
 
-## Development
+1. Push the repo to GitHub.
+2. Go to **Settings → Pages → Source** and select the `main` branch, root folder.
+3. GitHub Pages will serve the site at `https://YOUR_USERNAME.github.io/YOUR_REPO/`.
 
-1. Clone the repository
-2. Open `VideoToGif.html` in a modern web browser
-3. No build process or dependencies required
+---
+
+## File Structure
+
+```
+gif-forge/
+├── index.html          # App shell + markup
+├── styles.css          # All styles (design tokens → components → responsive)
+├── app.js              # Application logic (SizeEstimator, CropController,
+│                       #   TimelineController, GifConverter)
+├── gif.lib.js          # Bundled gif.js + worker source (GIF_WORKER_SOURCE)
+├── og-image.png        # 1200×630 Open Graph preview image (add your own)
+├── favicon.ico         # Favicons (generate from your logo)
+├── favicon.svg
+├── apple-touch-icon.png
+├── site.webmanifest    # PWA manifest
+└── README.md
+```
+
+---
+
+## Keyboard Shortcuts
+
+| Key     | Action                                            |
+| ------- | ------------------------------------------------- |
+| `Space` | Play / Pause                                      |
+| `[`     | Set **start** marker at current playhead position |
+| `]`     | Set **end** marker at current playhead position   |
+| `←`     | Step one frame backward (hold to continue)        |
+| `→`     | Step one frame forward (hold to continue)         |
+| `Esc`   | Close fullscreen GIF preview                      |
+
+---
+
+## Architecture
+
+GIF Forge is structured as four plain ES6 classes, no framework or bundler required.
+
+```
+GifConverter  (top-level orchestrator)
+│
+├── TimelineController   video scrubbing, markers, playhead, keyboard nav
+├── CropController       drag overlay + manual pixel inputs, localStorage sync
+└── SizeEstimator        single-frame encode → linear extrapolation
+```
+
+**Encoding pipeline (`GifConverter._runConversion`):**
+
+1. Build a list of source timestamps based on `fps`, `speed`, and the trimmed range.
+2. For each timestamp: seek the `<video>` element, wait for `seeked`, draw to an off-screen `<canvas>` (with optional crop + timecode), then hand the frame to gif.js via `addFrame()`.
+3. After all frames are captured, gif.js dispatches encoding to parallel Web Workers and emits a `Blob` on `finished`.
+
+---
+
+## Dependencies
+
+| Library                                                            | Version | Purpose                         |
+| ------------------------------------------------------------------ | ------- | ------------------------------- |
+| [gif.js](https://github.com/jnordberg/gif.js)                      | 0.2.0   | GIF encoding (web worker based) |
+| [JetBrains Mono](https://fonts.google.com/specimen/JetBrains+Mono) | —       | Monospace UI font               |
+| [Syne](https://fonts.google.com/specimen/Syne)                     | —       | Display / heading font          |
+
+No build tools, no npm, no bundler. Just three files.
+
+---
+
+## Browser Support
+
+Any modern browser with Web Worker and Canvas support:
+
+| Browser                | Supported |
+| ---------------------- | --------- |
+| Chrome / Edge 88+      | ✅         |
+| Firefox 78+            | ✅         |
+| Safari 14+             | ✅         |
+| Mobile Chrome / Safari | ✅         |
+
+---
+
+## Contributing
+
+Pull requests are welcome. For significant changes, please open an issue first to discuss what you'd like to change.
+
+1. Fork the repo and create your branch from `main`.
+2. Make your changes — no build step needed, just edit and refresh.
+3. Open a pull request with a clear description of the change and why.
+
+---
 
 ## License
-MIT License - feel free to use and modify as needed.
+
+[MIT](LICENSE) — free to use, modify, and distribute.
+
 
 ## Credits
+- Uses [video-to-gif-converter](https://dylansallred.github.io/Video-To-Gif-Converter/Video-To-Gif-Converter.html) (og project)
 - Uses [gif.js](https://jnordberg.github.io/gif.js/) for GIF encoding
 - Interface design inspired by modern web applications
 - SVG Icons from [Feather Icons](https://feathericons.com/)
