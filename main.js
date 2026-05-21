@@ -1,5 +1,5 @@
 /**
- * GIF Forge — app.js
+ * GIF Nyanpasu! — app.js
  *
  * Architecture:
  *   SizeEstimator      — live pre-conversion file size estimation
@@ -109,21 +109,12 @@ class SizeEstimator {
         const video = this.video;
         if (!video.src || !video.videoWidth) return;
 
-        // Seek to midpoint of the clip for the sample frame
-        const sampleT = p.start + p.dur / 2;
-
         const canvas = document.createElement('canvas');
         canvas.width = p.outW;
         canvas.height = p.outH;
         const ctx = canvas.getContext('2d', { willReadFrequently: true });
 
-        await new Promise(resolve => {
-            const onSeeked = () => { video.removeEventListener('seeked', onSeeked); resolve(); };
-            video.addEventListener('seeked', onSeeked);
-            video.currentTime = sampleT;
-        });
-
-        ctx.clearRect(0, 0, p.outW, p.outH);
+        // No seek needed — draw whatever frame is currently visible
         ctx.drawImage(video, p.srcX, p.srcY, p.srcW, p.srcH, 0, 0, p.outW, p.outH);
 
         // One-frame gif.js encode to measure real byte cost
@@ -134,7 +125,7 @@ class SizeEstimator {
                 width: p.outW,
                 height: p.outH,
                 dither: p.dither === 'false' ? false : p.dither,
-                workerScript: this._getWorkerUrl(),   // FIX: calls injected provider
+                workerScript: this._getWorkerUrl(),
             });
             gif.addFrame(ctx, { copy: true, delay: p.frameInterval });
             gif.on('finished', blob => resolve(blob.size));
@@ -150,6 +141,7 @@ class SizeEstimator {
         const estimated = GIF_HEADER_BYTES + perFrameBytes * p.totalFrames;
 
         const gifDur = (p.dur / p.speed).toFixed(1);
+
         this.valueEl.textContent =
             `~${fmtBytes(estimated)}  (${p.outW}×${p.outH} · ${p.totalFrames} frames · ${gifDur}s)`;
 
@@ -1344,7 +1336,7 @@ class GifConverter {
         if (!this.currentBlob) return;
         const a = document.createElement('a');
         a.href = URL.createObjectURL(this.currentBlob);
-        a.download = `${this.originalName || 'gif-forge-output'}.gif`;
+        a.download = `${this.originalName || 'gif-nyanpasu-output'}.gif`;
         a.click();
     }
 

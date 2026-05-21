@@ -1,4 +1,4 @@
-# [🎞️ GIF Forge](https://gif-forge.vercel.app)
+# [🎞️ GIF Nyanpasu!](https://gif-nyanpasu.vercel.app)
 
 **Free, browser-based video → GIF converter.**  
 Trim, crop, adjust frame rate and speed.  
@@ -16,7 +16,7 @@ Runs 100% client-side — nothing ever leaves your device.
 
 ## Live Demo
 
-Visit [Video To GIF Converter](https://gif-forge.vercel.app)
+Visit [Video To GIF Converter](https://gif-nyanpasu.vercel.app)
 
 ---
 
@@ -41,7 +41,7 @@ Visit [Video To GIF Converter](https://gif-forge.vercel.app)
 
 ### Option A — Open directly
 
-Because GIF Forge is pure HTML/CSS/JS with no build step, you can just open `index.html` in any modern browser.
+Because GIF Nyanpasu! is pure HTML/CSS/JS with no build step, you can just open `index.html` in any modern browser.
 
 > **Note:** the Web Workers used by gif.js require the page to be served over HTTP(S), not `file://`.  
 > Use Option B below for local development.
@@ -73,17 +73,13 @@ Then open `http://localhost:8080` in your browser.
 ## File Structure
 
 ```
-gif-forge/
+gif-nyanpasu/
 ├── index.html          # App shell + markup
 ├── styles.css          # All styles (design tokens → components → responsive)
 ├── app.js              # Application logic (SizeEstimator, CropController,
 │                       #   TimelineController, GifConverter)
 ├── gif.lib.js          # Bundled gif.js + worker source (GIF_WORKER_SOURCE)
-├── og-image.png        # 1200×630 Open Graph preview image (add your own)
-├── favicon.ico         # Favicons (generate from your logo)
-├── favicon.svg
-├── apple-touch-icon.png
-├── site.webmanifest    # PWA manifest
+├── /public             # Favicons, manifest, og-image, etc
 └── README.md
 ```
 
@@ -104,7 +100,7 @@ gif-forge/
 
 ## Architecture
 
-GIF Forge is structured as four plain ES6 classes, no framework or bundler required.
+GIF Nyanpasu! is structured as four plain ES6 classes, no framework or bundler required.
 
 ```
 GifConverter  (top-level orchestrator)
@@ -168,3 +164,7 @@ Pull requests are welcome. For significant changes, please open an issue first t
 - Interface design inspired by modern web applications
 - SVG Icons from [Feather Icons](https://feathericons.com/)
 - Agent: [Claude](https://claude.ai)
+
+### Concerning the name 😜
+
+All good ones were takes, so let's go with Nyanpasu! since i'm currently watching Non-Non Biyori.
