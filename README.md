@@ -1,4 +1,4 @@
-# [🎞️ GIF Forge](https://gifforge.vercel.app)
+# [🎞️ GIF Forge](https://gif-forge.vercel.app)
 
 **Free, browser-based video → GIF converter.**  
 Trim, crop, adjust frame rate and speed.  
@@ -16,7 +16,7 @@ Runs 100% client-side — nothing ever leaves your device.
 
 ## Live Demo
 
-Visit [Video To GIF Converter](https://gifforge.vercel.app)
+Visit [Video To GIF Converter](https://gif-forge.vercel.app)
 
 ---
 
