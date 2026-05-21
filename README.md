@@ -163,7 +163,8 @@ Pull requests are welcome. For significant changes, please open an issue first t
 
 
 ## Credits
-- Uses [video-to-gif-converter](https://dylansallred.github.io/Video-To-Gif-Converter/Video-To-Gif-Converter.html) (og project)
+- Uses [video-to-gif-converter](https://dylansallred.github.io/Video-To-Gif-Converter/Video-To-Gif-Converter.html) (og project by [dylansallred](https://github.com/dylansallred))
 - Uses [gif.js](https://jnordberg.github.io/gif.js/) for GIF encoding
 - Interface design inspired by modern web applications
 - SVG Icons from [Feather Icons](https://feathericons.com/)
+- Agent: [Claude](https://claude.ai)
