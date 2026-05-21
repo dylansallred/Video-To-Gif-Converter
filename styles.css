@@ -1339,6 +1339,11 @@ footer {
   .setting-group {
     margin: 7px 0;
   }
+  .setting-group--col-m {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
   .setting-label {
     min-width: 80px;
     font-size: 0.7rem;

@@ -16,7 +16,7 @@ Runs 100% client-side — nothing ever leaves your device.
 
 ## Live Demo
 
-Visit [Video To GIF Converter](https://gif-nyanpasu.vercel.app)
+Visit [GIF Nyanpasu!](https://gif-nyanpasu.vercel.app)
 
 ---
 
