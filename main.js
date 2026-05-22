@@ -1334,9 +1334,30 @@ class GifConverter {
     /* ── Download ── */
     _downloadGif() {
         if (!this.currentBlob) return;
+
+        const video = this.el.videoPreview;
+        if (!video.src || !video.videoWidth) return;
+
+        let srcW, srcH;
+        if (this.crop && this.crop.enabled) {
+            const px = this.crop.pixelRegion;   // already in pixels
+            srcW = px.w;
+            srcH = px.h;
+        } else {
+            srcW = video.videoWidth;
+            srcH = video.videoHeight;
+        }
+
+        const sizePercent = parseFloat(this.el.sizeSelect.value);
+        const outW = Math.max(2, Math.round(srcW * sizePercent));
+        const outH = Math.max(2, Math.round(srcH * sizePercent));
+
+        const fps = parseInt(this.el.fpsSelect.value);
+        const speed = parseFloat(this.el.speedSelect.value);
+
         const a = document.createElement('a');
         a.href = URL.createObjectURL(this.currentBlob);
-        a.download = `${this.originalName || 'gif-nyanpasu-output'}.gif`;
+        a.download = `${this.originalName || 'gif-nyanpasu-output'}--${sizePercent * 100}%-(${outW}x${outH})-${fps}fps-${speed}x.gif`;
         a.click();
     }
 
