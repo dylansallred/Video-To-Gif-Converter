@@ -1,140 +1,153 @@
 # [Video To GIF Converter](https://dylansallred.github.io/Video-To-Gif-Converter)
 
-A modern, browser-based tool for converting video clips to GIF animations with advanced customization options. Built with vanilla JavaScript and HTML5, this tool runs entirely in your browser - no server uploads required. The entire application is contained in a single HTML file, making it fast, secure, and privacy-friendly since all processing happens locally on your device.
+A single-file, browser-based video to GIF editor. It runs entirely locally in the browser, works offline after the page is loaded, and does not upload videos to a server. The app is built with vanilla HTML, CSS, JavaScript, Canvas, and an embedded GIF encoder.
 
 ![Main Application Interface](/images/videotogif.gif)
 <p align="center"><em>The GIF above was created using this tool.</em></p>
 
 ## Live Demo
-Visit [Video To GIF Converter](https://dylansallred.github.io/Video-To-Gif-Converter/Video-To-Gif-Converter.html)
+
+Open [Video To GIF Converter](https://dylansallred.github.io/Video-To-Gif-Converter/Video-To-Gif-Converter.html).
 
 ## Features
 
-### Video Preview
-- Upload and preview video files directly in the browser
-- Interactive timeline with draggable markers for precise time selection
-- Play/Pause functionality
-- Audio mute toggle with persistent settings
-- Loop playback within the selected range
-- Frame-by-frame navigation using arrow keys
-- Playhead scrubbing for precise frame selection
-- Expandable panels for better workspace organization
+### Local Video Workflow
 
-### Customization Options
-- **Frame Rate Selection:** Choose between 5-30 fps
-- **Output Size Control:** Adjust from 25% to 100% of the original size
-- **Speed Control:** Adjust playback speed from 1x to 5x
-- **Dithering Options:**
-  - No Dithering (default)
-  - Floyd-Steinberg
-  - Light Dithering
-  - Stucki
-- **Video Cropping:**
-  - Interactive crop region with resize handles
-  - Real-time crop dimensions display
-- Real-time GIF preview
-- File size estimation
-- Double-click GIF preview for fullscreen view
+- Load local MP4, WebM, OGG, and MOV video files
+- Drag-and-drop or browse with a custom file picker
+- Preview video locally without server uploads
+- Audio mute toggle with persistent setting
+- Fullscreen preview controls with Escape-to-close support
+- Responsive layout for desktop and mobile screens
 
-### User Interface
-- Expandable/collapsible panels for better workspace organization
-- Detailed conversion progress with status updates
-- Conversion time and file statistics display
-- Keyboard shortcuts for efficient timeline control
-- Cancel conversion option
-- Mobile-optimized touch controls
-- Persistent settings between sessions
-- Fullscreen preview mode for converted GIFs
+### Timeline And Trimming
 
-### Keyboard Shortcuts
-- **Space:** Play/Pause video
-- **[:** Set start marker at current position
-- **]:** Set end marker at current position
-- **←/→:** Step frame by frame (hold for continuous stepping)
+- Draggable start/end markers with a highlighted selected range
+- Playhead scrubbing with a visible handle and time feedback
+- Time inputs with stepper controls for precise start/end values
+- Timeline zoom that can focus on the selected range
+- Frame stepping based on the selected GIF frame interval
+- Shortcut support for setting markers, stepping frames, nudging time, playback, and adding sequence frames
 
-### Progress Tracking
-- Real-time conversion progress bar
-- Detailed frame processing information
-- Estimated file size and dimensions display
-- Conversion time tracking
-- Cancelable conversion process
-- Step-by-step status updates
+### Frame Sequence Mode
 
-### User Experience
-- Responsive design for desktop and mobile
-- Settings persistence between sessions
-- Works entirely in the browser - no server processing needed
-- Helpful tips panel with optimization suggestions
-- Visual feedback for settings changes
-- Automatic file size optimization suggestions
-- Touch-friendly controls for mobile devices
+- Switch between standard Range mode and Frame Sequence mode
+- Add the current video frame to a custom sequence
+- Preview sequence timing before rendering the final GIF
+- Click saved sequence frames to jump back to their source time
+- Duplicate, delete, and reorder sequence frames
+- Edit per-frame delays for custom stop-motion-style GIFs
+- Timeline marks show where saved sequence frames came from
+
+### GIF Export Settings
+
+- **Frame Rate:** 5, 10, 15, 24, or 30 fps
+- **Output Size:** 20% through 100% of the source dimensions
+- **Dithering:** No Dithering, Floyd-Steinberg, Light Dithering, Stucki, Atkinson, and Floyd-Steinberg Serpentine
+- **Color Quality:** High detail, Balanced, Compact, or Fast preview
+- **Looping:** Repeat forever or play once
+- **Palette Mode:** Per-frame palette or global palette
+- **Speed:** Slow down to 0.25x or speed up to 5x in Range mode
+- Estimated output details for dimensions, FPS, frame count, duration, and performance warnings
+
+### Cropping And Image Tuning
+
+- Interactive crop rectangle with visible corner handles
+- Crop region is constrained to the actual video frame
+- Crop dimensions update live as the crop changes
+- Fine-tune image adjustments for sharpness, brightness, contrast, saturation, and warmth
+- Reset image adjustments with a compact animated control
+- Timecode overlay option for review/export workflows
+
+### Conversion Feedback
+
+- Real-time progress overlay while rendering
+- Frame-by-frame progress details
+- Cancelable conversion
+- GIF preview and download after rendering
+- Tips panel with file-size and conversion-speed guidance
+
+## Keyboard Shortcuts
+
+| Shortcut | Action |
+| --- | --- |
+| `Space` | Play or pause the video |
+| `[` | Set the start marker to the playhead |
+| `]` | Set the end marker to the playhead |
+| `←` / `→` | Step backward or forward by the selected frame interval |
+| `Shift` + `←` / `→` | Jump backward or forward by 1 second |
+| `Alt` + `←` / `→` | Nudge backward or forward by 0.01 seconds |
+| `A` | Add the current frame to the frame sequence |
+| `Esc` | Close fullscreen or open overlays |
+| `Enter` / `Space` on picker | Browse for a video |
 
 ## Usage
 
-1. **Upload Video**
-   - Click the file input area or drag and drop a video file
-   - Video will appear in the preview panel
+1. **Load a video**
+   - Drag a local video onto the picker or click Browse.
+   - The app reads the file locally and shows video metadata.
 
-2. **Adjust Time Range**
-   - Use timeline markers to select start and end points
-   - Fine-tune using time input fields
-   - Preview selection using play button
+2. **Choose a workflow**
+   - Use Range mode for a continuous clip.
+   - Use Frame Sequence mode to build a GIF from selected non-contiguous frames.
 
-3. **Configure Settings**
-   - Adjust frame rate for smoothness vs. file size
-   - Select output size
-   - Choose dithering method for color optimization
+3. **Set timing**
+   - Drag the timeline markers, scrub the playhead, use shortcuts, or enter exact start/end values.
+   - Use timeline zoom when you want to focus on a selected range.
 
-4. **Convert and Download**
-   - Click "Convert to GIF" to process
-   - Preview the result
-   - Click "Download GIF" to save
+4. **Configure output**
+   - Pick FPS, output size, dithering, color quality, palette mode, loop behavior, and speed.
+   - Enable crop or timecode if needed.
+   - Open Tune Image for brightness, contrast, saturation, warmth, and sharpness adjustments.
+
+5. **Convert and download**
+   - Click Convert to GIF.
+   - Preview the rendered GIF.
+   - Download the final file when it looks right.
+
+## Performance Tips
+
+- Keep clips short when possible.
+- Use 10-15 fps for most GIFs.
+- Reduce output size before increasing compression.
+- Crop out unused pixels.
+- Skip image adjustments when you do not need them.
+- Use compact or fast quality settings for quick previews.
+- Use Frame Sequence mode when you only need selected moments instead of a continuous clip.
 
 ## Technical Details
 
-- Built with vanilla JavaScript
-- Uses HTML5 Canvas for video processing
-- Implements gif.js library for GIF encoding
-- Client-side processing only
-- Multi-threaded processing using Web Workers
-- Adaptive worker count based on CPU cores
+- Single HTML file application
+- Vanilla JavaScript, HTML5 video, and Canvas
+- Embedded GIF encoding with Web Workers
+- Local-only processing with no server dependency
+- Settings persisted with `localStorage`
+- No build step required
 
-### Performance Optimizations
-- Dynamic worker allocation
-- Efficient frame capture
-- Memory management during conversion
-- Cancelable conversion process
+## Browser Compatibility
 
-### Browser Compatibility
-- Chrome (recommended)
-- Firefox
-- Safari
-- Edge
-
-### Performance Notes
-Processing time depends on:
-- Video size
-- Selected duration
-- Frame rate
-- Output dimensions
-
-### Tips for Optimal File Size
-- Use shorter durations
-- Lower frame rates (10-15 fps) for most cases
-- Reduce output size if original is large
-- Experiment with dithering options
-- Adjust playback speed for longer videos
+- Chrome and Edge are recommended
+- Firefox and Safari should work with supported local video formats
+- Browser codec support determines which video files can be previewed
 
 ## Development
 
-1. Clone the repository
-2. Open `VideoToGif.html` in a modern web browser
-3. No build process or dependencies required
+1. Clone the repository.
+2. Serve the folder locally, for example:
+
+   ```bash
+   python3 -m http.server 8000
+   ```
+
+3. Open `http://localhost:8000/Video-To-Gif-Converter.html`.
+
+The app is intentionally kept as one standalone HTML file.
 
 ## License
+
 MIT License - feel free to use and modify as needed.
 
 ## Credits
+
 - Uses [gif.js](https://jnordberg.github.io/gif.js/) for GIF encoding
-- Interface design inspired by modern web applications
-- SVG Icons from [Feather Icons](https://feathericons.com/)
+- SVG icons are inline and based on open icon styles such as Feather/Lucide
