@@ -4,7 +4,7 @@
 <head>
     <!--
       ═══════════════════════════════════════════════════════════════════
-      GIF Nyanpasu! — SEO additions
+      GIF Nyanpasu!
       ═══════════════════════════════════════════════════════════════════
     -->
 
@@ -59,11 +59,7 @@
       "description": "Free, browser-based video to GIF converter. Trim, crop, adjust speed and frame rate. Runs 100% offline — no uploads, no accounts.",
       "applicationCategory": "MultimediaApplication",
       "operatingSystem": "Any",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD"
-      },
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
       "featureList": [
         "Video to GIF conversion",
         "In-browser processing — no uploads",
@@ -81,20 +77,24 @@
     <!-- ── Preconnect for Google Fonts ─────── -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-    <title>GIF Nyanpasu! — Video to GIF</title>
     <link
         href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Syne:wght@400;600;700;800&display=swap"
         rel="stylesheet">
+
+    <!-- ── Stylesheets: shared tokens first, then page-specific ─────── -->
+    <!-- <link rel="stylesheet" href="shared.css"> -->
     <link rel="stylesheet" href="styles.css">
+
+    <title>GIF Nyanpasu! — Video to GIF</title>
 </head>
 
 <body>
 
     <!-- ══ Header ══════════════════════════════════════════════════════ -->
     <header>
-        <div class="logo-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor"
-                stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
+        <div class="logo-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"
+                stroke-linecap="round" stroke-linejoin="round">
                 <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect>
                 <line x1="7" y1="2" x2="7" y2="22"></line>
                 <line x1="17" y1="2" x2="17" y2="22"></line>
@@ -103,11 +103,20 @@
                 <line x1="2" y1="17" x2="7" y2="17"></line>
                 <line x1="17" y1="17" x2="22" y2="17"></line>
                 <line x1="17" y1="7" x2="22" y2="7"></line>
-            </svg></div>
+            </svg>
+        </div>
         <div class="header-text">
             <h1>GIF Nyanpasu!</h1>
             <p class="tagline">Video → GIF &nbsp;·&nbsp; 100% offline &nbsp;·&nbsp; No uploads</p>
         </div>
+        <a href="crop.html" class="nav-link" style="left:auto;right:0;" aria-label="Open image cropper">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M6.13 1L6 16a2 2 0 0 0 2 2h15"></path>
+                <path d="M1 6.13L16 6a2 2 0 0 1 2 2v15"></path>
+            </svg>
+            Image Crop →
+        </a>
     </header>
 
     <!-- ══ Main layout ═════════════════════════════════════════════════ -->
@@ -225,6 +234,7 @@
                         <option value="0.6">60%</option>
                         <option value="0.5">50%</option>
                         <option value="0.4">40%</option>
+                        <option value="0.35">35%</option>
                         <option value="0.3">30%</option>
                         <option value="0.25">25%</option>
                         <option value="0.2">20%</option>
@@ -375,6 +385,8 @@
                             you need smooth gradients — it notably increases file size.</span></li>
                     <li><span class="tip-icon" aria-hidden="true">📊</span><span><strong>Estimate</strong> updates live
                             as you change settings so you know the ballpark before converting.</span></li>
+                    <li><span class="tip-icon" aria-hidden="true">🖼</span><span>Need to crop still images? Try the
+                            <a href="crop.html">Image Crop tool →</a></span></li>
                 </ul>
                 <div class="shortcuts-block">
                     <p class="shortcuts-title">Keyboard</p>
@@ -394,7 +406,8 @@
         <p>© 2026 <a href="https://github.com/thierryntoh24/gif-nyanpasu" target="_blank" rel="noopener">GIF
                 Nyanpasu!</a>
             &nbsp;·&nbsp; 100% client-side &nbsp;·&nbsp; No data leaves your device &nbsp;·&nbsp; Built
-            on <a href="https://github.com/jnordberg/gif.js" target="_blank" rel="noopener">gif.js</a></p>
+            on <a href="https://github.com/jnordberg/gif.js" target="_blank" rel="noopener">gif.js</a>
+            &nbsp;·&nbsp; <a href="crop.html">Image Crop →</a></p>
     </footer>
 
     <!-- ══ Progress overlay ════════════════════════════════════════════ -->
@@ -418,9 +431,11 @@
         <img id="overlayGif" alt="Fullscreen GIF preview — click anywhere to close">
     </div>
 
-    <!-- ══ Scripts ════════════════════════════════════════════════════ -->
-    <script src="gif.lib.js"></script>
+    <!-- ══ Scripts: shared helpers first, then lib, then page logic ═══ -->
+    <script src="shared.js"></script>
+    <script src="gif_lib.js"></script>
     <script src="main.js"></script>
+
 </body>
 
 </html>

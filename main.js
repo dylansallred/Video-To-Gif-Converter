@@ -1,5 +1,5 @@
 /**
- * GIF Nyanpasu! — app.js
+ * GIF Nyanpasu! — main.js
  *
  * Architecture:
  *   SizeEstimator      — live pre-conversion file size estimation
@@ -7,46 +7,15 @@
  *   TimelineController — video scrubbing, markers, playhead, keyboard nav
  *   GifConverter       — orchestrates encoding using gif.js (seek-based capture)
  *
+ * Depends on shared.js being loaded first (clamp, fmtTime, fmtBytes,
+ * loadSetting, saveSetting are globals from that file).
+ *
  * Encoding engine: web-worker based, fastest + best file sizes of the tested
  * options. Frame capture is seek-based (no real-time playback), so no frames
  * are ever dropped or duplicated.
  */
 
 'use strict';
-
-/* ═══════════════════════════════════════════════════════════════════
-   HELPERS
-   ═══════════════════════════════════════════════════════════════════ */
-
-/** Format seconds as M:SS.ss */
-function fmtTime(s) {
-    const m = Math.floor(s / 60);
-    const sec = s % 60;
-    return `${m}:${sec.toFixed(2).padStart(5, '0')}`;
-}
-
-/** Format bytes as KB / MB string */
-function fmtBytes(bytes) {
-    const kb = bytes / 1024;
-    return kb >= 1024
-        ? `${(kb / 1024).toFixed(2)} MB`
-        : `${kb.toFixed(1)} KB`;
-}
-
-/** Clamp a value between min and max */
-function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
-
-/** Read a setting from localStorage, with a fallback */
-function loadSetting(key, fallback) {
-    const v = localStorage.getItem(key);
-    return v !== null ? v : fallback;
-}
-
-/** Persist a setting to localStorage */
-function saveSetting(key, value) {
-    localStorage.setItem(key, value);
-}
-
 
 /* ═══════════════════════════════════════════════════════════════════
    SIZE ESTIMATOR
@@ -61,16 +30,16 @@ function saveSetting(key, value) {
    ═══════════════════════════════════════════════════════════════════ */
 class SizeEstimator {
     /**
-     * @param {HTMLElement}      wrapEl   - outer container (shown/hidden)
-     * @param {HTMLElement}      valueEl  - text node target
-     * @param {HTMLVideoElement} videoEl  - the video element
+     * @param {HTMLElement}      wrapEl       - outer container (shown/hidden)
+     * @param {HTMLElement}      valueEl      - text node target
+     * @param {HTMLVideoElement} videoEl      - the video element
      * @param {() => string}     getWorkerUrl - returns a gif.js worker Blob URL
      */
     constructor(wrapEl, valueEl, videoEl, getWorkerUrl) {
         this.wrapEl = wrapEl;
         this.valueEl = valueEl;
         this.video = videoEl;
-        this._getWorkerUrl = getWorkerUrl;   // worker URL provider injected
+        this._getWorkerUrl = getWorkerUrl;
         this._estimateTimer = null;
     }
 
@@ -101,7 +70,7 @@ class SizeEstimator {
         this._estimateTimer = setTimeout(() => this._run(p), 400);
     }
 
-    /** Hide the estimate widget */
+    /** Hide the estimate widget. */
     hide() { this.wrapEl.hidden = true; }
 
     /* ── Internal ── */
@@ -114,10 +83,10 @@ class SizeEstimator {
         canvas.height = p.outH;
         const ctx = canvas.getContext('2d', { willReadFrequently: true });
 
-        // No seek needed — draw whatever frame is currently visible
+        // No seek needed — draw whatever frame is currently visible.
         ctx.drawImage(video, p.srcX, p.srcY, p.srcW, p.srcH, 0, 0, p.outW, p.outH);
 
-        // One-frame gif.js encode to measure real byte cost
+        // One-frame gif.js encode to measure real byte cost.
         const sampleBytes = await new Promise((resolve, reject) => {
             const gif = new GIF({
                 workers: 1,
@@ -157,7 +126,7 @@ class SizeEstimator {
    CROP CONTROLLER
    Manages the drag-resize overlay on the video element and the manual
    pixel-input fields.  The two are kept in sync at all times.
-   Internal state: cropRegion {x, y, w, h} normalised 0-1 ratios.
+   Internal state: region {x, y, w, h} normalised 0-1 ratios.
    ═══════════════════════════════════════════════════════════════════ */
 class CropController {
     /**
@@ -238,7 +207,7 @@ class CropController {
 
     toggle() { this.enabled ? this.disable() : this.enable(); }
 
-    /** Reset crop to full video frame */
+    /** Reset crop to full video frame. */
     reset() {
         this.region = { x: 0, y: 0, w: 1, h: 1 };
         this._positionOverlay();
@@ -263,29 +232,21 @@ class CropController {
         };
     }
 
-    /* ── ① Persist region to localStorage (debounced 400 ms)  ── */
     _saveToStorage() {
-        try {
-            localStorage.setItem('cropRegion', JSON.stringify(this.region));
-        } catch (_) { /* quota / private-browsing — silently ignore */ }
-
+        try { localStorage.setItem('cropRegion', JSON.stringify(this.region)); } catch (_) { }
     }
 
-    /* ── ① Restore region from localStorage ── */
     _restoreFromStorage() {
         try {
             const raw = localStorage.getItem('cropRegion');
             if (!raw) return;
             const parsed = JSON.parse(raw);
             const keys = ['x', 'y', 'w', 'h'];
-            const valid = keys.every(k => typeof parsed[k] === 'number'
-                && isFinite(parsed[k])
-                && parsed[k] >= 0
-                && parsed[k] <= 1);
+            const valid = keys.every(k =>
+                typeof parsed[k] === 'number' && isFinite(parsed[k]) &&
+                parsed[k] >= 0 && parsed[k] <= 1);
             if (valid) this.region = { ...parsed };
-            // ← intentionally no _syncManualInputs() call here;
-            //   videoWidth is 0 at construction time.
-        } catch (_) { /* malformed data — silently ignore */ }
+        } catch (_) { }
     }
 
     /* ── Internal: position the overlay div from normalised region ── */
@@ -319,56 +280,41 @@ class CropController {
         this.inH.value = px.h;
     }
 
-    /* ── Internal: update readout text ── */
     _updateReadout() {
         if (!this.video.videoWidth) return;
         const px = this.pixelRegion;
         this.readout.innerHTML =
             `Crop: <span style="color:var(--accent)">${px.w}&thinsp;×&thinsp;${px.h}px</span>` +
-            `&ensp;at&ensp;` +
-            `<span style="color:var(--text2)">${px.x}, ${px.y}</span>`;
+            `&ensp;at&ensp;<span style="color:var(--text2)">${px.x}, ${px.y}</span>`;
     }
 
-    /* ── ② Bind manual pixel inputs — live sync on `input` ── */
     _bindManualInputs() {
-        // Live sync: fires on every keystroke / stepper click
         [this.inX, this.inY, this.inW, this.inH].forEach(inp => {
             inp.addEventListener('input', () => this._applyManualInputs());
         });
-
-        // Keep the Apply button for accessibility / explicit commit
         document.getElementById('applyCropInputs')
             .addEventListener('click', () => this._applyManualInputs());
-
-        // Enter key also commits
         [this.inX, this.inY, this.inW, this.inH].forEach(inp => {
-            inp.addEventListener('keydown', e => {
-                if (e.key === 'Enter') this._applyManualInputs();
-            });
+            inp.addEventListener('keydown', e => { if (e.key === 'Enter') this._applyManualInputs(); });
         });
     }
 
-    /**
-     * Read the four pixel inputs, clamp them to valid bounds derived from
-     * the current video resolution, normalise to 0-1, then commit.
-     */
     _applyManualInputs() {
         const vw = this.video.videoWidth;
         const vh = this.video.videoHeight;
         if (!vw) return;
 
-        // ③ Parse and clamp within video resolution
         const x = clamp(parseInt(this.inX.value) || 0, 0, vw - 1);
         const y = clamp(parseInt(this.inY.value) || 0, 0, vh - 1);
-        const w = clamp(parseInt(this.inW.value) || vw, 1, vw - x); // ③ max = remaining width
-        const h = clamp(parseInt(this.inH.value) || vh, 1, vh - y); // ③ max = remaining height
+        const w = clamp(parseInt(this.inW.value) || vw, 1, vw - x);
+        const h = clamp(parseInt(this.inH.value) || vh, 1, vh - y);
 
         this.region = { x: x / vw, y: y / vh, w: w / vw, h: h / vh };
 
         this._positionOverlay();
-        this._syncManualInputs(); // re-render clamped values back into inputs
+        this._syncManualInputs();
         this._updateReadout();
-        this._saveToStorage();    // ① persist
+        this._saveToStorage();
         this.onChangeCb();
     }
 
@@ -419,14 +365,13 @@ class CropController {
                 }
             }
 
-            // Safety clamps
             if (this.region.x + this.region.w > 1) this.region.w = 1 - this.region.x;
             if (this.region.y + this.region.h > 1) this.region.h = 1 - this.region.y;
 
             this._positionOverlay();
             this._syncManualInputs();
             this._updateReadout();
-            this._saveToStorage(); // ① persist on every drag move
+            this._saveToStorage();
             this.onChangeCb();
         };
 
@@ -486,8 +431,8 @@ class TimelineController {
         this.onChangeCb = onChangeCb;
         this.videoDuration = 0;
         this.isPlaying = false;
-        this.isDragging = false;   // marker drag
-        this.isScrubbing = false;   // playhead / timeline click-drag
+        this.isDragging = false;
+        this.isScrubbing = false;
         this.wasPaused = true;
         this.dragTarget = null;
         this.isKeyHeld = false;
@@ -512,7 +457,6 @@ class TimelineController {
         this._loadMuteState();
     }
 
-    /* ── Event wiring ── */
     _bindEvents() {
         this.video.addEventListener('loadedmetadata', () => this._onLoaded());
         this.video.addEventListener('timeupdate', () => this._onTimeUpdate());
@@ -524,7 +468,6 @@ class TimelineController {
             this.video.currentTime = parseFloat(this.el.startInput.value);
         });
 
-        // Marker drags
         [this.el.startMarker, this.el.endMarker].forEach(m => {
             m.addEventListener('mousedown', e => this._markerDragStart(e, m));
             m.addEventListener('touchstart', e => this._markerDragStart(e.touches[0], m), { passive: false });
@@ -550,12 +493,10 @@ class TimelineController {
         document.addEventListener('keyup', e => this._onKeyUp(e));
     }
 
-    /* ── Video loaded ── */
     _onLoaded() {
         const file = document.getElementById('videoInput').files[0];
         let dur = this.video.duration;
 
-        // Honour _Ns suffix in WebM filenames (screen-recorder convention)
         if (file && file.type === 'video/webm') {
             const m = file.name.match(/_(\d+(?:\.\d+)?)s\.[^.]+$/);
             if (m && !isNaN(m[1])) dur = parseFloat(m[1]);
@@ -579,7 +520,6 @@ class TimelineController {
         this._updateProgress();
     }
 
-    /* ── Periodic update ── */
     _onTimeUpdate() {
         const ct = this.video.currentTime;
         const end = parseFloat(this.el.endInput.value);
@@ -593,7 +533,6 @@ class TimelineController {
         this._updateProgress();
     }
 
-    /* ── Marker drag ── */
     _markerDragStart(e, marker) {
         if (!this.video.src) return;
         this.isDragging = true;
@@ -623,33 +562,22 @@ class TimelineController {
 
     _markerDragEnd() { this.isDragging = false; this.dragTarget = null; }
 
-    /* ── Timeline click-scrub ── */
     _initTimelineScrub() {
         const tl = this.el.timeline;
 
         tl.addEventListener('mousedown', e => {
-            if (
-                e.target === this.el.startMarker ||
-                e.target === this.el.endMarker ||
-                e.target === this.el.playhead
-            ) return;
+            if (e.target === this.el.startMarker || e.target === this.el.endMarker ||
+                e.target === this.el.playhead) return;
             this._scrubStart(e.clientX);
             const mm = ev => this._scrubMove(ev.clientX);
-            const mu = () => {
-                this._scrubEnd();
-                document.removeEventListener('mousemove', mm);
-                document.removeEventListener('mouseup', mu);
-            };
+            const mu = () => { this._scrubEnd(); document.removeEventListener('mousemove', mm); document.removeEventListener('mouseup', mu); };
             document.addEventListener('mousemove', mm);
             document.addEventListener('mouseup', mu);
         });
 
         tl.addEventListener('touchstart', e => {
-            if (
-                e.target === this.el.startMarker ||
-                e.target === this.el.endMarker ||
-                e.target === this.el.playhead
-            ) return;
+            if (e.target === this.el.startMarker || e.target === this.el.endMarker ||
+                e.target === this.el.playhead) return;
             this._scrubStart(e.touches[0].clientX);
             e.preventDefault();
         }, { passive: false });
@@ -666,9 +594,7 @@ class TimelineController {
         if (this.isPlaying) this.video.pause();
         this._seekToPos(clientX);
     }
-
     _scrubMove(clientX) { if (this.isScrubbing) this._seekToPos(clientX); }
-
     _scrubEnd() {
         this.isScrubbing = false;
         if (!this.wasPaused) this.video.play().catch(() => { });
@@ -677,31 +603,21 @@ class TimelineController {
     _seekToPos(clientX) {
         const pos = this._clientXToPos(clientX);
         const t = clamp(pos * this.videoDuration, 0, this.videoDuration);
-        if (isFinite(t)) {
-            this.video.currentTime = t;
-            this._updatePlayhead();
-        }
+        if (isFinite(t)) { this.video.currentTime = t; this._updatePlayhead(); }
     }
 
-    /* ── Playhead drag ── */
     _initPlayheadDrag() {
         const ph = this.el.playhead;
         ph.addEventListener('mousedown', e => {
             this._scrubStart(e.clientX);
             const mm = ev => this._scrubMove(ev.clientX);
-            const mu = () => {
-                this._scrubEnd();
-                document.removeEventListener('mousemove', mm);
-                document.removeEventListener('mouseup', mu);
-            };
+            const mu = () => { this._scrubEnd(); document.removeEventListener('mousemove', mm); document.removeEventListener('mouseup', mu); };
             document.addEventListener('mousemove', mm);
             document.addEventListener('mouseup', mu);
-            e.stopPropagation();
-            e.preventDefault();
+            e.stopPropagation(); e.preventDefault();
         });
     }
 
-    /* ── Manual time inputs ── */
     _onManualTimeChange(e) {
         if (!this.video.src) return;
         const isStart = e.target === this.el.startInput;
@@ -716,7 +632,6 @@ class TimelineController {
         this.onChangeCb();
     }
 
-    /* ── Play / pause ── */
     async _togglePlay() {
         if (!this.video.src) return;
         const st = parseFloat(this.el.startInput.value);
@@ -734,11 +649,8 @@ class TimelineController {
         finally { this.el.playBtn.disabled = false; }
     }
 
-    _syncPlayBtn() {
-        this.el.playBtn.textContent = this.isPlaying ? 'Pause' : 'Play';
-    }
+    _syncPlayBtn() { this.el.playBtn.textContent = this.isPlaying ? 'Pause' : 'Play'; }
 
-    /* ── Mute ── */
     _toggleMute() {
         this.video.muted = !this.video.muted;
         saveSetting('videoMuted', this.video.muted);
@@ -759,17 +671,12 @@ class TimelineController {
             : `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>`;
     }
 
-    /* ── Keyboard ── */
     _onKeyDown(e) {
         if (!this.video.src) return;
         if (['INPUT', 'SELECT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
         if (this.isKeyHeld) return;
 
-        if (e.code === 'Space') {
-            e.preventDefault();
-            this._togglePlay();
-            return;
-        }
+        if (e.code === 'Space') { e.preventDefault(); this._togglePlay(); return; }
 
         if (e.key === '[' || e.key === ']') {
             e.preventDefault();
@@ -804,7 +711,7 @@ class TimelineController {
             this._updatePlayhead();
         };
         step();
-        const tick = ts => {
+        const tick = () => {
             if (!this.isKeyHeld) return;
             step();
             setTimeout(() => requestAnimationFrame(tick), 38);
@@ -812,7 +719,6 @@ class TimelineController {
         setTimeout(() => { if (this.isKeyHeld) requestAnimationFrame(tick); }, 220);
     }
 
-    /* ── UI helpers ── */
     _clientXToPos(clientX) {
         const rect = this.el.timeline.getBoundingClientRect();
         return clamp((clientX - rect.left) / rect.width, 0, 1);
@@ -843,9 +749,8 @@ class TimelineController {
     _updatePlayhead() {
         const dur = this.videoDuration;
         if (!dur || !this.video.src) return;
-        const pos = (this.video.currentTime / dur) * 100;
         this.el.playhead.style.display = 'block';
-        this.el.playhead.style.left = `${pos}%`;
+        this.el.playhead.style.left = `${(this.video.currentTime / dur) * 100}%`;
     }
 
     _updateProgress() {
@@ -862,15 +767,11 @@ class TimelineController {
         const et = parseFloat(this.el.endInput.value);
         const spd = parseFloat(this.el.speedSelect.value);
         const raw = et - st;
-        if (spd !== 1) {
-            this.el.durationDisp.innerHTML =
-                `<span style="color:var(--text2)">${raw.toFixed(1)}s</span>` +
-                ` → <span style="color:var(--accent2)">${(raw / spd).toFixed(1)}s</span>` +
-                ` <span style="color:var(--accent);font-size:.9em">${spd}×</span>`;
-        } else {
-            this.el.durationDisp.innerHTML =
-                `<span style="color:var(--text2)">${raw.toFixed(1)}s</span>`;
-        }
+        this.el.durationDisp.innerHTML = spd !== 1
+            ? `<span style="color:var(--text2)">${raw.toFixed(1)}s</span>` +
+            ` → <span style="color:var(--accent2)">${(raw / spd).toFixed(1)}s</span>` +
+            ` <span style="color:var(--accent);font-size:.9em">${spd}×</span>`
+            : `<span style="color:var(--text2)">${raw.toFixed(1)}s</span>`;
     }
 
     /**
@@ -921,7 +822,6 @@ class GifConverter {
         this._initExpandButtons();
     }
 
-    /* ── DOM references ─────────────────────────────────────────────── */
     _bindElements() {
         const $ = id => document.getElementById(id);
         this.el = {
@@ -952,30 +852,25 @@ class GifConverter {
         };
     }
 
-    /* ── Load persisted settings ── */
     _loadSettings() {
         ['fpsSelect', 'sizeSelect', 'ditherSelect', 'speedSelect'].forEach(id => {
             const v = loadSetting(id, null);
             if (v) this.el[id].value = v;
         });
-        const tc = loadSetting('showTimecode', 'false');
-        this.el.showTimecode.checked = tc === 'true';
+        this.el.showTimecode.checked = loadSetting('showTimecode', 'false') === 'true';
     }
 
-    /* ── Event wiring ── */
     _bindEvents() {
         this.el.videoInput.addEventListener('change', e => this._onFileInput(e));
         this.el.convertButton.addEventListener('click', () => this._startConversion());
         this.el.downloadButton.addEventListener('click', () => this._downloadGif());
         this.el.cancelBtn.addEventListener('click', () => { this.cancelFlag = true; });
 
-        // Settings → persist + recompute estimate + mark changed
         ['fpsSelect', 'sizeSelect', 'ditherSelect', 'speedSelect'].forEach(id => {
             this.el[id].addEventListener('change', e => {
                 saveSetting(id, e.target.value);
-                if (id === 'speedSelect') {
+                if (id === 'speedSelect')
                     this.el.videoPreview.playbackRate = parseFloat(e.target.value);
-                }
                 this._refreshEstimate();
                 this._markChanged();
             });
@@ -991,49 +886,42 @@ class GifConverter {
             inp.addEventListener('change', () => { this._refreshEstimate(); this._markChanged(); });
         });
 
-        // Stepper buttons
         document.querySelectorAll('.time-stepper-btn').forEach(btn => {
             let hold = null, rep = null;
             const go = () => this.timeline.adjustTime(btn.dataset.target, parseFloat(btn.dataset.delta));
             btn.addEventListener('mousedown', e => {
-                e.preventDefault();
-                go();
+                e.preventDefault(); go();
                 hold = setTimeout(() => { rep = setInterval(go, 50); }, 380);
             });
             btn.addEventListener('mouseup', () => { clearTimeout(hold); clearInterval(rep); });
             btn.addEventListener('mouseleave', () => { clearTimeout(hold); clearInterval(rep); });
             btn.addEventListener('touchstart', e => {
-                e.preventDefault();
-                go();
+                e.preventDefault(); go();
                 hold = setTimeout(() => { rep = setInterval(go, 50); }, 380);
             });
             btn.addEventListener('touchend', () => { clearTimeout(hold); clearInterval(rep); });
         });
 
-        // Crop toggle
         this.el.toggleCrop.addEventListener('click', () => {
             this.crop.toggle();
             const active = this.crop.enabled;
             const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" aria-hidden="true">
-                                <path d="M6.13 1L6 16a2 2 0 0 0 2 2h15"></path>
-                                <path d="M1 6.13L16 6a2 2 0 0 1 2 2v15"></path>
-                            </svg>`
+                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round" aria-hidden="true">
+                <path d="M6.13 1L6 16a2 2 0 0 0 2 2h15"></path>
+                <path d="M1 6.13L16 6a2 2 0 0 1 2 2v15"></path></svg>`;
             this.el.toggleCrop.classList.toggle('active', active);
             this.el.toggleCrop.setAttribute('aria-pressed', active);
-            this.el.toggleCrop.innerHTML = active ? 'Disable Crop' + svg : 'Enable Crop' + svg;
+            this.el.toggleCrop.innerHTML = (active ? 'Disable Crop' : 'Enable Crop') + svg;
             this._refreshEstimate();
             this._markChanged();
         });
 
-        // Prevent space on focused buttons from conflicting with play-pause
         document.querySelectorAll('button').forEach(btn => {
             btn.addEventListener('keydown', e => { if (e.code === 'Space') e.preventDefault(); });
         });
     }
 
-    /* ── Sub-controller init (called after DOM ready) ── */
     _initSubControllers() {
         const onTimeChange = () => { this._refreshEstimate(); this._markChanged(); };
 
@@ -1044,7 +932,6 @@ class GifConverter {
             this._markChanged();
         });
 
-        // pass the worker-URL provider so SizeEstimator can run gif.js
         this.estimator = new SizeEstimator(
             this.el.sizeEstimate,
             this.el.sizeEstimateVal,
@@ -1053,7 +940,6 @@ class GifConverter {
         );
     }
 
-    /* ── File input ── */
     _onFileInput(e) {
         const file = e.target.files[0];
         if (!file) return;
@@ -1083,8 +969,7 @@ class GifConverter {
             this.el.showTimecode.checked ? 'block' : 'none';
 
         v.onloadedmetadata = () => {
-            const ar = v.videoWidth / v.videoHeight;
-            v.style.aspectRatio = `${ar}`;
+            v.style.aspectRatio = `${v.videoWidth / v.videoHeight}`;
             const spd = parseFloat(this.el.speedSelect.value);
             if (!isNaN(spd)) v.playbackRate = spd;
             this._refreshEstimate();
@@ -1096,24 +981,17 @@ class GifConverter {
             v.style.display = 'none';
         };
 
-        // Reset crop overlay for new video
         if (this.crop.enabled) this.crop.reset();
     }
 
-    /* ── Size estimate ── */
     _refreshEstimate() {
         const video = this.el.videoPreview;
         if (!video.src || !video.videoWidth) return;
 
-        // FIX: crop.pixelRegion already returns pixel values — use directly,
-        //      do NOT multiply by videoWidth/videoHeight again.
         let srcX, srcY, srcW, srcH;
         if (this.crop && this.crop.enabled) {
-            const px = this.crop.pixelRegion;   // already in pixels
-            srcX = px.x;
-            srcY = px.y;
-            srcW = px.w;
-            srcH = px.h;
+            const px = this.crop.pixelRegion;
+            srcX = px.x; srcY = px.y; srcW = px.w; srcH = px.h;
         } else {
             srcX = 0; srcY = 0;
             srcW = video.videoWidth;
@@ -1137,7 +1015,6 @@ class GifConverter {
         this.estimator.update({ outW, outH, srcX, srcY, srcW, srcH, dur, speed, dither, start, frameInterval, totalFrames });
     }
 
-    /* ── Mark settings changed ── */
     _markChanged() {
         if (!this.lastSettings || !this.currentBlob) return;
         const cur = this._captureSettings();
@@ -1159,7 +1036,6 @@ class GifConverter {
         };
     }
 
-    /* ── Conversion entry point ── */
     _startConversion() {
         const s = this._captureSettings();
         this.lastSettings = s;
@@ -1177,22 +1053,9 @@ class GifConverter {
         });
     }
 
-    /**
-     * Core seek-based encoding loop using gif.js (web workers).
-     * For each output frame:
-     *   1. Seek the video to the source timestamp
-     *   2. Wait for the `seeked` event
-     *   3. Draw to canvas (with optional crop + timecode overlay)
-     *   4. Feed the frame to gif.js via addFrame()
-     * After all frames are captured, gif.js renders them in parallel
-     * workers and returns a Blob on the `finished` event.
-     *
-     * @param {ReturnType<GifConverter['_captureSettings']>} s
-     */
     async _runConversion(s) {
         const video = this.el.videoPreview;
 
-        /* ── Output dimensions ── */
         let srcX, srcY, srcW, srcH, outW, outH;
         if (s.crop) {
             const vw = video.videoWidth, vh = video.videoHeight;
@@ -1207,25 +1070,20 @@ class GifConverter {
             outH = Math.max(2, Math.round(srcH * s.sizePercent));
         }
 
-        /* ── Build timestamps ── */
-        const frameInterval = 1000 / s.fps;           // ms per output frame
-        const sourceStep = frameInterval * s.speed; // ms of source per output frame
+        const frameInterval = 1000 / s.fps;
+        const sourceStep = frameInterval * s.speed;
         const startMs = s.startTime * 1000;
         const endMs = s.endTime * 1000;
         const timestamps = [];
-        for (let t = startMs; t < endMs - sourceStep * 0.01; t += sourceStep) {
-            timestamps.push(t / 1000);
-        }
+        for (let t = startMs; t < endMs - sourceStep * 0.01; t += sourceStep) timestamps.push(t / 1000);
         if (timestamps.length === 0) timestamps.push(s.startTime);
         const total = timestamps.length;
 
-        /* ── Off-screen canvas ── */
         const canvas = document.createElement('canvas');
         canvas.width = outW;
         canvas.height = outH;
         const ctx = canvas.getContext('2d', { willReadFrequently: true });
 
-        /* ── gif.js instance ── */
         const gif = new GIF({
             workers: this.workerCount,
             quality: 50,
@@ -1235,7 +1093,6 @@ class GifConverter {
             workerScript: this._workerBlobUrl(),
         });
 
-        /* ── Capture each frame ── */
         for (let i = 0; i < total; i++) {
             if (this.cancelFlag) { gif.abort(); this._endConversion(false); return; }
 
@@ -1243,23 +1100,17 @@ class GifConverter {
             gif.addFrame(ctx, { copy: true, delay: frameInterval });
 
             const pct = ((i + 1) / total) * 100;
-            this._setProgress(
-                pct * 0.75,
-                `Capturing frame ${i + 1} / ${total}`,
-                `${outW}×${outH}px · ${Math.round(pct)}% captured`,
-            );
+            this._setProgress(pct * 0.75, `Capturing frame ${i + 1} / ${total}`, `${outW}×${outH}px · ${Math.round(pct)}% captured`);
         }
 
         if (this.cancelFlag) { gif.abort(); this._endConversion(false); return; }
 
-        /* ── Render (web workers) ── */
         this._setProgress(75, 'Rendering…', 'gif.js workers encoding');
 
         await new Promise((resolve, reject) => {
             gif.on('progress', p => {
                 if (this.cancelFlag) { gif.abort(); reject(new Error('cancelled')); return; }
-                const pct = 75 + p * 25;
-                this._setProgress(pct, `Rendering… ${Math.round(p * 100)}%`, 'Quantising palettes & compressing');
+                this._setProgress(75 + p * 25, `Rendering… ${Math.round(p * 100)}%`, 'Quantising palettes & compressing');
             });
             gif.on('finished', blob => { this.currentBlob = blob; resolve(); });
             gif.on('abort', () => reject(new Error('cancelled')));
@@ -1273,7 +1124,6 @@ class GifConverter {
         this._endConversion(true);
     }
 
-    /* ── Seek video to t, draw to ctx, optionally overlay timecode ── */
     _seekAndCapture(video, t, ctx, srcX, srcY, srcW, srcH, outW, outH, s) {
         return new Promise((resolve, reject) => {
             const onSeeked = () => {
@@ -1293,17 +1143,14 @@ class GifConverter {
         });
     }
 
-    /* ── Clean up after conversion ── */
     _endConversion(success) {
         this.el.progressOverlay.hidden = true;
-        // Re-enable the button only on failure so user can retry
         if (!success) {
             this.el.convertButton.disabled = false;
             this.el.progressStatus.style.color = '';
         }
     }
 
-    /* ── Show result ── */
     _showResult(outW, outH, s, elapsed) {
         const url = URL.createObjectURL(this.currentBlob);
         this.el.previewGif.onload = () => {
@@ -1322,7 +1169,6 @@ class GifConverter {
         this.el.downloadButton.hidden = false;
     }
 
-    /* ── Progress ── */
     _setProgress(pct, status, details) {
         this.el.progressFill.style.width = `${clamp(pct, 0, 100)}%`;
         this.el.progressStatus.textContent = status;
@@ -1331,18 +1177,15 @@ class GifConverter {
         if (bar) bar.setAttribute('aria-valuenow', Math.round(pct));
     }
 
-    /* ── Download ── */
     _downloadGif() {
         if (!this.currentBlob) return;
-
         const video = this.el.videoPreview;
         if (!video.src || !video.videoWidth) return;
 
         let srcW, srcH;
         if (this.crop && this.crop.enabled) {
-            const px = this.crop.pixelRegion;   // already in pixels
-            srcW = px.w;
-            srcH = px.h;
+            const px = this.crop.pixelRegion;
+            srcW = px.w; srcH = px.h;
         } else {
             srcW = video.videoWidth;
             srcH = video.videoHeight;
@@ -1351,7 +1194,6 @@ class GifConverter {
         const sizePercent = parseFloat(this.el.sizeSelect.value);
         const outW = Math.max(2, Math.round(srcW * sizePercent));
         const outH = Math.max(2, Math.round(srcH * sizePercent));
-
         const fps = parseInt(this.el.fpsSelect.value);
         const speed = parseFloat(this.el.speedSelect.value);
 
@@ -1361,7 +1203,6 @@ class GifConverter {
         a.click();
     }
 
-    /* ── Timecode drawing (on output canvas + live preview canvas) ── */
     _drawTimecode(ctx, t, w, h) {
         const mins = Math.floor(t / 60);
         const secs = t % 60;
@@ -1394,7 +1235,6 @@ class GifConverter {
         ctx.fillText(ts, bx + pad / 2, by + fs * 0.88 + pad * 0.35);
     }
 
-    /* ── Live timecode overlay on video preview ── */
     _initTimecodePreview() {
         const video = this.el.videoPreview;
         const canvas = this.el.timecodePreviewer;
@@ -1416,20 +1256,20 @@ class GifConverter {
             const ctx = canvas.getContext('2d');
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             const st = parseFloat(this.el.startTime.value) || 0;
-            const t = Math.max(0, video.currentTime - st);
-            this._drawTimecode(ctx, t, canvas.width, canvas.height);
+            this._drawTimecode(ctx, Math.max(0, video.currentTime - st), canvas.width, canvas.height);
         };
         tick();
     }
 
-    /* ── Fullscreen GIF preview ── */
     _initPreviewOverlay() {
+        // Open on double-click; each open creates a fresh object URL for the overlay.
         this.el.previewGif.addEventListener('dblclick', () => {
             if (!this.currentBlob) return;
             this.el.overlayGif.src = URL.createObjectURL(this.currentBlob);
             this.el.previewOverlay.hidden = false;
             document.body.style.overflow = 'hidden';
         });
+        // Close: revoke the overlay-specific URL, leave the gif src alone.
         this.el.previewOverlay.addEventListener('click', () => {
             this.el.previewOverlay.hidden = true;
             document.body.style.overflow = '';
@@ -1442,7 +1282,6 @@ class GifConverter {
         });
     }
 
-    /* ── Panel expand buttons ── */
     _initExpandButtons() {
         document.querySelectorAll('.expand-btn').forEach(btn => {
             btn.addEventListener('click', () => {
@@ -1460,18 +1299,15 @@ class GifConverter {
         });
     }
 
-    /* ── Create gif.js worker Blob URL ── */
+    /** Create / return a cached Blob URL for the embedded gif.js worker source. */
     _workerBlobUrl() {
         if (this._cachedWorkerUrl) return this._cachedWorkerUrl;
-        // Read the worker source from gif.worker.js embedded in gif.lib.js
-        // gif.js expects a URL; we make one from the exported GIF_WORKER_SOURCE string
         if (typeof GIF_WORKER_SOURCE !== 'undefined') {
             const blob = new Blob([GIF_WORKER_SOURCE], { type: 'application/javascript' });
             this._cachedWorkerUrl = URL.createObjectURL(blob);
             return this._cachedWorkerUrl;
         }
-        // Fallback: try relative path (works when served via a local server)
-        return 'gif.worker.js';
+        return 'gif.worker.js'; // fallback for local server
     }
 }
 
@@ -1482,6 +1318,4 @@ class GifConverter {
 document.addEventListener('DOMContentLoaded', () => {
     const app = new GifConverter();
     app._initSubControllers();
-    // Expose timeline on app so stepper buttons can call adjustTime()
-    // (timeline is created inside _initSubControllers and wired through app.timeline)
 });

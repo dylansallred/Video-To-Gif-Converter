@@ -1,0 +1,524 @@
+/* ═══════════════════════════════════════════════════════════════
+   GIF Nyanpasu! — shared.css
+   Design tokens + components shared across all pages.
+   Must be loaded BEFORE any page-specific stylesheet.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Design tokens ─────────────────────────────────────────────── */
+:root {
+  /* Backgrounds — warm dark plum, not cold black */
+  --bg: #16101f;
+  --surface: #1e1628;
+  --surface2: #261d32;
+
+  /* Borders — softer, warmer purple-tinted */
+  --border: #3a2d4a;
+  --border2: #4e3d64;
+
+  /* Text — cream & lavender-grey */
+  --text: #ede7f6;
+  --text2: #9e8fbb;
+
+  /* Accent — soft lavender (primary) + rose-lilac (secondary) */
+  --accent: #a78bfa;
+  --accent2: #c4b5fd;
+
+  /* Semantic */
+  --green: #6ee7b7;
+  --red: #fca5a5;
+  --orange: #fcd34d;
+  --pink: #f9a8d4;
+
+  /* Typography */
+  --font-mono: "JetBrains Mono", "Fira Mono", monospace;
+  --font-sans: "Syne", system-ui, sans-serif;
+
+  /* Geometry */
+  --radius-sm: 8px;
+  --radius: 12px;
+  --radius-lg: 16px;
+
+  /* Paw-print dot colour used in header rule + panel left border */
+  --paw: #7c5cbf;
+
+  --shadow: 0 4px 28px rgba(0, 0, 0, 0.45);
+}
+
+/* ── Reset ──────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+img,
+video,
+canvas {
+  display: block;
+  max-width: 100%;
+}
+button {
+  font-family: inherit;
+}
+a {
+  color: var(--accent2);
+}
+
+/* ── Base ───────────────────────────────────────────────────────── */
+body {
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 12px 32px;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+[hidden] {
+  display: none !important;
+}
+
+/* ── Scrollbar ──────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border2);
+  border-radius: 3px;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   HEADER
+   ══════════════════════════════════════════════════════════════════ */
+header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 28px 0 22px;
+  position: relative;
+}
+
+/* Paw-print dotted separator */
+header::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 55%;
+  height: 2px;
+  background: repeating-linear-gradient(
+    to right,
+    transparent 0px,
+    transparent 6px,
+    var(--paw) 6px,
+    var(--paw) 10px,
+    transparent 10px,
+    transparent 18px,
+    var(--accent2) 18px,
+    var(--accent2) 20px,
+    transparent 20px,
+    transparent 28px
+  );
+  opacity: 0.55;
+}
+
+.logo-icon {
+  width: 40px;
+  height: 40px;
+  background: var(--paw);
+  border-radius: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+  box-shadow: 0 0 18px rgba(124, 92, 191, 0.5);
+}
+
+h1 {
+  font-family: var(--font-sans);
+  font-size: clamp(1.5rem, 3.5vw, 2.1rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  background: linear-gradient(120deg, var(--accent2) 20%, var(--pink) 80%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.1;
+}
+
+.tagline {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text2);
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+/* Nav link — "back" style used by secondary pages */
+.nav-link {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text2);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface2);
+  transition:
+    border-color 0.18s,
+    color 0.18s;
+  white-space: nowrap;
+  position: absolute;
+  left: 0;
+}
+.nav-link:hover {
+  border-color: var(--accent);
+  color: var(--accent2);
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   LAYOUT
+   ══════════════════════════════════════════════════════════════════ */
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 18px;
+  align-items: start;
+}
+
+.left-col {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.right-col {
+  position: sticky;
+  top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   PANEL
+   ══════════════════════════════════════════════════════════════════ */
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  /* border-left: 3px solid var(--paw); */
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  position: relative;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.panel-title {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--accent2);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 8px;
+  flex-grow: 1;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   CROP OVERLAY
+   Shared by the GIF tool (CropController) and the image cropper.
+   ══════════════════════════════════════════════════════════════════ */
+.crop-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.48);
+  pointer-events: none;
+  z-index: 1;
+  border-radius: var(--radius-sm);
+}
+
+.crop-region {
+  position: absolute;
+  border: 2px solid var(--accent);
+  background: rgba(167, 139, 250, 0.1);
+  cursor: move;
+  touch-action: none;
+  pointer-events: auto;
+  z-index: 2;
+  user-select: none;
+  -webkit-user-select: none;
+  box-shadow: 0 0 0 1px rgba(167, 139, 250, 0.28);
+}
+
+.crop-handle {
+  position: absolute;
+  width: 13px;
+  height: 13px;
+  background: var(--accent);
+  border: 2px solid var(--bg);
+  border-radius: 50%;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+}
+/* Corner handles — both tools */
+.crop-handle.nw {
+  top: -7px;
+  left: -7px;
+  cursor: nw-resize;
+}
+.crop-handle.ne {
+  top: -7px;
+  right: -7px;
+  cursor: ne-resize;
+}
+.crop-handle.sw {
+  bottom: -7px;
+  left: -7px;
+  cursor: sw-resize;
+}
+.crop-handle.se {
+  bottom: -7px;
+  right: -7px;
+  cursor: se-resize;
+}
+/* Edge midpoint handles — image cropper only, harmless on GIF tool */
+.crop-handle.n {
+  top: -7px;
+  left: calc(50% - 6px);
+  cursor: n-resize;
+}
+.crop-handle.s {
+  bottom: -7px;
+  left: calc(50% - 6px);
+  cursor: s-resize;
+}
+.crop-handle.w {
+  left: -7px;
+  top: calc(50% - 6px);
+  cursor: w-resize;
+}
+.crop-handle.e {
+  right: -7px;
+  top: calc(50% - 6px);
+  cursor: e-resize;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   BUTTONS — shared variants
+   ══════════════════════════════════════════════════════════════════ */
+button {
+  outline: none;
+  cursor: pointer;
+}
+button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+button:hover svg {
+  transform: scale(1.08);
+}
+button svg {
+  vertical-align: middle;
+  transition: transform 0.15s;
+}
+button:focus {
+  outline: none;
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 7px 13px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  font-weight: 600;
+  transition:
+    background 0.18s,
+    border-color 0.18s;
+}
+.btn-ghost:hover {
+  background: var(--border);
+}
+.btn-ghost:hover:disabled {
+  background: var(--surface2);
+}
+.btn-ghost.active {
+  background: var(--paw);
+  border-color: var(--paw);
+  color: #f0e8ff;
+}
+
+/* Download button — mint green, shared by both pages */
+.btn-download {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 11px;
+  background: linear-gradient(135deg, #059669, var(--green));
+  color: #f0fdf4;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(110, 231, 183, 0.22);
+  transition:
+    transform 0.15s,
+    box-shadow 0.15s;
+}
+.btn-download:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(110, 231, 183, 0.38);
+}
+.btn-download:disabled {
+  background: var(--surface2);
+  color: var(--text2);
+  box-shadow: none;
+  border: 1px solid var(--border);
+  cursor: not-allowed;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   FULLSCREEN PREVIEW OVERLAY — shared by GIF tool + image cropper
+   ══════════════════════════════════════════════════════════════════ */
+.preview-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(22, 16, 31, 0.95);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  z-index: 1001;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: zoom-out;
+}
+.preview-overlay[hidden] {
+  display: none;
+}
+
+.preview-overlay img {
+  max-width: 95vw;
+  max-height: 95vh;
+  object-fit: contain;
+  border-radius: var(--radius);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   FOOTER
+   ══════════════════════════════════════════════════════════════════ */
+footer {
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 0.67rem;
+  color: var(--text2);
+  margin-top: 32px;
+  padding-top: 16px;
+  border-top: 1px dashed var(--border2);
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   UTILITIES
+   ══════════════════════════════════════════════════════════════════ */
+.dragging-active {
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  cursor: grabbing !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   RESPONSIVE — shared breakpoints
+   ══════════════════════════════════════════════════════════════════ */
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .right-col {
+    position: static;
+  }
+}
+
+@media (max-width: 540px) {
+  body {
+    padding: 8px 14px 32px;
+    font-size: 14px;
+  }
+  header {
+    padding: 18px 0 16px;
+    gap: 10px;
+  }
+  .logo-icon {
+    width: 34px;
+    height: 34px;
+    font-size: 18px;
+    border-radius: 9px;
+  }
+  h1 {
+    font-size: 1.35rem;
+  }
+  .tagline {
+    font-size: 0.6rem;
+  }
+  .panel {
+    padding: 14px;
+    border-radius: var(--radius);
+  }
+  .panel-header {
+    margin-bottom: 10px;
+  }
+  .btn-ghost {
+    padding: 6px 11px;
+    font-size: 0.78rem;
+  }
+  .nav-link {
+    font-size: 0.65rem;
+    padding: 4px 8px;
+  }
+  footer {
+    font-size: 0.62rem;
+  }
+}

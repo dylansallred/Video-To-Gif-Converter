@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="description"
+        content="GIF Nyanpasu! Image Crop — free, browser-based image cropper. Upload one or many images, set a crop, download. Runs 100% offline. No uploads, no accounts.">
+    <meta name="keywords"
+        content="image crop, image cropper, batch crop, browser crop, offline image tool, png crop, jpeg crop, webp crop">
+    <meta name="author" content="Thièrry Ntoh">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://gif-nyanpasu.vercel.app/crop.html">
+
+    <!-- ── Open Graph ─────────────────────────────────────────────────── -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://gif-nyanpasu.vercel.app/crop.html">
+    <meta property="og:title" content="Crop Nyanpasu! — Free Browser Image Cropper">
+    <meta property="og:description"
+        content="Upload, crop, download. Supports batch cropping multiple images with the same region. Runs 100% in your browser.">
+    <meta property="og:image" content="https://gif-nyanpasu.vercel.app/public/og-image.png">
+    <meta property="og:site_name" content="GIF Nyanpasu!">
+
+    <!-- ── Favicon set ───────────────────────────────────────────────── -->
+    <link rel="apple-touch-icon" sizes="180x180" href="public/crop-apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="public/crop-favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="public/crop-favicon-16x16.png">
+    <link rel="manifest" href="public/crop-site.webmanifest">
+    <meta name="theme-color" content="#7c6af7">
+
+    <!-- ── Fonts ─────────────────────────────────────────────────────── -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Syne:wght@400;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- ── Stylesheets: shared tokens first, then page-specific ─────── -->
+    <!-- <link rel="stylesheet" href="shared.css"> -->
+    <link rel="stylesheet" href="crop.css">
+
+    <title>Crop Nyanpasu! — Free Browser Image Cropper</title>
+</head>
+
+<body>
+
+    <!-- ══ Header ══════════════════════════════════════════════════════ -->
+    <header>
+        <a href="index.html" class="nav-link" aria-label="Back to GIF converter">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+            GIF tool
+        </a>
+        <div class="logo-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6.13 1L6 16a2 2 0 0 0 2 2h15"></path>
+                <path d="M1 6.13L16 6a2 2 0 0 1 2 2v15"></path>
+            </svg>
+        </div>
+        <div class="header-text">
+            <h1>Crop Nyanpasu</h1>
+            <p class="tagline">Upload · Crop · Download &nbsp;·&nbsp; 100% offline</p>
+        </div>
+    </header>
+
+    <!-- ══ Main layout ═════════════════════════════════════════════════ -->
+    <main class="layout">
+
+        <!-- ─── LEFT COLUMN ─────────────────────────────────────────── -->
+        <div class="left-col">
+
+            <!-- Upload panel -->
+            <section class="panel" aria-label="Upload images">
+                <div class="panel-header">
+                    <span class="panel-title">Images</span>
+                </div>
+
+                <input type="file" id="fileInput" accept="image/png,image/jpeg,image/webp,image/gif,image/avif"
+                    multiple>
+
+                <div class="drop-zone" id="dropZone" role="button" tabindex="0"
+                    aria-label="Drop images here or click to browse">
+                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                        stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+                        <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                        <polyline points="21 15 16 10 5 21"></polyline>
+                    </svg>
+                    <p class="drop-zone-label"><strong>Drop images here</strong> or click to browse</p>
+                    <p class="drop-zone-sub">PNG · JPEG · WebP · GIF · AVIF &nbsp;·&nbsp; Multiple files supported</p>
+                </div>
+
+                <div class="image-queue" id="imageQueue"></div>
+            </section>
+
+            <!-- Crop settings panel -->
+            <section class="panel" aria-label="Crop settings">
+                <div class="panel-header">
+                    <span class="panel-title">Crop Settings</span>
+                </div>
+
+                <!-- Aspect ratio presets -->
+                <div class="setting-group" style="flex-direction:column;align-items:flex-start;gap:8px">
+                    <span class="setting-label">Aspect Ratio</span>
+                    <div class="aspect-presets" id="aspectPresets">
+                        <button class="preset-btn active" data-ratio="free">Free</button>
+                        <button class="preset-btn" data-ratio="1:1">1 : 1</button>
+                        <button class="preset-btn" data-ratio="4:3">4 : 3</button>
+                        <button class="preset-btn" data-ratio="16:9">16 : 9</button>
+                        <button class="preset-btn" data-ratio="3:2">3 : 2</button>
+                        <button class="preset-btn" data-ratio="9:16">9 : 16</button>
+                        <button class="preset-btn" data-ratio="2:3">2 : 3</button>
+                        <button class="preset-btn" data-ratio="4:5">4 : 5</button>
+                    </div>
+                </div>
+
+                <!-- Output format -->
+                <div class="setting-group">
+                    <label class="setting-label" for="formatSelect">Output Format</label>
+                    <select id="formatSelect" aria-label="Output image format">
+                        <option value="image/png">PNG — lossless</option>
+                        <option value="image/jpeg" selected>JPEG — smaller</option>
+                        <option value="image/webp">WebP — modern</option>
+                    </select>
+                </div>
+
+                <!-- Quality (hidden for PNG) -->
+                <div class="setting-group" id="qualityGroup">
+                    <label class="setting-label" for="qualityInput">Quality</label>
+                    <input type="range" id="qualityInput" min="10" max="100" value="92"
+                        aria-label="Output quality percentage">
+                    <span id="qualityLabel"
+                        style="font-family:var(--font-mono);font-size:0.75rem;color:var(--accent2);min-width:32px;text-align:right">
+                        92%
+                    </span>
+                </div>
+
+                <!-- Crop readout -->
+                <div id="cropReadout" class="crop-readout" hidden>—</div>
+
+                <!-- Manual pixel inputs -->
+                <div class="crop-inputs-grid">
+                    <div class="crop-field">
+                        <label class="crop-field-label" for="inX">Left (X)</label>
+                        <input type="number" id="inX" min="0" value="0" aria-label="Crop left offset in pixels">
+                    </div>
+                    <div class="crop-field">
+                        <label class="crop-field-label" for="inY">Top (Y)</label>
+                        <input type="number" id="inY" min="0" value="0" aria-label="Crop top offset in pixels">
+                    </div>
+                    <div class="crop-field">
+                        <label class="crop-field-label" for="inW">Width (W)</label>
+                        <input type="number" id="inW" min="1" value="0" aria-label="Crop width in pixels">
+                    </div>
+                    <div class="crop-field">
+                        <label class="crop-field-label" for="inH">Height (H)</label>
+                        <input type="number" id="inH" min="1" value="0" aria-label="Crop height in pixels">
+                    </div>
+                </div>
+
+                <!-- Action buttons -->
+                <div class="action-row">
+                    <button class="btn-ghost" id="resetCropBtn" style="flex:1" disabled
+                        aria-label="Reset crop to full image">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <polyline points="1 4 1 10 7 10"></polyline>
+                            <path d="M3.51 15a9 9 0 1 0 .49-4.53"></path>
+                        </svg>
+                        Reset
+                    </button>
+                    <button class="btn-crop" id="cropBtn" disabled aria-label="Crop active image">
+                        ✂&nbsp; Crop Image
+                    </button>
+                    <button class="btn-crop-all" id="cropAllBtn" disabled
+                        aria-label="Apply current crop region to all images">
+                        ✂&nbsp; Crop All
+                    </button>
+                </div>
+            </section>
+
+        </div><!-- /left-col -->
+
+        <!-- ─── RIGHT COLUMN ─────────────────────────────────────────── -->
+        <div class="right-col">
+
+            <!-- Canvas preview panel -->
+            <section class="panel" aria-label="Image preview and crop area">
+                <div class="panel-header">
+                    <span class="panel-title">Preview</span>
+                </div>
+                <div class="canvas-wrapper" id="canvasWrapper">
+                    <div class="empty-state" id="emptyPreview">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+                            <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                            <polyline points="21 15 16 10 5 21"></polyline>
+                        </svg>
+                        <p>Select an image to begin cropping</p>
+                    </div>
+                    <canvas id="sourceCanvas" hidden aria-label="Image preview canvas"></canvas>
+                    <!-- Crop overlay injected by crop.js -->
+                </div>
+            </section>
+
+            <!-- Output panel -->
+            <section class="panel" aria-label="Cropped image outputs">
+                <div class="panel-header">
+                    <span class="panel-title">Output</span>
+                    <button class="btn-download-all" id="downloadAllBtn" disabled
+                        aria-label="Download all cropped images">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                        Download All
+                    </button>
+                </div>
+                <div id="outputGrid" class="output-grid">
+                    <div class="empty-state" id="emptyOutput" style="grid-column:1/-1">
+                        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                        <p>Cropped images will appear here</p>
+                    </div>
+                </div>
+            </section>
+
+        </div><!-- /right-col -->
+    </main>
+
+    <!-- ══ Fullscreen preview overlay ══════════════════════════════════ -->
+    <div class="preview-overlay" id="previewOverlay" role="dialog" aria-modal="true"
+        aria-label="Fullscreen image preview" hidden>
+        <img id="overlayImg" alt="Fullscreen preview — click anywhere to close">
+    </div>
+
+    <footer>
+        <p>© 2026 <a href="https://github.com/thierryntoh24/gif-nyanpasu" target="_blank" rel="noopener">GIF
+                Nyanpasu!</a>
+            &nbsp;·&nbsp; 100% client-side &nbsp;·&nbsp; No data leaves your device
+            &nbsp;·&nbsp; <a href="index.html">← Back to GIF converter</a></p>
+    </footer>
+
+    <!-- ══ Scripts: shared helpers first, then page logic ═════════════ -->
+    <script src="shared.js"></script>
+    <script src="crop.js"></script>
+
+</body>
+
+</html>

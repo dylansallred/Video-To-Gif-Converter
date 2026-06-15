@@ -10,6 +10,10 @@ Runs 100% client-side — nothing ever leaves your device.
 
 ---
 
+![Cover Image](/public/og-image.png)
+
+---
+
 ![Main Application Interface](/public/screenshot.jpeg)
 
 ---

@@ -1,0 +1,576 @@
+/* ═══════════════════════════════════════════════════════════════
+   Crop Nyanpasu! — crop.css
+   Page-specific styles for crop.html (the image cropper).
+   Depends on shared.css being loaded first.
+   ═══════════════════════════════════════════════════════════════ */
+
+@import "./shared.css";
+
+/* ══════════════════════════════════════════════════════════════════
+   DROP ZONE
+   ══════════════════════════════════════════════════════════════════ */
+#fileInput {
+  display: none;
+}
+
+.drop-zone {
+  width: 100%;
+  border: 2px dashed var(--border2);
+  border-radius: var(--radius);
+  padding: 32px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    background 0.2s;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+.drop-zone:hover,
+.drop-zone.drag-over {
+  border-color: var(--accent);
+  background: rgba(167, 139, 250, 0.06);
+}
+.drop-zone svg {
+  color: var(--accent);
+  opacity: 0.7;
+}
+
+.drop-zone-label {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--text2);
+}
+.drop-zone-label strong {
+  color: var(--accent2);
+}
+
+.drop-zone-sub {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--text2);
+  opacity: 0.7;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   IMAGE QUEUE
+   ══════════════════════════════════════════════════════════════════ */
+.image-queue {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.queue-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: border-color 0.18s;
+}
+.queue-item:hover {
+  border-color: var(--border2);
+}
+.queue-item.active {
+  border-color: var(--accent);
+  background: rgba(167, 139, 250, 0.08);
+}
+
+.queue-thumb {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 5px;
+  flex-shrink: 0;
+  background: var(--border);
+}
+
+.queue-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.queue-name {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.queue-dims {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  color: var(--text2);
+  margin-top: 2px;
+}
+
+.queue-status {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.queue-status.done {
+  color: var(--green);
+}
+.queue-status.active {
+  color: var(--accent2);
+}
+
+.queue-remove {
+  background: none;
+  border: none;
+  color: var(--text2);
+  padding: 4px;
+  border-radius: 4px;
+  opacity: 0.5;
+  transition:
+    opacity 0.15s,
+    color 0.15s;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+.queue-remove:hover {
+  opacity: 1;
+  color: var(--pink);
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   CANVAS / PREVIEW AREA
+   ══════════════════════════════════════════════════════════════════ */
+.canvas-wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  min-height: 200px;
+  overflow: hidden;
+}
+
+#sourceCanvas {
+  display: block;
+  max-width: 100%;
+  max-height: 62vh;
+  border-radius: var(--radius-sm);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Rule-of-thirds grid lines overlaid on the crop region */
+.crop-region::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      to right,
+      transparent calc(33.33% - 0.5px),
+      rgba(167, 139, 250, 0.2) calc(33.33% - 0.5px),
+      rgba(167, 139, 250, 0.2) calc(33.33% + 0.5px),
+      transparent calc(33.33% + 0.5px)
+    ),
+    linear-gradient(
+      to right,
+      transparent calc(66.66% - 0.5px),
+      rgba(167, 139, 250, 0.2) calc(66.66% - 0.5px),
+      rgba(167, 139, 250, 0.2) calc(66.66% + 0.5px),
+      transparent calc(66.66% + 0.5px)
+    ),
+    linear-gradient(
+      to bottom,
+      transparent calc(33.33% - 0.5px),
+      rgba(167, 139, 250, 0.2) calc(33.33% - 0.5px),
+      rgba(167, 139, 250, 0.2) calc(33.33% + 0.5px),
+      transparent calc(33.33% + 0.5px)
+    ),
+    linear-gradient(
+      to bottom,
+      transparent calc(66.66% - 0.5px),
+      rgba(167, 139, 250, 0.2) calc(66.66% - 0.5px),
+      rgba(167, 139, 250, 0.2) calc(66.66% + 0.5px),
+      transparent calc(66.66% + 0.5px)
+    );
+  pointer-events: none;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   SETTINGS — crop page variants
+   ══════════════════════════════════════════════════════════════════ */
+.setting-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 9px 0;
+}
+
+.setting-label {
+  font-family: var(--font-mono);
+  font-size: 0.73rem;
+  color: var(--text2);
+  min-width: 90px;
+  flex-shrink: 0;
+}
+
+select {
+  flex-grow: 1;
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-sm);
+  padding: 7px 32px 7px 10px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12'><path d='M2 4 L6 8 L10 4' stroke='%239e8fbb' stroke-width='1.5' fill='none'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  transition: border-color 0.18s;
+}
+select:hover {
+  border-color: var(--accent);
+}
+select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.18);
+  outline: none;
+}
+
+input[type="number"] {
+  flex-grow: 1;
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-sm);
+  padding: 7px 10px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  -moz-appearance: textfield;
+  appearance: textfield;
+  transition: border-color 0.18s;
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+}
+input[type="number"]:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.18);
+  outline: none;
+}
+
+input[type="range"] {
+  accent-color: var(--accent);
+  flex: 1;
+}
+
+/* ── Aspect ratio presets ── */
+.aspect-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.preset-btn {
+  font-family: var(--font-mono);
+  font-size: 0.67rem;
+  padding: 4px 10px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text2);
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    border-color 0.15s,
+    color 0.15s;
+}
+.preset-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent2);
+}
+.preset-btn.active {
+  background: var(--paw);
+  border-color: var(--paw);
+  color: #f0e8ff;
+}
+
+/* ── Crop readout strip ── */
+.crop-readout {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text2);
+  line-height: 1.7;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  margin-bottom: 10px;
+}
+
+/* ── Pixel inputs grid ── */
+.crop-inputs-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.crop-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.crop-field-label {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--text2);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.crop-field input {
+  padding: 5px 8px;
+  font-size: 0.78rem;
+}
+
+/* ── Action row ── */
+.action-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+/* ── Primary crop button ── */
+.btn-crop {
+  flex: 2;
+  padding: 12px;
+  background: linear-gradient(
+    135deg,
+    var(--paw) 0%,
+    var(--accent) 55%,
+    var(--pink) 100%
+  );
+  color: #f0e8ff;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-sans);
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 4px 18px rgba(124, 92, 191, 0.32);
+  transition:
+    transform 0.15s,
+    box-shadow 0.15s;
+}
+.btn-crop:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 24px rgba(167, 139, 250, 0.44);
+}
+.btn-crop:disabled {
+  background: var(--surface2);
+  color: var(--text2);
+  box-shadow: none;
+  border: 1px solid var(--border);
+  cursor: not-allowed;
+}
+
+/* ── Crop All button — mint green to distinguish from single-crop ── */
+.btn-crop-all {
+  flex: 2;
+  padding: 12px;
+  background: linear-gradient(135deg, #059669, var(--green));
+  color: #f0fdf4;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-sans);
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(110, 231, 183, 0.22);
+  transition:
+    transform 0.15s,
+    box-shadow 0.15s;
+}
+.btn-crop-all:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(110, 231, 183, 0.38);
+}
+.btn-crop-all:disabled {
+  background: var(--surface2);
+  color: var(--text2);
+  box-shadow: none;
+  border: 1px solid var(--border);
+  cursor: not-allowed;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   OUTPUT GRID
+   ══════════════════════════════════════════════════════════════════ */
+.output-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.output-card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.output-card img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  cursor: zoom-in;
+  display: block;
+}
+
+.output-card-info {
+  padding: 6px 8px;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  color: var(--text2);
+  border-top: 1px solid var(--border);
+}
+
+.output-card-name {
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 2px;
+}
+
+.output-card-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  width: 100%;
+  padding: 5px;
+  background: rgba(167, 139, 250, 0.1);
+  border: none;
+  border-top: 1px solid var(--border);
+  color: var(--accent2);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  transition: background 0.15s;
+}
+.output-card-btn:hover {
+  background: rgba(167, 139, 250, 0.2);
+}
+
+/* ── Download All — compact variant for panel header ── */
+.btn-download-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: linear-gradient(135deg, #059669, var(--green));
+  color: #f0fdf4;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(110, 231, 183, 0.22);
+  transition:
+    transform 0.15s,
+    box-shadow 0.15s;
+  margin-left: 12px;
+  white-space: nowrap;
+}
+.btn-download-all:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(110, 231, 183, 0.38);
+}
+.btn-download-all:disabled {
+  background: var(--surface2);
+  color: var(--text2);
+  box-shadow: none;
+  border: 1px solid var(--border);
+  cursor: not-allowed;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   EMPTY STATE
+   ══════════════════════════════════════════════════════════════════ */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--text2);
+}
+.empty-state svg {
+  opacity: 0.3;
+}
+.empty-state p {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   RESPONSIVE — crop page specific
+   ══════════════════════════════════════════════════════════════════ */
+@media (max-width: 540px) {
+  .crop-inputs-grid {
+    gap: 6px;
+  }
+  .output-grid {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  }
+  .action-row {
+    flex-wrap: wrap;
+  }
+  .btn-crop,
+  .btn-crop-all {
+    flex: 1 1 100%;
+  }
+  #sourceCanvas {
+    max-height: 55vw;
+  }
+}
+
+@media (max-width: 360px) {
+  .crop-inputs-grid {
+    grid-template-columns: 1fr;
+  }
+  .aspect-presets {
+    gap: 4px;
+  }
+}
