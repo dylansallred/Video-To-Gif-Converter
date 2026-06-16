@@ -162,8 +162,12 @@
 
 #sourceCanvas {
   display: block;
+  /* Let the element size itself from style.width/height set in JS.
+     max-* are safety caps so nothing escapes the wrapper. */
   max-width: 100%;
   max-height: 62vh;
+  width: auto;
+  height: auto;
   border-radius: var(--radius-sm);
   user-select: none;
   -webkit-user-select: none;
@@ -489,6 +493,7 @@ input[type="range"] {
 }
 
 /* ── Download All — compact variant for panel header ── */
+.btn-clear-all,
 .btn-download-all {
   display: inline-flex;
   align-items: center;
@@ -511,10 +516,20 @@ input[type="range"] {
   margin-left: 12px;
   white-space: nowrap;
 }
+.btn-clear-all {
+  background: linear-gradient(135deg, #be185d, var(--pink));
+  color: #fff0f7;
+  box-shadow: 0 4px 14px rgba(249, 168, 212, 0.22);
+}
+.btn-clear-all:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(249, 168, 212, 0.38);
+}
 .btn-download-all:hover:not(:disabled) {
   transform: translateY(-1px);
   box-shadow: 0 6px 20px rgba(110, 231, 183, 0.38);
 }
+.btn-clear-all:disabled,
 .btn-download-all:disabled {
   background: var(--surface2);
   color: var(--text2);

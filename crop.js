@@ -103,6 +103,7 @@ class ImageCropper {
             downloadAllBtn: $('downloadAllBtn'),
             previewOverlay: $('previewOverlay'),
             overlayImg: $('overlayImg'),
+            clearAllBtn: $('clearAllBtn'),
         };
     }
 
@@ -220,6 +221,7 @@ class ImageCropper {
         this.el.cropBtn.addEventListener('click', () => this._cropActive());
         this.el.cropAllBtn.addEventListener('click', () => this._cropAll());
         this.el.downloadAllBtn.addEventListener('click', () => this._downloadAll());
+        this.el.clearAllBtn.addEventListener('click', () => this._clearAll());
 
         // Fullscreen overlay — close only; never revoke the card's previewUrl
         this.el.previewOverlay.addEventListener('click', () => {
@@ -249,6 +251,7 @@ class ImageCropper {
                 const entry = new ImageEntry(file, url, img.naturalWidth, img.naturalHeight);
                 this.entries.push(entry);
                 this._renderQueue();
+                this.el.clearAllBtn.disabled = false;
                 // Auto-select the first image added
                 if (this.entries.length === 1) this._selectEntry(0);
                 // Enable Crop All once there are at least 2 images
@@ -327,6 +330,43 @@ class ImageCropper {
         if (this.entries.length > 0 && this.activeIndex < 0) this._selectEntry(0);
     }
 
+    /** Revoke all object URLs and reset the workspace to its initial state. */
+    _clearAll() {
+        // Revoke every URL we own to avoid memory leaks
+        this.entries.forEach(e => {
+            URL.revokeObjectURL(e.objectUrl);
+            if (e.previewUrl) URL.revokeObjectURL(e.previewUrl);
+        });
+        this.entries = [];
+        this.activeIndex = -1;
+
+        this._clearCanvas();
+        this.el.imageQueue.innerHTML = '';
+
+        // Reset output grid back to just the empty-state placeholder
+        this.el.outputGrid.innerHTML = '';
+        const placeholder = document.createElement('div');
+        placeholder.className = 'empty-state';
+        placeholder.id = 'emptyOutput';
+        placeholder.style.gridColumn = '1 / -1';
+        placeholder.innerHTML = `
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+        </svg>
+        <p>Cropped images will appear here</p>`;
+        this.el.outputGrid.appendChild(placeholder);
+        // Re-point the cached reference
+        this.el.emptyOutput = placeholder;
+
+        this.el.clearAllBtn.disabled = true;
+        this.el.downloadAllBtn.disabled = true;
+        this.el.cropAllBtn.disabled = true;
+        this.el.fileInput.value = '';
+    }
+
     /* ═══ Entry selection / canvas ═══════════════════════════════════ */
 
     /**
@@ -347,18 +387,28 @@ class ImageCropper {
             canvas.height = img.naturalHeight;
             ctx.drawImage(img, 0, 0);
 
-            // Scale displayed canvas to fit the wrapper width
+            // Fit the canvas display into the wrapper respecting both axes.
+            // For wide images: constrain by width. For tall images: constrain
+            // by height (62vh) so the overlay never goes off-screen.
             const wrapW = this.el.canvasWrapper.clientWidth;
-            canvas.style.width = `${wrapW}px`;
-            canvas.style.height = `${Math.round(img.naturalHeight * (wrapW / img.naturalWidth))}px`;
+            const maxH = Math.floor(window.innerHeight * 0.62);
+            const byWidth = { w: wrapW, h: Math.round(img.naturalHeight * (wrapW / img.naturalWidth)) };
+            const byHeight = { h: maxH, w: Math.round(img.naturalWidth * (maxH / img.naturalHeight)) };
+
+            // Use whichever constraint produces the smaller result
+            const fitted = byWidth.h <= maxH ? byWidth : byHeight;
+            canvas.style.width = `${fitted.w}px`;
+            canvas.style.height = `${fitted.h}px`;
 
             canvas.hidden = false;
             this.el.emptyPreview.style.display = 'none';
 
-            // Attach overlay if not already in the DOM
+            // Attach overlay to the wrapper but size+position it to sit exactly
+            // over the canvas, not the full wrapper width.
             if (!this._overlayEl.parentElement) {
                 this.el.canvasWrapper.appendChild(this._overlayEl);
             }
+            this._positionOverlayToCanvas();
 
             this._renderCropRegion();
             this._syncInputsFromRegion();
@@ -368,6 +418,17 @@ class ImageCropper {
             this.el.resetCropBtn.disabled = false;
             this.el.cropBtn.disabled = false;
             this.el.cropAllBtn.disabled = this.entries.length < 2;
+
+            // Re-align overlay whenever the wrapper is resized (e.g. window resize,
+            // panel layout reflow on mobile)
+            if (this._resizeObs) this._resizeObs.disconnect();
+            this._resizeObs = new ResizeObserver(() => {
+                if (this.activeIndex >= 0) {
+                    this._positionOverlayToCanvas();
+                    this._renderCropRegion();
+                }
+            });
+            this._resizeObs.observe(this.el.canvasWrapper);
         };
         img.src = entry.objectUrl;
 
@@ -387,13 +448,41 @@ class ImageCropper {
 
     /* ═══ Crop region rendering ═══════════════════════════════════════ */
 
+    /**
+ * Size and position the crop overlay div so it sits exactly over the
+ * rendered canvas element, regardless of how the canvas is aligned
+ * inside the wrapper.
+ * Called after every canvas resize and on window resize.
+ */
+    _positionOverlayToCanvas() {
+        const canvas = this.el.sourceCanvas;
+        const wrapperRect = this.el.canvasWrapper.getBoundingClientRect();
+        const canvasRect = canvas.getBoundingClientRect();
+
+        // Offset of canvas inside the wrapper
+        const offsetLeft = canvasRect.left - wrapperRect.left;
+        const offsetTop = canvasRect.top - wrapperRect.top;
+
+        Object.assign(this._overlayEl.style, {
+            position: 'absolute',
+            left: `${offsetLeft}px`,
+            top: `${offsetTop}px`,
+            width: `${canvasRect.width}px`,
+            height: `${canvasRect.height}px`,
+            // Override inset:0 from shared.css
+            inset: 'unset',
+        });
+    }
+
     /** Position the overlay div from the active entry's normalised region. */
     _renderCropRegion() {
         if (this.activeIndex < 0) return;
         const entry = this.entries[this.activeIndex];
         const canvas = this.el.sourceCanvas;
-        const dW = parseFloat(canvas.style.width) || canvas.offsetWidth;
-        const dH = parseFloat(canvas.style.height) || canvas.offsetHeight;
+
+        // Overlay now matches canvas exactly — use its own dimensions
+        const dW = this._overlayEl.offsetWidth;
+        const dH = this._overlayEl.offsetHeight;
 
         Object.assign(this._regionEl.style, {
             left: `${entry.region.x * dW}px`,
@@ -518,8 +607,10 @@ class ImageCropper {
     _dragMove(clientX, clientY) {
         if (!this._dragging || this.activeIndex < 0) return;
 
-        const canvas = this.el.sourceCanvas;
-        const rect = canvas.getBoundingClientRect();
+        // Deltas must be relative to the overlay (which sits over the canvas),
+        // not the wrapper or the raw canvas element
+        const rect = this._overlayEl.getBoundingClientRect();
+
         const dx = (clientX - this._startX) / rect.width;
         const dy = (clientY - this._startY) / rect.height;
         const MIN = 0.02;

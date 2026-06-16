@@ -254,10 +254,11 @@
   gap: 6px;
 }
 .setting-group--col-m {
-  flex-direction: column;
-  align-items: flex-start;
+  flex-direction: row;
+  align-items: center;
   gap: 4px;
 }
+
 .setting-group--toggles {
   flex-wrap: wrap;
   gap: 14px 20px;
@@ -765,7 +766,7 @@ input:checked + .toggle-label::before {
 .progress-card {
   background: var(--surface);
   border: 1px solid var(--border2);
-  border-top: 3px solid var(--accent);
+  /* border-top: 3px solid var(--accent); */
   border-radius: var(--radius-lg);
   padding: 36px 48px;
   text-align: center;
