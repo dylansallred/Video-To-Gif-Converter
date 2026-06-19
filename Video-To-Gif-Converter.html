@@ -144,7 +144,7 @@
             position: relative;
             width: min(390px, 64vw);
             height: 7px;
-            overflow: hidden;
+            overflow: visible;
             border: 1px solid rgba(249, 115, 22, 0.36);
             border-radius: 999px;
             background:
@@ -300,6 +300,8 @@
         }
 
         .file-picker-icon {
+            grid-column: 1;
+            grid-row: 1;
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -312,6 +314,8 @@
         }
 
         .file-picker-copy {
+            grid-column: 2;
+            grid-row: 1;
             display: flex;
             min-width: 0;
             flex-direction: column;
@@ -342,6 +346,8 @@
         }
 
         .file-picker-action {
+            grid-column: 3;
+            grid-row: 1;
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -918,6 +924,7 @@
         .crop-handle.se { bottom: -6px; right: -6px; cursor: se-resize; }
 
         .crop-button {
+            position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -933,11 +940,299 @@
             white-space: nowrap;
         }
 
+        .crop-button:disabled,
+        .crop-precision-trigger:disabled,
+        .adjustments-button:disabled,
+        .mute-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.45;
+            background: var(--disabled-color);
+            color: var(--muted-text);
+            border-color: var(--border-color);
+            box-shadow: none;
+            transform: none;
+        }
+
+        .crop-button:disabled:hover,
+        .crop-precision-trigger:disabled:hover,
+        .adjustments-button:disabled:hover,
+        .mute-btn:disabled:hover {
+            background: var(--disabled-color);
+            color: var(--muted-text);
+            border-color: var(--border-color);
+            box-shadow: none;
+        }
+
         .crop-controls {
             display: flex;
             align-items: center;
             gap: 8px;
             min-width: 0;
+        }
+
+        .crop-action-wrap {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            flex: 0 0 auto;
+        }
+
+        .crop-precision-wrap {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            flex: 0 0 auto;
+        }
+
+        .crop-precision-trigger,
+        .crop-precision-close {
+            display: inline-grid;
+            place-items: center;
+            border: 1px solid var(--border-color);
+            background: rgba(11, 13, 16, 0.36);
+            color: var(--muted-text);
+            cursor: pointer;
+            transition: background 140ms ease, border-color 140ms ease, color 140ms ease, transform 140ms ease, box-shadow 140ms ease;
+        }
+
+        .crop-precision-trigger {
+            width: 34px;
+            height: 34px;
+            border-radius: 9px;
+        }
+
+        .crop-precision-trigger svg {
+            width: 17px;
+            height: 17px;
+        }
+
+        .crop-precision-trigger:hover,
+        .crop-precision-trigger:focus-visible,
+        .crop-precision-trigger.active {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            background: rgba(20, 184, 166, 0.12);
+            box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.1);
+            outline: none;
+        }
+
+        .crop-precision-trigger:hover {
+            transform: translateY(-1px);
+        }
+
+        .crop-precision-close {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+        }
+
+        .crop-precision-close svg {
+            width: 15px;
+            height: 15px;
+        }
+
+        .crop-precision-close:hover,
+        .crop-precision-close:focus-visible {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            background: rgba(20, 184, 166, 0.12);
+            transform: rotate(90deg);
+            outline: none;
+        }
+
+        .crop-precision-popover {
+            position: absolute;
+            left: 0;
+            bottom: calc(100% + 12px);
+            z-index: 44;
+            width: min(430px, calc(100vw - 32px));
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(6px) scale(0.985);
+            transform-origin: bottom left;
+            visibility: hidden;
+            transition: opacity 160ms ease, transform 160ms ease, visibility 160ms ease;
+        }
+
+        .crop-precision-popover.is-open {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0) scale(1);
+            visibility: visible;
+        }
+
+        .crop-precision-panel {
+            position: relative;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+            padding: 14px;
+            border: 1px solid rgba(20, 184, 166, 0.5);
+            border-radius: 12px;
+            background:
+                radial-gradient(circle at 82% 0%, rgba(20, 184, 166, 0.14), transparent 34%),
+                linear-gradient(145deg, rgba(21, 26, 34, 0.98), rgba(8, 10, 13, 0.98));
+            box-shadow:
+                0 22px 60px rgba(0, 0, 0, 0.62),
+                0 0 0 1px rgba(255, 255, 255, 0.05),
+                0 0 34px rgba(20, 184, 166, 0.1);
+            backdrop-filter: blur(16px);
+        }
+
+        .crop-precision-panel::before {
+            content: "";
+            position: absolute;
+            bottom: -7px;
+            left: var(--crop-arrow-x, 64px);
+            width: 12px;
+            height: 12px;
+            border-right: 1px solid rgba(20, 184, 166, 0.5);
+            border-bottom: 1px solid rgba(20, 184, 166, 0.5);
+            background: #111821;
+            transform: translateX(-50%) rotate(45deg);
+        }
+
+        .crop-precision-title,
+        .crop-precision-readout {
+            grid-column: 1 / -1;
+        }
+
+        .crop-precision-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            color: var(--text-color);
+            font-size: 0.84rem;
+            font-weight: 800;
+            padding-bottom: 4px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .crop-precision-title-actions {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .crop-precision-unit {
+            color: var(--muted-text);
+            font-size: 0.72rem;
+            font-weight: 700;
+        }
+
+        .crop-precision-field {
+            display: grid;
+            grid-template-columns: 22px minmax(0, 1fr) 54px;
+            align-items: center;
+            gap: 7px;
+            min-width: 0;
+            color: var(--muted-text);
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        .crop-precision-number {
+            display: flex;
+            min-width: 0;
+        }
+
+        .crop-precision-input {
+            box-sizing: border-box;
+            width: 100%;
+            min-height: 30px;
+            padding: 4px 8px;
+            border: 1px solid rgba(174, 183, 196, 0.18);
+            border-radius: 7px;
+            background: rgba(11, 13, 16, 0.5);
+            color: var(--text-color);
+            font-size: 0.78rem;
+            font-variant-numeric: tabular-nums;
+            text-align: right;
+            outline: none;
+            transition: border-color 140ms ease, background 140ms ease, box-shadow 140ms ease;
+        }
+
+        .crop-precision-steps {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4px;
+        }
+
+        .crop-precision-step {
+            display: inline-grid;
+            place-items: center;
+            min-width: 0;
+            height: 30px;
+            border: 1px solid rgba(174, 183, 196, 0.2);
+            border-radius: 7px;
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--muted-text);
+            cursor: pointer;
+            font-size: 0.84rem;
+            font-weight: 800;
+            line-height: 1;
+            transition: border-color 140ms ease, color 140ms ease, background 140ms ease, transform 140ms ease;
+        }
+
+        .crop-precision-step:hover,
+        .crop-precision-step:focus-visible {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            background: rgba(20, 184, 166, 0.1);
+            outline: none;
+            transform: translateY(-1px);
+        }
+
+        .crop-precision-step:disabled {
+            cursor: not-allowed;
+            opacity: 0.42;
+            transform: none;
+            color: var(--muted-text);
+            border-color: rgba(174, 183, 196, 0.16);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .crop-precision-input:focus,
+        .crop-precision-input:focus-visible {
+            border-color: var(--primary-color);
+            background: rgba(20, 184, 166, 0.12);
+            box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.16);
+        }
+
+        .crop-precision-input::-webkit-inner-spin-button,
+        .crop-precision-input::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .crop-precision-input {
+            -moz-appearance: textfield;
+            appearance: textfield;
+        }
+
+        .crop-precision-readout {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            flex-wrap: wrap;
+            min-height: 28px;
+            padding: 5px 8px;
+            border: 1px solid rgba(174, 183, 196, 0.16);
+            border-radius: 7px;
+            background: rgba(11, 13, 16, 0.45);
+            color: var(--muted-text);
+            font-size: 0.74rem;
+            text-align: center;
+        }
+
+        .crop-precision-readout strong {
+            color: var(--primary-color);
+            font-weight: 800;
         }
 
         .crop-button:hover {
@@ -1819,7 +2114,98 @@
         }
 
         .timeline.is-range-zoomed {
-            box-shadow: inset 0 0 0 1px rgba(20, 184, 166, 0.25), 0 0 18px rgba(20, 184, 166, 0.08);
+            height: 15px;
+            border: 1px solid rgba(20, 184, 166, 0.52);
+            background:
+                linear-gradient(90deg, rgba(20, 184, 166, 0.28), rgba(20, 184, 166, 0.05) 15%, rgba(249, 115, 22, 0.08) 85%, rgba(249, 115, 22, 0.26)),
+                rgba(11, 13, 16, 0.72);
+            box-shadow:
+                inset 0 0 0 1px rgba(255, 255, 255, 0.05),
+                inset 0 0 22px rgba(20, 184, 166, 0.14),
+                0 0 18px rgba(20, 184, 166, 0.1);
+            overflow: hidden;
+        }
+
+        .timeline.is-range-zoomed::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            background:
+                repeating-linear-gradient(90deg,
+                    rgba(255, 255, 255, 0.14) 0 1px,
+                    transparent 1px 16px),
+                linear-gradient(90deg,
+                    rgba(34, 197, 94, 0.16),
+                    rgba(20, 184, 166, 0.2) 48%,
+                    rgba(249, 115, 22, 0.18));
+            opacity: 0.72;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .timeline.is-range-zoomed .timeline-range-fill {
+            top: 2px;
+            bottom: 2px;
+            border-radius: 2px;
+            background:
+                linear-gradient(90deg, rgba(34, 197, 94, 0.68), rgba(20, 184, 166, 0.82), rgba(249, 115, 22, 0.55));
+            box-shadow:
+                inset 0 0 0 1px rgba(255, 255, 255, 0.14),
+                0 0 16px rgba(20, 184, 166, 0.2);
+            z-index: 1;
+        }
+
+        .timeline.is-range-zoomed .timeline-marker,
+        .timeline.is-range-zoomed .playhead,
+        .timeline.is-range-zoomed .sequence-timeline-mark {
+            z-index: 3;
+        }
+
+        .timeline.is-range-zoomed .timeline-marker {
+            width: 22px;
+            height: 24px;
+            filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.75));
+        }
+
+        .timeline.is-range-zoomed .start-marker::before,
+        .timeline.is-range-zoomed .end-marker::before {
+            top: 50%;
+            font-size: 28px;
+            line-height: 1;
+            font-weight: 900;
+            transform: translateY(-50%);
+            text-shadow:
+                0 0 0 #06110f,
+                0 0 7px rgba(0, 0, 0, 0.85),
+                0 0 10px currentColor;
+        }
+
+        .timeline.is-range-zoomed .start-marker::before {
+            left: 7px;
+            color: #22c55e;
+        }
+
+        .timeline.is-range-zoomed .end-marker::before {
+            right: 7px;
+            color: #ff4f7b;
+        }
+
+        .timeline-container.is-range-zoomed::after {
+            content: "ZOOMED RANGE";
+            position: absolute;
+            right: 0;
+            top: -21px;
+            padding: 3px 8px 3px 9px;
+            border: 1px solid rgba(20, 184, 166, 0.45);
+            border-radius: 999px;
+            background: linear-gradient(135deg, rgba(12, 24, 28, 0.96), rgba(20, 184, 166, 0.16));
+            color: var(--primary-color);
+            font-size: 0.58rem;
+            font-weight: 900;
+            letter-spacing: 0.08em;
+            box-shadow: 0 5px 18px rgba(0, 0, 0, 0.28), 0 0 14px rgba(20, 184, 166, 0.12);
+            pointer-events: none;
         }
 
         .timeline-container {
@@ -1968,13 +2354,67 @@
         .estimate-row {
             display: none;
             margin-top: 4px;
-            padding: 6px 8px;
+            padding: 5px 6px 5px 9px;
             border: 1px solid var(--border-color);
             border-radius: 7px;
             background: rgba(11, 13, 16, 0.55);
             color: var(--muted-text);
             font-size: 0.8rem;
             text-align: center;
+        }
+
+        .estimate-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            min-width: 0;
+        }
+
+        .estimate-text {
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .estimate-refresh {
+            display: inline-grid;
+            place-items: center;
+            width: 25px;
+            height: 25px;
+            flex: 0 0 auto;
+            border: 1px solid rgba(174, 183, 196, 0.2);
+            border-radius: 7px;
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--muted-text);
+            cursor: pointer;
+            padding: 0;
+            transition: transform 160ms ease, border-color 160ms ease, color 160ms ease, background 160ms ease;
+        }
+
+        .estimate-refresh:hover,
+        .estimate-refresh:focus-visible {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            background: rgba(20, 184, 166, 0.1);
+            outline: none;
+            transform: translateY(-1px);
+        }
+
+        .estimate-refresh:disabled {
+            cursor: not-allowed;
+            opacity: 0.45;
+            transform: none;
+        }
+
+        .estimate-refresh svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .estimate-refresh.is-estimating svg {
+            animation: spin 850ms linear infinite;
         }
 
         .estimate-row strong {
@@ -2534,6 +2974,22 @@
                 width: 100%;
             }
 
+            .crop-controls {
+                width: 100%;
+                flex-wrap: wrap;
+            }
+
+            .crop-precision-wrap {
+                min-width: 0;
+            }
+
+            .crop-precision-popover {
+                left: 0;
+                right: auto;
+                width: min(430px, calc(100vw - 32px));
+                transform-origin: bottom left;
+            }
+
             .adjustments-panel {
                 grid-template-columns: 1fr;
                 gap: 7px;
@@ -2598,6 +3054,15 @@
 
             .adjustments-popover {
                 width: min(100%, calc(100vw - 24px));
+            }
+
+            .crop-precision-popover {
+                width: min(430px, calc(100vw - 24px));
+            }
+
+            .crop-precision-panel {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                padding: 11px;
             }
 
             .adjustments-panel {
@@ -2729,8 +3194,8 @@
                 <div class="container-header">
                     <h3>Original Video</h3>
                     <span class="editor-mode-toggle" role="group" aria-label="Editor mode">
-                        <button class="mode-button active" type="button" data-editor-mode="range">Range</button>
-                        <button class="mode-button" type="button" data-editor-mode="sequence">Frame Sequence</button>
+                        <button class="mode-button active" type="button" data-editor-mode="range" title="Range mode converts one continuous start-to-end clip." aria-label="Range mode: convert one continuous start-to-end clip">Range</button>
+                        <button class="mode-button" type="button" data-editor-mode="sequence" title="Frame Sequence mode builds a GIF from selected individual frames with custom delays." aria-label="Frame Sequence mode: build a GIF from selected individual frames with custom delays">Frame Sequence</button>
                     </span>
                     <button class="expand-button" aria-label="Toggle fullscreen">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -2945,9 +3410,9 @@
                 </div>
 
                 <div class="setting-group">
-                    <label class="setting-label">Adjustments <span class="info-tooltip" tabindex="0" aria-label="Adjustments help" data-tooltip="Tune the image before export. Brightness, contrast, saturation, and warmth preview live on the video; sharpness is applied during export.">?</span></label>
+                    <label class="setting-label">Adjustments <span class="info-tooltip" tabindex="0" aria-label="Adjustments help" data-tooltip="Preview-only tuning for the video view. These controls do not change the exported GIF.">?</span></label>
                     <div class="adjustment-trigger-wrap">
-                        <button class="adjustments-button" type="button" id="openAdjustments" aria-expanded="false">
+                        <button class="adjustments-button" type="button" id="openAdjustments" aria-expanded="false" disabled>
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21v-7"></path><path d="M4 10V3"></path><path d="M12 21v-9"></path><path d="M12 8V3"></path><path d="M20 21v-5"></path><path d="M20 12V3"></path><path d="M2 14h4"></path><path d="M10 8h4"></path><path d="M18 16h4"></path></svg>
                             <span class="adjustments-button-text">Tune Image</span>
                         </button>
@@ -2999,10 +3464,75 @@
                 <div class="setting-group crop-setting-group" id="cropControls">
                     <label class="setting-label">Crop Video <span class="info-tooltip" tabindex="0" aria-label="Crop Video help" data-tooltip="Limit the GIF to part of the video frame. Cropping reduces dimensions and can greatly reduce file size.">?</span></label>
                     <div class="crop-controls">
-                        <button id="toggleCrop" class="crop-button" type="button" aria-pressed="false">
-                            Enable Crop
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-crop"><path d="M6.13 1L6 16a2 2 0 0 0 2 2h15"></path><path d="M1 6.13L16 6a2 2 0 0 1 2 2v15"></path></svg>
-                        </button>
+                        <div class="crop-action-wrap">
+                            <button id="toggleCrop" class="crop-button" type="button" aria-pressed="false" disabled>
+                                Enable Crop
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-crop"><path d="M6.13 1L6 16a2 2 0 0 0 2 2h15"></path><path d="M1 6.13L16 6a2 2 0 0 1 2 2v15"></path></svg>
+                            </button>
+                            <div class="crop-precision-wrap">
+                                <button id="toggleCropPrecision" class="crop-precision-trigger" type="button" aria-label="Open crop precision controls" title="Open crop precision controls" aria-expanded="false" disabled>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                        <path d="M10 15v-3"></path>
+                                        <path d="M14 15v-3"></path>
+                                        <path d="M18 15v-3"></path>
+                                        <path d="M2 8V4"></path>
+                                        <path d="M22 6H2"></path>
+                                        <path d="M22 8V4"></path>
+                                        <path d="M6 15v-3"></path>
+                                        <rect x="2" y="12" width="20" height="8" rx="2"></rect>
+                                    </svg>
+                                </button>
+                                <div class="crop-precision-popover" id="cropPrecisionPopover">
+                                    <div class="crop-precision-panel">
+                                        <div class="crop-precision-title">
+                                            <span>Crop Precision</span>
+                                            <span class="crop-precision-title-actions">
+                                                <span class="crop-precision-unit">px</span>
+                                                <button id="closeCropPrecision" class="crop-precision-close" type="button" aria-label="Close crop precision controls" title="Close crop precision controls">
+                                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                                        <path d="M18 6 6 18"></path>
+                                                        <path d="m6 6 12 12"></path>
+                                                    </svg>
+                                                </button>
+                                            </span>
+                                        </div>
+                                        <label class="crop-precision-field" for="cropInputX">
+                                            X
+                                            <span class="crop-precision-number"><input class="crop-precision-input" type="number" inputmode="numeric" id="cropInputX" data-crop-precision="x" min="0" step="1" value="0"></span>
+                                            <span class="crop-precision-steps">
+                                                <button class="crop-precision-step" type="button" data-crop-step="x" data-crop-step-delta="-1" aria-label="Decrease crop X">−</button>
+                                                <button class="crop-precision-step" type="button" data-crop-step="x" data-crop-step-delta="1" aria-label="Increase crop X">+</button>
+                                            </span>
+                                        </label>
+                                        <label class="crop-precision-field" for="cropInputY">
+                                            Y
+                                            <span class="crop-precision-number"><input class="crop-precision-input" type="number" inputmode="numeric" id="cropInputY" data-crop-precision="y" min="0" step="1" value="0"></span>
+                                            <span class="crop-precision-steps">
+                                                <button class="crop-precision-step" type="button" data-crop-step="y" data-crop-step-delta="-1" aria-label="Decrease crop Y">−</button>
+                                                <button class="crop-precision-step" type="button" data-crop-step="y" data-crop-step-delta="1" aria-label="Increase crop Y">+</button>
+                                            </span>
+                                        </label>
+                                        <label class="crop-precision-field" for="cropInputW">
+                                            W
+                                            <span class="crop-precision-number"><input class="crop-precision-input" type="number" inputmode="numeric" id="cropInputW" data-crop-precision="width" min="1" step="1" value="0"></span>
+                                            <span class="crop-precision-steps">
+                                                <button class="crop-precision-step" type="button" data-crop-step="width" data-crop-step-delta="-1" aria-label="Decrease crop width">−</button>
+                                                <button class="crop-precision-step" type="button" data-crop-step="width" data-crop-step-delta="1" aria-label="Increase crop width">+</button>
+                                            </span>
+                                        </label>
+                                        <label class="crop-precision-field" for="cropInputH">
+                                            H
+                                            <span class="crop-precision-number"><input class="crop-precision-input" type="number" inputmode="numeric" id="cropInputH" data-crop-precision="height" min="1" step="1" value="0"></span>
+                                            <span class="crop-precision-steps">
+                                                <button class="crop-precision-step" type="button" data-crop-step="height" data-crop-step-delta="-1" aria-label="Decrease crop height">−</button>
+                                                <button class="crop-precision-step" type="button" data-crop-step="height" data-crop-step-delta="1" aria-label="Increase crop height">+</button>
+                                            </span>
+                                        </label>
+                                        <div class="crop-precision-readout" id="cropPrecisionReadout">Enable crop to edit exact pixels.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div id="cropDimensions" style="display: none;">
                             <span id="cropSize"></span>
                         </div>
@@ -3244,11 +3774,22 @@
                 saturation: 0,
                 warmth: 0
             };
+            this.sizeEstimate = {
+                status: 'idle',
+                bytes: null,
+                key: '',
+                timeoutId: null,
+                requestId: 0,
+                currentGif: null
+            };
+            this.currentEstimateMetrics = null;
             this.initializeEventListeners();
             this.loadSavedSettings();
             this.currentBlob = null;
             this.originalFileName = '';
+            this.currentVideoFile = null;
             this.settingsChanged = false;
+            this.previewOnlyChanged = false;
 
             this.initializePreviewOverlay();
 
@@ -3262,6 +3803,7 @@
             this.initializeExpandButtons();
             this.initializeCollapsiblePanels();
             this.initializeWindowResizeHandler();
+            this.updateVideoDependentControls();
 
 
         }
@@ -3311,6 +3853,13 @@
                 adjustmentInputs: document.querySelectorAll('[data-adjustment]'),
                 adjustmentValues: document.querySelectorAll('[data-adjustment-value]'),
                 resetAdjustments: document.getElementById('resetAdjustments'),
+                toggleCrop: document.getElementById('toggleCrop'),
+                toggleCropPrecision: document.getElementById('toggleCropPrecision'),
+                closeCropPrecision: document.getElementById('closeCropPrecision'),
+                cropPrecisionPopover: document.getElementById('cropPrecisionPopover'),
+                cropPrecisionInputs: document.querySelectorAll('[data-crop-precision]'),
+                cropPrecisionSteppers: document.querySelectorAll('[data-crop-step]'),
+                cropPrecisionReadout: document.getElementById('cropPrecisionReadout'),
             };
         }
 
@@ -3415,6 +3964,7 @@
             this.elements.showTimecode.addEventListener('change', (e) => {
                 this.saveSetting('showTimecode', e.target.checked);
                 this.markSettingsChanged();
+                this.updateEstimate();
             });
 
             this.elements.modeButtons.forEach(button => {
@@ -3490,9 +4040,55 @@
                 this.elements.resetAdjustments.classList.remove('is-resetting');
             });
 
+            this.elements.cropPrecisionInputs.forEach(input => {
+                input.addEventListener('focus', () => input.select());
+                input.addEventListener('click', event => {
+                    event.stopPropagation();
+                    input.select();
+                });
+                input.addEventListener('input', () => {
+                    this.applyCropPrecisionInputs(false);
+                });
+                input.addEventListener('change', () => {
+                    this.applyCropPrecisionInputs(true);
+                });
+                input.addEventListener('blur', () => {
+                    this.updateCropPrecisionInputs(true);
+                });
+            });
+
+            this.elements.cropPrecisionSteppers.forEach(button => {
+                button.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    const key = button.dataset.cropStep;
+                    const delta = parseInt(button.dataset.cropStepDelta, 10) || 0;
+                    this.stepCropPrecisionValue(key, delta, event.shiftKey ? 10 : 1);
+                });
+            });
+
+            this.elements.toggleCropPrecision?.addEventListener('click', (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                this.setCropPrecisionPopoverOpen(!this.elements.cropPrecisionPopover?.classList.contains('is-open'));
+            });
+
+            this.elements.closeCropPrecision?.addEventListener('click', (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                this.setCropPrecisionPopoverOpen(false);
+            });
+
             this.elements.openAdjustments?.addEventListener('click', (event) => {
                 event.stopPropagation();
                 this.setAdjustmentsPopoverOpen(!this.elements.adjustmentsPopover?.classList.contains('is-open'));
+            });
+
+            this.elements.estimateStatus?.addEventListener('click', (event) => {
+                const refreshButton = event.target.closest('[data-estimate-refresh]');
+                if (!refreshButton) return;
+                event.preventDefault();
+                this.scheduleSizeEstimate(this.currentEstimateMetrics, true);
             });
 
             document.addEventListener('click', (event) => {
@@ -3736,8 +4332,8 @@
 
             if (shouldSave) {
                 localStorage.setItem(this.getAdjustmentStorageKey(key), String(numericValue));
-                this.markSettingsChanged();
-                this.updateEstimate();
+                this.previewOnlyChanged = true;
+                this.updateConvertAvailability();
             }
         }
 
@@ -3745,6 +4341,171 @@
             Object.keys(this.adjustments).forEach(key => {
                 this.updateAdjustment(key, 0, true);
             });
+        }
+
+        hasLoadedVideo() {
+            const video = this.elements.videoPreview;
+            return Boolean(video?.src && video.videoWidth && video.videoHeight);
+        }
+
+        updateVideoDependentControls() {
+            const hasUsableVideo = this.hasLoadedVideo();
+
+            if (this.elements.toggleCrop) {
+                this.elements.toggleCrop.disabled = !hasUsableVideo;
+            }
+
+            if (this.elements.openAdjustments) {
+                this.elements.openAdjustments.disabled = !hasUsableVideo;
+            }
+
+            if (this.elements.toggleCropPrecision) {
+                this.elements.toggleCropPrecision.disabled = !hasUsableVideo || !this.cropEnabled;
+            }
+
+            this.elements.cropPrecisionInputs?.forEach(input => {
+                input.disabled = !hasUsableVideo || !this.cropEnabled;
+            });
+            this.elements.cropPrecisionSteppers?.forEach(button => {
+                button.disabled = !hasUsableVideo || !this.cropEnabled;
+            });
+
+            this.updateConvertAvailability();
+        }
+
+        setCropPrecisionPopoverOpen(isOpen) {
+            if (!this.elements.cropPrecisionPopover) return;
+
+            if (isOpen && (!this.hasLoadedVideo() || !this.cropEnabled)) {
+                isOpen = false;
+            }
+
+            this.elements.cropPrecisionPopover.classList.toggle('is-open', isOpen);
+            this.elements.toggleCropPrecision?.classList.toggle('active', isOpen);
+            this.elements.toggleCropPrecision?.setAttribute('aria-expanded', String(isOpen));
+
+            if (isOpen) {
+                const arrowX = this.elements.toggleCropPrecision
+                    ? Math.round(this.elements.toggleCropPrecision.offsetWidth / 2)
+                    : 17;
+                this.elements.cropPrecisionPopover.style.setProperty('--crop-arrow-x', `${arrowX}px`);
+                this.updateCropPrecisionInputs(true);
+            }
+        }
+
+        stepCropPrecisionValue(key, delta, multiplier = 1) {
+            if (!key || !delta || !this.hasLoadedVideo() || !this.cropEnabled) return;
+
+            const input = [...this.elements.cropPrecisionInputs].find(item => item.dataset.cropPrecision === key);
+            if (!input) return;
+
+            const current = parseInt(input.value, 10);
+            const next = (Number.isFinite(current) ? current : 0) + delta * multiplier;
+            input.value = String(next);
+            this.applyCropPrecisionInputs(true);
+            input.focus();
+            input.select();
+        }
+
+        getCropPixelBounds() {
+            const video = this.elements.videoPreview;
+            const videoWidth = video.videoWidth || 0;
+            const videoHeight = video.videoHeight || 0;
+
+            if (!this.cropRegion || !videoWidth || !videoHeight) {
+                return {
+                    x: 0,
+                    y: 0,
+                    width: videoWidth,
+                    height: videoHeight,
+                    videoWidth,
+                    videoHeight
+                };
+            }
+
+            this.normalizeCropRegion();
+            const x = Math.round(this.cropRegion.x * videoWidth);
+            const y = Math.round(this.cropRegion.y * videoHeight);
+            const width = Math.max(1, Math.min(videoWidth - x, Math.round(this.cropRegion.width * videoWidth)));
+            const height = Math.max(1, Math.min(videoHeight - y, Math.round(this.cropRegion.height * videoHeight)));
+
+            return { x, y, width, height, videoWidth, videoHeight };
+        }
+
+        updateCropPrecisionInputs(force = false) {
+            const bounds = this.getCropPixelBounds();
+            const sizePercent = parseFloat(this.elements.sizeSelect.value) || 1;
+            const outputWidth = Math.max(1, Math.round(bounds.width * sizePercent));
+            const outputHeight = Math.max(1, Math.round(bounds.height * sizePercent));
+
+            this.elements.cropPrecisionInputs.forEach(input => {
+                const key = input.dataset.cropPrecision;
+                if (!force && document.activeElement === input) return;
+                input.value = String(bounds[key] || 0);
+                input.max = key === 'x'
+                    ? String(Math.max(0, bounds.videoWidth - 1))
+                    : key === 'y'
+                        ? String(Math.max(0, bounds.videoHeight - 1))
+                        : key === 'width'
+                            ? String(Math.max(1, bounds.videoWidth))
+                            : String(Math.max(1, bounds.videoHeight));
+            });
+
+            if (this.elements.cropPrecisionReadout) {
+                if (!bounds.videoWidth || !bounds.videoHeight) {
+                    this.elements.cropPrecisionReadout.textContent = 'Load a video to edit exact crop pixels.';
+                } else {
+                    this.elements.cropPrecisionReadout.innerHTML = `
+                        <span>Source&nbsp;<strong>${bounds.width} × ${bounds.height}px</strong></span>
+                        <span aria-hidden="true">·</span>
+                        <span>Output&nbsp;<strong>${outputWidth} × ${outputHeight}px</strong></span>
+                    `;
+                }
+            }
+        }
+
+        applyCropPrecisionInputs(forceClamp) {
+            const video = this.elements.videoPreview;
+            const videoWidth = video.videoWidth || 0;
+            const videoHeight = video.videoHeight || 0;
+            if (!videoWidth || !videoHeight || !this.cropRegion) return;
+
+            const current = this.getCropPixelBounds();
+            const next = { ...current };
+            let hasEmptyValue = false;
+
+            this.elements.cropPrecisionInputs.forEach(input => {
+                const key = input.dataset.cropPrecision;
+                if (input.value === '') {
+                    hasEmptyValue = true;
+                    return;
+                }
+                const parsed = parseInt(input.value, 10);
+                if (Number.isFinite(parsed)) {
+                    next[key] = parsed;
+                }
+            });
+
+            if (hasEmptyValue && !forceClamp) return;
+
+            const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+            next.x = clamp(Math.round(next.x), 0, Math.max(0, videoWidth - 1));
+            next.y = clamp(Math.round(next.y), 0, Math.max(0, videoHeight - 1));
+            next.width = clamp(Math.round(next.width), 1, videoWidth - next.x);
+            next.height = clamp(Math.round(next.height), 1, videoHeight - next.y);
+
+            this.cropRegion = {
+                x: next.x / videoWidth,
+                y: next.y / videoHeight,
+                width: next.width / videoWidth,
+                height: next.height / videoHeight
+            };
+
+            this.normalizeCropRegion();
+            this.updateCropRegionElement();
+            this.updateCropPrecisionInputs(forceClamp);
+            this.updateCropDimensions();
+            this.markSettingsChanged();
         }
 
         setAdjustmentsPopoverOpen(isOpen) {
@@ -3875,7 +4636,6 @@
                 speed: this.editorMode === 'sequence' ? 1 : parseFloat(this.elements.speedSelect.value),
                 crop: this.cropEnabled ? { ...this.cropRegion } : null,
                 showTimecode: this.elements.showTimecode.checked,
-                adjustments: { ...this.adjustments },
                 sequenceFrames: this.frameSequence.map(frame => ({
                     id: frame.id,
                     sourceTime: frame.sourceTime,
@@ -3902,9 +4662,14 @@
         }
 
         updateConvertAvailability() {
-            const hasVideo = Boolean(this.elements.videoPreview.src);
+            const hasVideo = this.hasLoadedVideo();
             const hasSequenceFrames = this.editorMode !== 'sequence' || this.frameSequence.length > 0;
-            this.elements.convertButton.disabled = !hasVideo || !hasSequenceFrames || Boolean(this.currentConversion);
+            const hasCurrentRender = Boolean(this.currentBlob && this.elements.previewGif?.src);
+            const canConvert = hasVideo &&
+                hasSequenceFrames &&
+                !this.currentConversion &&
+                (!hasCurrentRender || this.settingsChanged || this.previewOnlyChanged);
+            this.elements.convertButton.disabled = !canConvert;
         }
 
         createThumbnailFromCurrentFrame(time) {
@@ -4238,15 +5003,22 @@
         handleVideoInput(e) {
             const file = e.target.files[0];
             if (!file) {
+                if (this.elements.videoPreview.src) {
+                    this.updateVideoDependentControls();
+                    return;
+                }
+
                 // If no file, hide the timecode previewer
                 this.stopSequencePreview(true);
                 this.elements.timecodePreviewer.style.display = 'none';
                 this.updateFilePicker(null);
                 this.elements.videoWrapper?.classList.remove('has-video');
+                this.setCropPrecisionPopoverOpen(false);
                 this.frameSequence = [];
                 this.renderFrameSequence();
                 this.elements.convertButton.disabled = true;
                 this.updateEstimate();
+                this.updateVideoDependentControls();
                 return;
             }
 
@@ -4261,12 +5033,17 @@
 
             if (!supportedTypes.includes(file.type)) {
                 alert('Unsupported video format. Please use MP4, WebM, OGG, or MOV files.');
-                this.stopSequencePreview(true);
                 this.elements.videoInput.value = '';
-                this.updateFilePicker(null);
-                this.elements.videoWrapper?.classList.remove('has-video');
-                this.frameSequence = [];
-                this.renderFrameSequence();
+                if (this.elements.videoPreview.src && this.currentVideoFile) {
+                    this.updateVideoDependentControls();
+                } else {
+                    this.stopSequencePreview(true);
+                    this.updateFilePicker(null);
+                    this.elements.videoWrapper?.classList.remove('has-video');
+                    this.frameSequence = [];
+                    this.renderFrameSequence();
+                    this.updateVideoDependentControls();
+                }
                 return;
             }
 
@@ -4274,19 +5051,25 @@
             const hasFileDuration = durationMatch && !isNaN(durationMatch[1]);
 
             this.originalFileName = file.name.replace(/\.[^/.]+$/, '');
+            this.currentVideoFile = file;
             const videoUrl = URL.createObjectURL(file);
 
             this.elements.videoPreview.src = videoUrl;
             this.elements.videoPreview.style.display = 'block';
             this.elements.videoWrapper?.classList.add('has-video');
-            this.elements.convertButton.disabled = false;
+            this.elements.convertButton.disabled = true;
+            this.updateVideoDependentControls();
             this.stopSequencePreview(true);
             this.elements.previewGif.style.display = 'none';
             this.elements.previewGif.removeAttribute('src');
             this.elements.gifWrapper?.classList.remove('has-gif');
             this.elements.sizeIndicator.style.display = 'none';
             this.elements.downloadButton.style.display = 'none';
+            this.currentBlob = null;
             this.lastConversionSettings = null;
+            this.settingsChanged = false;
+            this.previewOnlyChanged = false;
+            this.elements.convertButton.classList.remove('attention-needed');
             this.frameSequence = [];
             this.renderFrameSequence();
 
@@ -4338,20 +5121,25 @@
                     this.formatFileSize(file.size)
                 ].join(' · ');
 
+                this.updateCropPrecisionInputs(true);
                 this.updateEstimate();
+                this.updateVideoDependentControls();
             };
 
             this.elements.videoPreview.onerror = () => {
                 alert('Error loading video. Please try another file.');
                 this.stopSequencePreview(true);
                 this.elements.videoInput.value = '';
+                this.currentVideoFile = null;
                 this.updateFilePicker(null);
                 this.elements.videoPreview.style.display = 'none';
                 this.elements.videoWrapper?.classList.remove('has-video');
+                this.setCropPrecisionPopoverOpen(false);
                 this.elements.convertButton.disabled = true;
                 this.frameSequence = [];
                 this.renderFrameSequence();
                 this.updateEstimate();
+                this.updateVideoDependentControls();
             };
 
             // Only show timecode previewer if checkbox is checked and we have a video
@@ -4400,6 +5188,7 @@
             this.conversionStartTime = performance.now();
             this.lastConversionSettings = {...settings};
             this.settingsChanged = false;
+            this.previewOnlyChanged = false;
             this.elements.convertButton.classList.remove('attention-needed');
             this.elements.previewGif.style.opacity = '1';
             this.elements.convertButton.disabled = true;
@@ -4468,33 +5257,40 @@
             }
         }
 
-        getOutputGeometry(settings) {
-            const video = this.elements.videoPreview;
-            const geometry = this.getFrameGeometry(settings);
+        getOutputGeometry(settings, sourceVideo = this.elements.videoPreview) {
+            const video = sourceVideo;
+            const geometry = this.getFrameGeometry(settings, sourceVideo);
             return {
                 finalWidth: geometry.finalWidth || Math.max(1, Math.floor(video.videoWidth * settings.sizePercent)),
                 finalHeight: geometry.finalHeight || Math.max(1, Math.floor(video.videoHeight * settings.sizePercent))
             };
         }
 
-        getFrameGeometry(settings) {
-            const video = this.elements.videoPreview;
+        getFrameGeometry(settings, sourceVideo = this.elements.videoPreview) {
+            const video = sourceVideo;
             let sourceX = 0;
             let sourceY = 0;
             let sourceWidth = video.videoWidth;
             let sourceHeight = video.videoHeight;
             let finalWidth = Math.max(1, Math.floor(video.videoWidth * settings.sizePercent));
             let finalHeight = Math.max(1, Math.floor(video.videoHeight * settings.sizePercent));
+            const activeCrop = settings.crop || (this.cropEnabled && this.cropRegion ? this.cropRegion : null);
 
-            if (this.cropEnabled && this.cropRegion) {
-                this.normalizeCropRegion();
+            if (activeCrop) {
                 const videoWidth = video.videoWidth;
                 const videoHeight = video.videoHeight;
+                const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+                const minWidth = videoWidth ? Math.min(1, 1 / videoWidth) : this.minCropSize;
+                const minHeight = videoHeight ? Math.min(1, 1 / videoHeight) : this.minCropSize;
+                const cropX = clamp(Number.isFinite(activeCrop.x) ? activeCrop.x : 0, 0, 1 - minWidth);
+                const cropY = clamp(Number.isFinite(activeCrop.y) ? activeCrop.y : 0, 0, 1 - minHeight);
+                const cropWidth = clamp(Number.isFinite(activeCrop.width) ? activeCrop.width : 1, minWidth, 1 - cropX);
+                const cropHeight = clamp(Number.isFinite(activeCrop.height) ? activeCrop.height : 1, minHeight, 1 - cropY);
 
-                sourceX = Math.round(this.cropRegion.x * videoWidth);
-                sourceY = Math.round(this.cropRegion.y * videoHeight);
-                sourceWidth = Math.max(1, Math.min(videoWidth - sourceX, Math.round(this.cropRegion.width * videoWidth)));
-                sourceHeight = Math.max(1, Math.min(videoHeight - sourceY, Math.round(this.cropRegion.height * videoHeight)));
+                sourceX = Math.round(cropX * videoWidth);
+                sourceY = Math.round(cropY * videoHeight);
+                sourceWidth = Math.max(1, Math.min(videoWidth - sourceX, Math.round(cropWidth * videoWidth)));
+                sourceHeight = Math.max(1, Math.min(videoHeight - sourceY, Math.round(cropHeight * videoHeight)));
 
                 finalWidth = Math.max(1, Math.round(sourceWidth * settings.sizePercent));
                 finalHeight = Math.max(1, Math.round(sourceHeight * settings.sizePercent));
@@ -4503,17 +5299,15 @@
             return { sourceX, sourceY, sourceWidth, sourceHeight, finalWidth, finalHeight };
         }
 
-        drawVideoFrameToContext(ctx, settings) {
-            const geometry = this.getFrameGeometry(settings);
+        drawVideoFrameToContext(ctx, settings, sourceVideo = this.elements.videoPreview) {
+            const geometry = this.getFrameGeometry(settings, sourceVideo);
 
             ctx.clearRect(0, 0, geometry.finalWidth, geometry.finalHeight);
             ctx.drawImage(
-                this.elements.videoPreview,
+                sourceVideo,
                 geometry.sourceX, geometry.sourceY, geometry.sourceWidth, geometry.sourceHeight,
                 0, 0, geometry.finalWidth, geometry.finalHeight
             );
-
-            this.applyAdjustments(ctx, settings.adjustments);
 
             return geometry;
         }
@@ -4750,9 +5544,9 @@
                 this.updatePreview(blob, conversionTime);
                 this.updateUIForConversion(false);
                 this.elements.downloadButton.style.display = 'block';
-                this.elements.convertButton.disabled = true;
                 this.elements.previewGif.style.opacity = '1';
                 this.currentConversion = null;
+                this.updateConvertAvailability();
             });
 
             gif.on('error', (error) => {
@@ -4778,7 +5572,6 @@
         updatePreview(blob, conversionTime) {
             const gifUrl = URL.createObjectURL(blob);
             this.setupPreviewImage(gifUrl, blob, conversionTime);
-            this.elements.convertButton.disabled = true;
         }
 
         updateFileSize(blob, conversionTime) {
@@ -4833,7 +5626,7 @@
             } else {
                 this.settingsChanged = false;
                 this.elements.convertButton.classList.remove('attention-needed');
-                this.elements.convertButton.disabled = true;
+                this.updateConvertAvailability();
             }
         }
 
@@ -5015,8 +5808,10 @@
                 }
 
                 this.updateCropDimensions();
+                this.setCropPrecisionPopoverOpen(true);
             } else {
                 this.cropOverlay.style.display = 'none';
+                this.setCropPrecisionPopoverOpen(false);
                 toggleButton.classList.remove('active');
                 toggleButton.setAttribute('aria-pressed', 'false');
                 toggleButton.firstChild.textContent = 'Enable Crop ';
@@ -5031,6 +5826,7 @@
             }
 
             this.markSettingsChanged();
+            this.updateVideoDependentControls();
         }
 
         initializeCropDrag() {
@@ -5225,17 +6021,20 @@
 
             const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
             const round = (value) => Math.round(value * 1000000) / 1000000;
-            const minSize = this.minCropSize;
+            const videoWidth = this.elements.videoPreview.videoWidth;
+            const videoHeight = this.elements.videoPreview.videoHeight;
+            const minWidth = videoWidth ? Math.min(1, 1 / videoWidth) : this.minCropSize;
+            const minHeight = videoHeight ? Math.min(1, 1 / videoHeight) : this.minCropSize;
 
             let x = Number.isFinite(this.cropRegion.x) ? this.cropRegion.x : 0;
             let y = Number.isFinite(this.cropRegion.y) ? this.cropRegion.y : 0;
             let width = Number.isFinite(this.cropRegion.width) ? this.cropRegion.width : 1;
             let height = Number.isFinite(this.cropRegion.height) ? this.cropRegion.height : 1;
 
-            width = clamp(width, minSize, 1);
-            height = clamp(height, minSize, 1);
-            x = clamp(x, 0, 1 - minSize);
-            y = clamp(y, 0, 1 - minSize);
+            width = clamp(width, minWidth, 1);
+            height = clamp(height, minHeight, 1);
+            x = clamp(x, 0, 1 - minWidth);
+            y = clamp(y, 0, 1 - minHeight);
 
             if (x + width > 1) {
                 width = 1 - x;
@@ -5247,8 +6046,8 @@
             this.cropRegion = {
                 x: round(x),
                 y: round(y),
-                width: round(Math.max(minSize, width)),
-                height: round(Math.max(minSize, height))
+                width: round(Math.max(minWidth, width)),
+                height: round(Math.max(minHeight, height))
             };
         }
 
@@ -5300,6 +6099,7 @@
 
             dimensions.style.display = 'none';
             sizeText.textContent = dimensionsText;
+            this.updateCropPrecisionInputs();
             this.updateEstimate();
         }
 
@@ -5341,22 +6141,19 @@
             this.updateEstimate();
         }
 
-        updateEstimate() {
-            if (!this.elements.estimateStatus) return;
-
+        getEstimateMetrics() {
             const video = this.elements.videoPreview;
             const videoWidth = video.videoWidth;
             const videoHeight = video.videoHeight;
 
             if (!videoWidth || !videoHeight) {
-                this.elements.estimateStatus.style.display = 'block';
-                this.elements.estimateStatus.textContent = 'Load a video to see output estimate.';
-                return;
+                return null;
             }
 
+            const settings = this.getCurrentConversionSettings();
+            const geometry = this.getOutputGeometry(settings);
             const fps = parseInt(this.elements.fpsSelect.value, 10);
             const speed = parseFloat(this.elements.speedSelect.value) || 1;
-            const sizePercent = parseFloat(this.elements.sizeSelect.value) || 1;
             const startTime = parseFloat(this.elements.startTime.value) || 0;
             const rawEndTime = parseFloat(this.elements.endTime.value);
             const endTime = Number.isFinite(rawEndTime) ? rawEndTime : video.duration;
@@ -5364,53 +6161,336 @@
             const adjustedDuration = duration / speed;
             const frameCount = Math.max(1, Math.ceil(adjustedDuration * fps));
 
-            let sourceWidth = videoWidth;
-            let sourceHeight = videoHeight;
-            if (this.cropEnabled && this.cropRegion) {
-                sourceWidth = Math.round(videoWidth * this.cropRegion.width);
-                sourceHeight = Math.round(videoHeight * this.cropRegion.height);
-            }
-
-            const outputWidth = Math.max(1, Math.round(sourceWidth * sizePercent));
-            const outputHeight = Math.max(1, Math.round(sourceHeight * sizePercent));
-            const hasAdjustments = this.hasActiveAdjustments();
-
             if (this.editorMode === 'sequence') {
                 const sequenceFrameCount = this.frameSequence.length;
                 const totalDuration = this.frameSequence.reduce((sum, frame) => sum + frame.delayMs, 0) / 1000;
                 const averageDelay = sequenceFrameCount ? (totalDuration * 1000) / sequenceFrameCount : 0;
                 const warnings = [];
+                const sampleFrame = sequenceFrameCount
+                    ? this.frameSequence[Math.floor(sequenceFrameCount / 2)]
+                    : null;
 
                 if (!sequenceFrameCount) warnings.push('add frames to convert');
                 if (sequenceFrameCount > 150) warnings.push('large sequence may convert slowly');
-                if (hasAdjustments) warnings.push('adjustments add processing time');
 
-                this.elements.estimateStatus.style.display = 'block';
-                this.elements.estimateStatus.innerHTML = `
-                    <strong>${outputWidth} × ${outputHeight}px</strong>
-                    · Sequence
-                    · ${sequenceFrameCount} frames
-                    · ${totalDuration.toFixed(2)}s
-                    · avg ${Math.round(averageDelay)}ms
-                    ${warnings.length ? ` · <span class="estimate-warning">${warnings.join(' · ')}</span>` : ''}
-                `;
-                this.updateConvertAvailability();
-                return;
+                return {
+                    settings,
+                    mode: 'sequence',
+                    outputWidth: geometry.finalWidth,
+                    outputHeight: geometry.finalHeight,
+                    frameCount: sequenceFrameCount,
+                    duration: totalDuration,
+                    averageDelay,
+                    warnings,
+                    canEstimate: sequenceFrameCount > 0,
+                    sampleTime: sampleFrame?.sourceTime ?? null,
+                    sampleDelayMs: sampleFrame?.delayMs ?? 200,
+                    timecodeStart: this.frameSequence[0]?.sourceTime ?? 0
+                };
             }
 
             const warnings = [];
             if (frameCount > 600) warnings.push('large conversion');
-            if (hasAdjustments) warnings.push('adjustments add processing time');
+
+            const sampleTime = duration > 0
+                ? startTime + duration / 2
+                : Number.isFinite(video.currentTime)
+                    ? video.currentTime
+                    : startTime;
+
+            return {
+                settings,
+                mode: 'range',
+                outputWidth: geometry.finalWidth,
+                outputHeight: geometry.finalHeight,
+                fps,
+                speed,
+                frameCount,
+                duration: adjustedDuration,
+                warnings,
+                canEstimate: frameCount > 0,
+                sampleTime: Math.max(0, Math.min(sampleTime, video.duration || sampleTime)),
+                sampleDelayMs: Math.round(1000 / fps),
+                timecodeStart: startTime
+            };
+        }
+
+        getEstimateKey(metrics) {
+            if (!metrics) return '';
+
+            const normalizedSettings = this.normalizeSettingsForCompare(metrics.settings);
+            return JSON.stringify({
+                settings: normalizedSettings,
+                outputWidth: metrics.outputWidth,
+                outputHeight: metrics.outputHeight,
+                frameCount: metrics.frameCount,
+                sampleTime: Math.round((metrics.sampleTime || 0) * 1000) / 1000,
+                sampleDelayMs: metrics.sampleDelayMs
+            });
+        }
+
+        updateEstimate() {
+            if (!this.elements.estimateStatus) return;
+
+            const metrics = this.getEstimateMetrics();
+            this.currentEstimateMetrics = metrics;
+
+            if (!metrics) {
+                if (this.sizeEstimate.timeoutId) {
+                    clearTimeout(this.sizeEstimate.timeoutId);
+                    this.sizeEstimate.timeoutId = null;
+                }
+                if (this.sizeEstimate.currentGif?.abort) {
+                    try {
+                        this.sizeEstimate.currentGif.abort();
+                    } catch (error) {
+                        // Ignore estimator cleanup errors.
+                    }
+                }
+                this.sizeEstimate.status = 'idle';
+                this.sizeEstimate.bytes = null;
+                this.sizeEstimate.key = '';
+                this.elements.estimateStatus.style.display = 'block';
+                this.elements.estimateStatus.textContent = 'Load a video to see output estimate.';
+                return;
+            }
+
+            metrics.key = this.getEstimateKey(metrics);
+            this.renderEstimateStatus(metrics);
+            this.scheduleSizeEstimate(metrics, false);
+            this.updateConvertAvailability();
+        }
+
+        renderEstimateStatus(metrics) {
+            if (!this.elements.estimateStatus || !metrics) return;
+
+            const isCurrentEstimate = this.sizeEstimate.key === metrics.key;
+            const isEstimating = isCurrentEstimate && this.sizeEstimate.status === 'running';
+            const canRefresh = metrics.canEstimate && !isEstimating;
+            let estimateText = 'Estimate stale';
+
+            if (!metrics.canEstimate) {
+                estimateText = 'Estimate unavailable';
+            } else if (isEstimating) {
+                estimateText = 'Estimating...';
+            } else if (isCurrentEstimate && this.sizeEstimate.status === 'ready' && Number.isFinite(this.sizeEstimate.bytes)) {
+                estimateText = `Est. ~${this.formatFileSize(this.sizeEstimate.bytes)}`;
+            } else if (isCurrentEstimate && this.sizeEstimate.status === 'error') {
+                estimateText = 'Estimate unavailable';
+            }
+
+            const summary = metrics.mode === 'sequence'
+                ? `
+                    <strong>${metrics.outputWidth} × ${metrics.outputHeight}px</strong>
+                    · Sequence
+                    · ${metrics.frameCount} frames
+                    · ${metrics.duration.toFixed(2)}s
+                    · avg ${Math.round(metrics.averageDelay || 0)}ms
+                `
+                : `
+                    <strong>${metrics.outputWidth} × ${metrics.outputHeight}px</strong>
+                    · ${metrics.fps} fps
+                    · ~${metrics.frameCount} frames
+                    · ${metrics.duration.toFixed(1)}s at ${metrics.speed}x
+                `;
 
             this.elements.estimateStatus.style.display = 'block';
             this.elements.estimateStatus.innerHTML = `
-                <strong>${outputWidth} × ${outputHeight}px</strong>
-                · ${fps} fps
-                · ~${frameCount} frames
-                · ${adjustedDuration.toFixed(1)}s at ${speed}x
-                ${warnings.length ? ` · <span class="estimate-warning">${warnings.join(' · ')}</span>` : ''}
+                <div class="estimate-content">
+                    <span class="estimate-text">
+                        ${summary}
+                        · <span class="${estimateText.startsWith('Est.') ? '' : 'estimate-warning'}">${estimateText}</span>
+                        ${metrics.warnings.length ? ` · <span class="estimate-warning">${metrics.warnings.join(' · ')}</span>` : ''}
+                    </span>
+                    <button class="estimate-refresh ${isEstimating ? 'is-estimating' : ''}" type="button" data-estimate-refresh
+                        ${canRefresh ? '' : 'disabled'}
+                        title="Refresh estimated GIF size"
+                        aria-label="Refresh estimated GIF size">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M21 12a9 9 0 1 1-2.64-6.36"></path>
+                            <path d="M21 3v6h-6"></path>
+                        </svg>
+                    </button>
+                </div>
             `;
-            this.updateConvertAvailability();
+        }
+
+        scheduleSizeEstimate(metrics, immediate = false) {
+            if (!metrics || !metrics.canEstimate || !Number.isFinite(metrics.sampleTime)) {
+                if (this.sizeEstimate.timeoutId) {
+                    clearTimeout(this.sizeEstimate.timeoutId);
+                    this.sizeEstimate.timeoutId = null;
+                }
+                return;
+            }
+
+            const keyChanged = this.sizeEstimate.key !== metrics.key;
+            const shouldEstimate = immediate || keyChanged || this.sizeEstimate.status === 'idle' || this.sizeEstimate.status === 'error';
+            if (!shouldEstimate) return;
+
+            if (this.sizeEstimate.timeoutId) {
+                clearTimeout(this.sizeEstimate.timeoutId);
+                this.sizeEstimate.timeoutId = null;
+            }
+
+            if (keyChanged) {
+                this.sizeEstimate.requestId += 1;
+                if (this.sizeEstimate.currentGif?.abort) {
+                    try {
+                        this.sizeEstimate.currentGif.abort();
+                    } catch (error) {
+                        // Ignore stale estimator cleanup errors.
+                    }
+                }
+            }
+
+            this.sizeEstimate.key = metrics.key;
+            this.sizeEstimate.bytes = keyChanged ? null : this.sizeEstimate.bytes;
+            this.sizeEstimate.status = immediate ? 'running' : 'stale';
+            this.renderEstimateStatus(metrics);
+
+            this.sizeEstimate.timeoutId = window.setTimeout(() => {
+                this.sizeEstimate.timeoutId = null;
+                this.runSizeEstimate(metrics);
+            }, immediate ? 0 : 850);
+        }
+
+        async runSizeEstimate(metrics) {
+            if (!metrics || !metrics.canEstimate) return;
+
+            const requestId = ++this.sizeEstimate.requestId;
+            this.sizeEstimate.status = 'running';
+            this.sizeEstimate.key = metrics.key;
+            this.renderEstimateStatus(metrics);
+
+            if (this.sizeEstimate.currentGif?.abort) {
+                try {
+                    this.sizeEstimate.currentGif.abort();
+                } catch (error) {
+                    // Ignore stale estimator cleanup errors.
+                }
+            }
+
+            try {
+                const sampleBlob = await this.renderSampleGifFrame(metrics, requestId);
+                if (requestId !== this.sizeEstimate.requestId) return;
+
+                this.sizeEstimate.bytes = Math.max(1, Math.round(sampleBlob.size * Math.max(1, metrics.frameCount)));
+                this.sizeEstimate.status = 'ready';
+            } catch (error) {
+                if (requestId !== this.sizeEstimate.requestId) return;
+                console.warn('GIF size estimate failed:', error);
+                this.sizeEstimate.bytes = null;
+                this.sizeEstimate.status = 'error';
+            } finally {
+                if (requestId === this.sizeEstimate.requestId) {
+                    this.sizeEstimate.currentGif = null;
+                    this.renderEstimateStatus(metrics);
+                }
+            }
+        }
+
+        async renderSampleGifFrame(metrics, requestId) {
+            const sampleVideo = await this.createSampleVideoAt(metrics.sampleTime, requestId);
+            const settings = metrics.settings;
+            const geometry = this.getFrameGeometry(settings, sampleVideo);
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d', { willReadFrequently: true });
+            const workerScript = this.createWorkerScript();
+
+            canvas.width = geometry.finalWidth;
+            canvas.height = geometry.finalHeight;
+            this.drawVideoFrameToContext(ctx, settings, sampleVideo);
+
+            if (settings.showTimecode) {
+                this.drawTimecode(
+                    ctx,
+                    metrics.sampleTime,
+                    settings.speed || 1,
+                    metrics.timecodeStart
+                );
+            }
+
+            const gif = new GIF({
+                workers: 1,
+                quality: settings.quality,
+                width: geometry.finalWidth,
+                height: geometry.finalHeight,
+                repeat: settings.repeat,
+                globalPalette: settings.globalPalette,
+                dither: settings.dither === 'false' ? false : settings.dither,
+                workerScript
+            });
+
+            this.sizeEstimate.currentGif = gif;
+            gif.addFrame(ctx, { copy: true, delay: metrics.sampleDelayMs || 100 });
+
+            try {
+                return await new Promise((resolve, reject) => {
+                    gif.on('finished', (blob) => resolve(blob));
+                    gif.on('error', reject);
+                    gif.render();
+                });
+            } finally {
+                gif.removeAllListeners?.();
+                URL.revokeObjectURL(workerScript);
+                sampleVideo.removeAttribute('src');
+                sampleVideo.load();
+                if (requestId === this.sizeEstimate.requestId) {
+                    this.sizeEstimate.currentGif = null;
+                }
+            }
+        }
+
+        createSampleVideoAt(time, requestId) {
+            const sourceVideo = this.elements.videoPreview;
+            const source = sourceVideo.currentSrc || sourceVideo.src;
+            const sampleVideo = document.createElement('video');
+
+            sampleVideo.muted = true;
+            sampleVideo.playsInline = true;
+            sampleVideo.preload = 'auto';
+            sampleVideo.src = source;
+
+            const waitForEvent = (eventName) => new Promise((resolve, reject) => {
+                const cleanup = () => {
+                    sampleVideo.removeEventListener(eventName, handleEvent);
+                    sampleVideo.removeEventListener('error', handleError);
+                };
+                const handleEvent = () => {
+                    cleanup();
+                    resolve();
+                };
+                const handleError = () => {
+                    cleanup();
+                    reject(new Error(`Estimator video ${eventName} failed`));
+                };
+                sampleVideo.addEventListener(eventName, handleEvent, { once: true });
+                sampleVideo.addEventListener('error', handleError, { once: true });
+            });
+
+            return (async () => {
+                if (sampleVideo.readyState < 1) {
+                    await waitForEvent('loadedmetadata');
+                }
+                if (requestId !== this.sizeEstimate.requestId) {
+                    throw new Error('Stale estimator request');
+                }
+
+                const duration = sampleVideo.duration || sourceVideo.duration || time;
+                const targetTime = Math.max(0, Math.min(time, duration || time));
+                if (Math.abs(sampleVideo.currentTime - targetTime) > 0.002) {
+                    const seekPromise = waitForEvent('seeked');
+                    sampleVideo.currentTime = targetTime;
+                    await seekPromise;
+                }
+
+                if (requestId !== this.sizeEstimate.requestId) {
+                    throw new Error('Stale estimator request');
+                }
+
+                return sampleVideo;
+            })();
         }
 
         drawTimecode(ctx, currentTime, speedMultiplier, startTimeOverride = null) {
@@ -5682,6 +6762,7 @@
 
         initializeElements() {
             this.elements = {
+                timelineContainer: document.querySelector('.timeline-container'),
                 timeline: document.querySelector('.timeline'),
                 startMarker: document.querySelector('.start-marker'),
                 endMarker: document.querySelector('.end-marker'),
@@ -5899,6 +6980,7 @@
                 this.rangeZoomBounds = null;
             }
             this.elements.timeline.classList.toggle('is-range-zoomed', this.isRangeZoomed);
+            this.elements.timelineContainer?.classList.toggle('is-range-zoomed', this.isRangeZoomed);
             this.updateRangeZoomButton();
             this.updateMarkerPositions();
             this.updatePlayhead();
